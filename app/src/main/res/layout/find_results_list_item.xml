@@ -87,6 +87,19 @@
                         android:layout_width="@dimen/btn_square_side"
                         android:layout_height="@dimen/btn_square_side"
                         android:layout_margin="@dimen/btn_square_margin"/>
+
+
+                    <TextView
+                        android:id="@+id/show_more_details"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="@dimen/padding_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_small"
+                        android:layout_gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:text="@string/show_more"/>
+
                 </LinearLayout>
 
             </LinearLayout>

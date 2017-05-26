@@ -61,6 +61,8 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holderResults.setTmdbId(mResultsPresenter.getTmdbId(position));
     }
 
+
+
     @Override
     public int getItemCount() {
         return mSize;
@@ -73,6 +75,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.start_year) TextView year;
         @BindView(R.id.user_score) TextView userScore;
         @BindView(R.id.button_add) ImageButton buttonAdd;
+        @BindView(R.id.show_more_details) TextView showMoreDetails;
 
         private int tmdbId;
 
@@ -80,14 +83,19 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             ButterKnife.bind(this,itemView);
             buttonAdd.setOnClickListener(this);
+            showMoreDetails.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if(view.getId() == buttonAdd.getId()){
                 buttonAdd.setVisibility(View.INVISIBLE);
+                showMoreDetails.setVisibility(View.INVISIBLE);
                 Toast.makeText(mContext,"Downloading " + title.getText().toString(),Toast.LENGTH_SHORT).show();
                 mResultsPresenter.saveSelectedToDatabase(tmdbId);
+            }
+            else if(view.getId() == showMoreDetails.getId()){
+                mResultsPresenter.openMoreDetailsDialog(getAdapterPosition());
             }
         }
 
@@ -96,8 +104,14 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         public void setAddButtonVisible(boolean visible){
-            if(visible) buttonAdd.setVisibility(View.VISIBLE);
-            else buttonAdd.setVisibility(View.INVISIBLE);
+            if(visible) {
+                buttonAdd.setVisibility(View.VISIBLE);
+                showMoreDetails.setVisibility(View.VISIBLE);
+            }
+            else {
+                buttonAdd.setVisibility(View.INVISIBLE);
+                showMoreDetails.setVisibility(View.INVISIBLE);
+            }
 
         }
     }

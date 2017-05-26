@@ -75,7 +75,6 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_small"
                     android:textColor="@color/colorTextLight"
-
                     android:text="@string/genres"/>
 
                 <TextView

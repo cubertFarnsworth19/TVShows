@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorItemBackgroundDark">
+
+    <ScrollView
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:fillViewport="true">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextLight"
+                tools:text="TV Show Title"/>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/padding_medium">
+
+            <TextView
+                android:id="@+id/start_year"
+                tools:text="2000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/padding_medium"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"/>
+
+            <TextView
+                android:id="@+id/in_production"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_small"
+                tools:text="Continuing"/>
+
+        </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/padding_medium">
+                <TextView
+                    android:id="@+id/user_score"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/user_score_circle"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:text="6.9"
+                    />
+
+                <TextView
+                    android:id="@+id/vote_count"
+                    android:paddingLeft="@dimen/padding_large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextLight"
+                    tools:text="130"/>
+                <TextView
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/votes"/>
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/genres"/>
+
+            <TextView
+                android:id="@+id/genres_list"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/padding_medium"
+                tools:text="Crime, Drama"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/creators"/>
+
+            <TextView
+                android:id="@+id/creators_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:paddingBottom="@dimen/padding_medium"
+                tools:text="Person 1, Person 2"/>
+
+            <TextView
+                android:id="@+id/overview"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                tools:text="This is where the overview goes. Some overviews are very long in length, therefore taking up many lines."/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:paddingRight="@dimen/padding_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:paddingLeft="@dimen/padding_large"
+            android:paddingRight="@dimen/padding_large"
+            android:textSize="@dimen/text_size_small"
+            android:layout_gravity="center"
+            android:textColor="@color/colorAccent"
+            android:text="@string/dismiss"/>
+        <Button
+            android:id="@+id/add_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:paddingLeft="@dimen/padding_large"
+            android:paddingRight="@dimen/padding_large"
+            android:textSize="@dimen/text_size_small"
+            android:layout_gravity="center"
+            android:textColor="@color/colorAccent"
+            android:text="@string/add_show"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.example.android.tvshows.ui.find;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 
 import com.example.android.tvshows.data.model.search.DiscoverResults;
 import com.example.android.tvshows.data.model.search.Result;
@@ -17,6 +18,8 @@ public interface ResultsContract {
                                     String minVoteAverage, String minVoteCount,
                                     String firstAirDateAfter, String firstAirDateBefore);
         void search(String searchTerm);
+        FragmentManager getFragmentManagerForDialog();
+        void updateAdapter();
     }
 
     interface Presenter{
@@ -35,6 +38,8 @@ public interface ResultsContract {
         String getPosterUrl(Context context, int position);
         boolean showAddButton(int position);
         int getTmdbId(int position);
+        void openMoreDetailsDialog(int position);
+        void showAdded();
     }
 
 }

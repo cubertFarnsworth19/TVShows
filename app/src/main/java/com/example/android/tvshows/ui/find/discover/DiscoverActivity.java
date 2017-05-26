@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ui.BaseNavigationActivity;
 import com.example.android.tvshows.ui.NavigationIconActivity;
+import com.example.android.tvshows.ui.find.MoreDetailsDialog;
 import com.example.android.tvshows.ui.find.ResultsFragment;
 import com.example.android.tvshows.util.Genres;
 import com.example.android.tvshows.util.Utility;
@@ -130,6 +131,7 @@ public class DiscoverActivity extends NavigationIconActivity {
             genresDialog.show(fm,"dialog_exclude_genres");
             Log.v("setGenres","exclude");
         }
+
     }
 
     public void setIncludeGenres(boolean[] includeGenres){

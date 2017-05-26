@@ -1,8 +1,10 @@
 package com.example.android.tvshows.ui.find;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 
@@ -13,8 +15,10 @@ import com.example.android.tvshows.data.model.search.DiscoverResults;
 
 
 import com.example.android.tvshows.data.model.search.Result;
+import com.example.android.tvshows.data.model.tvshowdetailed.TVShowDetailed;
 import com.example.android.tvshows.data.rest.ApiService;
 import com.example.android.tvshows.service.DownloadService;
+import com.example.android.tvshows.ui.RetryUntilDownloaded;
 import com.example.android.tvshows.util.Utility;
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -58,6 +63,7 @@ public class ResultsPresenter implements ResultsContract.Presenter {
     @Override
     public void saveSelectedToDatabase(Integer id) {
 
+        mAllShowIds.add(id);
         Context context = mShowsRepository.getContext();
         Intent intent = new Intent(context,DownloadService.class);
         intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.RESULTS);
@@ -82,12 +88,12 @@ public class ResultsPresenter implements ResultsContract.Presenter {
 //
 //        observableZipped.subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())
-////                .subscribe(new Consumer<Object[]>() {
-////                    @Override
-////                    public void accept(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
-////                        completeDownload((TVShowDetailed) objects[0],(Credits)objects[1],strId);
-////                    }
-////                });
+//                .subscribe(new Consumer<Object[]>() {
+//                    @Override
+//                    public void accept(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
+//                        completeDownload((TVShowDetailed) objects[0],(Credits)objects[1],strId);
+//                    }
+//                });
 //                .subscribe(new Observer<Object[]>() {
 //                    @Override
 //                    public void onSubscribe(Disposable d) {
@@ -329,5 +335,41 @@ public class ResultsPresenter implements ResultsContract.Presenter {
     public int getTmdbId(int position) {
         return mResults.get(position).getId();
     }
+
+    @Override
+    public void openMoreDetailsDialog(final int position) {
+        mApiService.getTVShowDetailed(mResults.get(position).getId().toString(),BuildConfig.TMDB_API_KEY)
+                .retryWhen(new RetryUntilDownloaded(2000)).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<TVShowDetailed>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(TVShowDetailed tvShowDetailed) {
+                        FragmentManager fm = mResultsView.getFragmentManagerForDialog();
+                        MoreDetailsDialog moreDetailsDialog = new MoreDetailsDialog(tvShowDetailed,ResultsPresenter.this,position);
+                        moreDetailsDialog.show(fm,"dialog_more_details");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void showAdded() {
+        mResultsView.updateAdapter();
+    }
+
 
 }

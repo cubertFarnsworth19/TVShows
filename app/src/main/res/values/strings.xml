@@ -50,7 +50,9 @@
 
     <string name="cancel">Cancel</string>
 
-
+    <string name="show_more">more...</string>
+    <string name="dismiss">DISMISS</string>
+    <string name="add_show">ADD SHOW</string>
     <!-- navigation drawer -->
     <string name="tv_shows">TV Shows</string>
     <string name="search">Search</string>

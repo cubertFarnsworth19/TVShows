@@ -27,8 +27,6 @@ public class GenresDialog extends DialogFragment implements View.OnClickListener
 
     CheckBox[] mCheckBoxesGenres = new CheckBox[Genres.numberOfGenres()];
 
-
-
     public GenresDialog(DiscoverActivity discoverActivity, boolean[] genresSelected,boolean include){
         mDiscoverActivity = discoverActivity;
         mGenresSelected = genresSelected;

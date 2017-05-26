@@ -1,8 +1,11 @@
 package com.example.android.tvshows.ui.find;
 
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -12,9 +15,12 @@ import android.view.ViewGroup;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ShowsApplication;
+import com.example.android.tvshows.data.model.Actor;
 import com.example.android.tvshows.data.model.search.DiscoverResults;
 
 //import com.example.android.tvshows.ui.find.DaggerResultsComponent;
+import com.example.android.tvshows.ui.find.discover.DiscoverActivity;
+import com.example.android.tvshows.ui.find.search.SearchActivity;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -73,6 +79,25 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     @Override
     public void search(String searchTerm) {
         mResultsPresenter.search(searchTerm);
+    }
+
+    @Override
+    public FragmentManager getFragmentManagerForDialog() {
+      //  if(getActivity() instanceof DiscoverActivity){
+       //     DiscoverActivity activity = (DiscoverActivity) getActivity();
+       //     return activity.getSupportFragmentManager();
+     //   }
+      //  else {
+            //SearchActivity activity = (SearchActivity) getActivity();
+            return getActivity().getSupportFragmentManager();
+      //  }
+
+ //       return getActivity().getSupportFragmentManager();
+    }
+
+    @Override
+    public void updateAdapter() {
+        mResultsAdapter.notifyDataSetChanged();
     }
 
 
