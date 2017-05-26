@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroundDark"
+    >
+    <LinearLayout
+        android:background="@color/colorBackgroundDark"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_medium"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            tools:text="Episode Name"
+            android:id="@+id/episode_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_medium"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/colorTextLight"/>
+
+        <TextView
+            tools:text="24 Oct 2015"
+            android:id="@+id/original_air_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_small"
+            android:paddingBottom="@dimen/padding_medium"
+            android:textColor="@android:color/background_light"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_medium">
+            <ImageView
+                android:id="@+id/still_photo"
+                android:layout_width="360dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center_horizontal"
+                tools:background="@mipmap/ic_launcher"/>
+        </FrameLayout>
+        <TextView
+            tools:text="This is where the episode overview goes."
+            android:id="@+id/overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_small"
+            android:paddingBottom="@dimen/padding_medium"
+            android:textColor="@color/colorTextLight"/>
+
+        <LinearLayout
+            android:id="@+id/link_imdb"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_imdb"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/link_tmdb"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_tmdb"
+                android:id="@+id/textView3"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/link_google_search"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_google_search"
+                android:id="@+id/textView2"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/link_youtube_search"
+            android:orientation="horizontal"
+            android:background="?android:selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_youtube_search"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

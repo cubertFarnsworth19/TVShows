@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_gravity="center">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="4"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_action_adventure"
+                />
+            <CheckBox
+                android:id="@+id/check_box_action_adventure"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_animation"
+                />
+            <CheckBox
+                android:id="@+id/check_box_animation"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_comedy"
+                />
+            <CheckBox
+                android:id="@+id/check_box_comedy"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_crime"
+                />
+            <CheckBox
+                android:id="@+id/check_box_crime"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_documentary"
+                />
+            <CheckBox
+                android:id="@+id/check_box_documentary"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_drama"
+                />
+            <CheckBox
+                android:id="@+id/check_box_drama"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_family"
+                />
+            <CheckBox
+                android:id="@+id/check_box_family"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_kids"
+                />
+            <CheckBox
+                android:id="@+id/check_box_kids"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_mystery"
+                />
+            <CheckBox
+                android:id="@+id/check_box_mystery"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_news"
+                />
+            <CheckBox
+                android:id="@+id/check_box_news"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_reality"
+                />
+            <CheckBox
+                android:id="@+id/check_box_reality"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_sci_fi_fantasy"
+                />
+            <CheckBox
+                android:id="@+id/check_box_sci_fi_fantasy"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_soap"
+                />
+            <CheckBox
+                android:id="@+id/check_box_soap"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_talk"
+                />
+            <CheckBox
+                android:id="@+id/check_box_talk"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_war_politics"
+                />
+            <CheckBox
+                android:id="@+id/check_box_war_politics"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:text="@string/genre_western"
+                />
+            <CheckBox
+                android:id="@+id/check_box_western"/>
+
+        </GridLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <Button
+                android:id="@+id/btn_select_genres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/include_genres"/>
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

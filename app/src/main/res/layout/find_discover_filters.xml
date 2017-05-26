@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:id="@+id/discover_filters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@color/colorWhite">
+
+       <ScrollView
+            android:id="@+id/scrollview_discover_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="@dimen/padding_medium">
+                <TextView
+                    android:text="@string/sort_by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextDark"
+                    />
+                <Spinner
+                    android:id="@+id/spinner_sort_by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:entries="@array/sort_by_options"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/vote_average_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextDark"
+                    android:id="@+id/textView"/>
+
+                <EditText
+                    android:id="@+id/edit_text_vote_average_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/vote_count_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextDark"/>
+                <EditText
+                    android:id="@+id/edit_text_vote_count_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                   />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_include_genres"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="@dimen/padding_medium">
+                <TextView
+                    android:text="@string/include_genres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextDark"/>
+                <TextView
+                    android:id="@+id/txt_include_genres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Crime, Sci-Fi &amp; Fantasy, War &amp; Politics"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_exclude_genres"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="@dimen/padding_medium">
+                <TextView
+                    android:text="@string/exclude_genres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextDark"/>
+                <TextView
+                    android:id="@+id/txt_exclude_genres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Crime, Sci-Fi &amp; Fantasy, War &amp; Politics"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="@dimen/padding_medium">
+                <TextView
+                    android:text="@string/first_air_date_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextDark"
+                    />
+                <Spinner
+                    android:id="@+id/spinner_first_air_date_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:entries="@array/sort_by_options"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="@dimen/padding_medium">
+                <TextView
+                    android:text="@string/first_air_date_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextDark"
+                    />
+                <Spinner
+                    android:id="@+id/spinner_first_air_date_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:entries="@array/sort_by_options"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="sort_by_options">
+        <item>@string/sort_by_popularity</item>
+        <item>@string/sort_by_vote_average</item>
+        <item>@string/sort_by_first_air_date_asc</item>
+        <item>@string/sort_by_first_air_date_desc</item>
+    </string-array>
+
+    <string-array name="sort_by_options_request">
+        <item>@string/sort_by_popularity_request</item>
+        <item>@string/sort_by_vote_average_request</item>
+        <item>@string/sort_by_first_air_date_asc_request</item>
+        <item>@string/sort_by_first_air_date_desc_request</item>
+    </string-array>
+
+</resources>

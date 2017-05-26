@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorBackgroundDark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/padding_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/poster"
+                android:layout_width="120dp"
+                android:layout_height="180dp"
+                android:scaleType="centerInside"
+                tools:background="@mipmap/ic_launcher"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_medium">
+                <TextView
+                    android:id="@+id/start_year"
+                    tools:text="2000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/padding_medium"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextLight"/>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="@dimen/padding_medium">
+                    <TextView
+                        android:id="@+id/user_score"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/user_score_circle"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        tools:text="6.9"
+                        />
+
+                    <TextView
+                        android:id="@+id/vote_count"
+                        android:paddingLeft="@dimen/padding_large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/colorTextLight"
+                        tools:text="130"/>
+                    <TextView
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/colorTextLight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/votes"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextLight"
+
+                    android:text="@string/genres"/>
+
+                <TextView
+                    android:id="@+id/genres"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorTextLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Crime, Drama"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/colorTextLight"
+            android:text="@string/creators"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_creator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_small">
+        </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/overview"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_small"
+            tools:text="This is where the overview goes."/>
+
+        <LinearLayout
+            android:id="@+id/link_imdb"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_imdb"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/link_tmdb"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_tmdb"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/link_google_search"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_google_search"
+                android:id="@+id/textView2"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/link_youtube_search"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_youtube_search"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/link_wikipedia"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_link_white_24dp"/>
+
+            <TextView
+                android:paddingLeft="@dimen/padding_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorTextLight"
+                android:text="@string/link_wikipedia"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
