@@ -71,107 +71,10 @@ public class ResultsPresenter implements ResultsContract.Presenter {
         context.startService(intent);
 
         Log.i("Attempting TMDB id",id.toString());
-//        final String strId = id.toString();
-//        Observable<TVShowDetailed> observableTvShow = mApiService.getTVShowDetailed(strId,BuildConfig.TMDB_API_KEY)
-//                .retryWhen(new RetryUntilDownloaded(2000));
-//        Observable<Credits> observableCredits = mApiService.getCredits(strId,BuildConfig.TMDB_API_KEY,"1")
-//                .retryWhen(new RetryUntilDownloaded(2000));
-//
-//
-//        Observable<Object[]> observableZipped = Observable.zip(observableTvShow,observableCredits, new BiFunction<TVShowDetailed, Credits, Object[]>(){
-//                    @Override
-//                    public Object[] apply(@io.reactivex.annotations.NonNull TVShowDetailed tvShowDetailed,
-//                                          @io.reactivex.annotations.NonNull Credits credits) throws Exception {
-//                        return new Object[]{tvShowDetailed, credits};
-//                    }
-//                });
-//
-//        observableZipped.subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<Object[]>() {
-//                    @Override
-//                    public void accept(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
-//                        completeDownload((TVShowDetailed) objects[0],(Credits)objects[1],strId);
-//                    }
-//                });
-//                .subscribe(new Observer<Object[]>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Object[] objects) {
-//                        TVShowDetailed tvShowDetailed = (TVShowDetailed) objects[0];
-//                        Log.e("Show Details No Error",strId + "  " + tvShowDetailed.getName());
-//                        completeDownload((TVShowDetailed) objects[0],(Credits)objects[1],strId);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
 
     }
 
-//    private void completeDownload(final TVShowDetailed tvShowDetailed, final Credits credits, String strId){
-//
-//        int seasonsListSize = tvShowDetailed.getSeasonsListSize();
-//
-//        Observable<Season>[] observableSeasons = new Observable[seasonsListSize];
-//
-//        for(Integer i=0;i<seasonsListSize;i++){
-//            observableSeasons[i] = mApiService
-//                    .getSeason(strId,tvShowDetailed.getSeasons().get(i).getSeasonNumber().toString(),BuildConfig.TMDB_API_KEY,"1")
-//                    .retryWhen(new RetryUntilDownloaded(2000));
-//        }
-//
-//        Observable<Season[]> observableZipped = Observable.zipArray(new Function<Object[],Season[]>(){
-//            @Override
-//            public Season[] apply(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
-//                Season[] seasons = new Season[objects.length];
-//                for(int i=0;i<objects.length;i++)
-//                    seasons[i] = (Season) objects[i];
-//                return seasons;
-//            }
-//        },false,100,observableSeasons);
-//
-//        observableZipped.subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-////                .subscribe(new Consumer<Season[]>() {
-////                    @Override
-////                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
-////                        Log.i("Completed TMDB id",tvShowDetailed.getId().toString());
-////                        mShowsRepository.insertShowIntoDatabase(tvShowDetailed,credits,seasons);
-////                    }
-////                });
-//                .subscribe(new Observer<Season[]>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Season[] seasons) {
-//                        Log.e("Downloaded No Error",tvShowDetailed.getName());
-//                        mShowsRepository.insertShowIntoDatabase(tvShowDetailed,credits,seasons);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-//    }
+
 
     @Override
     public void makeDiscoverRequest(String sortBy, String withGenres, String withoutGenres, String minVoteAverage,
