@@ -33,8 +33,6 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
 
     @Override
     public void loadSeasonsData() {
-//        mSeasonsCursor = mShowsRepository.getSeasons(tmdbId);
-//        mSeasonsView.seasonDataLoaded(mSeasonsCursor.getCount());
 
         Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
