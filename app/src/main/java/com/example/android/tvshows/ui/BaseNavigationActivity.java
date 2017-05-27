@@ -45,7 +45,14 @@ public abstract class BaseNavigationActivity extends AppCompatActivity {
         if(textView.getId() == getViewId()){
             getDrawerLayout().closeDrawer(mNaviagationDrawer);
         }
-        else if(textView.getId() == R.id.navigation_my_shows){
+        else {
+            startNewActivity(textView);
+        }
+
+    }
+
+    protected void startNewActivity(TextView textView){
+        if(textView.getId() == R.id.navigation_my_shows){
             Intent intent = new Intent(this,MyShowsActivity.class);
             startActivity(intent);
         }
@@ -61,8 +68,8 @@ public abstract class BaseNavigationActivity extends AppCompatActivity {
             Intent intent = new Intent(this,UpdatesActivity.class);
             startActivity(intent);
         }
-
     }
+
 
     @OnClick(R.id.tmdb_link)
     public void openTmDbWebpage(){

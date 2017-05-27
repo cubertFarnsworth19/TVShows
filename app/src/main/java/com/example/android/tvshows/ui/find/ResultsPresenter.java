@@ -3,6 +3,8 @@ package com.example.android.tvshows.ui.find;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -33,7 +35,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class ResultsPresenter implements ResultsContract.Presenter {
+public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
 
     private ResultsContract.View mResultsView;
     private ApiService mApiService;
@@ -74,8 +76,6 @@ public class ResultsPresenter implements ResultsContract.Presenter {
 
     }
 
-
-
     @Override
     public void makeDiscoverRequest(String sortBy, String withGenres, String withoutGenres, String minVoteAverage,
                                     String minVoteCount, String firstAirDateAfter, String firstAirDateBefore) {
@@ -100,9 +100,7 @@ public class ResultsPresenter implements ResultsContract.Presenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<DiscoverResults>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
+                        public void onSubscribe(Disposable d) {}
 
                         @Override
                         public void onNext(DiscoverResults discoverResults) {
@@ -110,14 +108,10 @@ public class ResultsPresenter implements ResultsContract.Presenter {
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-
-                        }
+                        public void onError(Throwable e) {}
 
                         @Override
-                        public void onComplete() {
-
-                        }
+                        public void onComplete() {}
                     });
         }
     }
@@ -275,4 +269,78 @@ public class ResultsPresenter implements ResultsContract.Presenter {
     }
 
 
+    protected ResultsPresenter(Parcel in) {
+        mResultsView = (ResultsContract.View) in.readValue(ResultsContract.View.class.getClassLoader());
+        mApiService = (ApiService) in.readValue(ApiService.class.getClassLoader());
+        mShowsRepository = (ShowsRepository) in.readValue(ShowsRepository.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            mResults = new ArrayList<Result>();
+            in.readList(mResults, Result.class.getClassLoader());
+        } else {
+            mResults = null;
+        }
+        mPage = in.readInt();
+        mTotalPages = in.readInt();
+        mTotalResults = in.readInt();
+        mLastSortBy = in.readString();
+        mLastWithGenres = in.readString();
+        mLastWithoutGenres = in.readString();
+        mLastMinVoteAverage = in.readString();
+        mLastMinVoteCount = in.readString();
+        mLastFirstAirDateAfter = in.readString();
+        mLastFirstAirDateBefore = in.readString();
+        if (in.readByte() == 0x01) {
+            mAllShowIds = new ArrayList<Integer>();
+            in.readList(mAllShowIds, Integer.class.getClassLoader());
+        } else {
+            mAllShowIds = null;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(mResultsView);
+        dest.writeValue(mApiService);
+        dest.writeValue(mShowsRepository);
+        if (mResults == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mResults);
+        }
+        dest.writeInt(mPage);
+        dest.writeInt(mTotalPages);
+        dest.writeInt(mTotalResults);
+        dest.writeString(mLastSortBy);
+        dest.writeString(mLastWithGenres);
+        dest.writeString(mLastWithoutGenres);
+        dest.writeString(mLastMinVoteAverage);
+        dest.writeString(mLastMinVoteCount);
+        dest.writeString(mLastFirstAirDateAfter);
+        dest.writeString(mLastFirstAirDateBefore);
+        if (mAllShowIds == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mAllShowIds);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ResultsPresenter> CREATOR = new Parcelable.Creator<ResultsPresenter>() {
+        @Override
+        public ResultsPresenter createFromParcel(Parcel in) {
+            return new ResultsPresenter(in);
+        }
+
+        @Override
+        public ResultsPresenter[] newArray(int size) {
+            return new ResultsPresenter[size];
+        }
+    };
 }

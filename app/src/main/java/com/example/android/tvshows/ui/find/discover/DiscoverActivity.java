@@ -36,6 +36,8 @@ import butterknife.OnClick;
 
 public class DiscoverActivity extends NavigationIconActivity {
 
+    private final String FRAGMENT = "Results Fragment";
+
     @BindView(R.id.discover_filters) View mViewDiscoverFilters;
     @BindView(R.id.find_discover_activity)  LinearLayout mRootLayout;
     @BindView(R.id.edit_text_vote_average_min) EditText mEditTextVoteAverage;
@@ -65,11 +67,18 @@ public class DiscoverActivity extends NavigationIconActivity {
 
         setupSpinners();
 
-        mResultsFragment = new DiscoverFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if(savedInstanceState != null){
+            mResultsFragment = (DiscoverFragment) getSupportFragmentManager().getFragment(savedInstanceState,FRAGMENT);
+        }
+        else {
+            mResultsFragment = new DiscoverFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        fragmentTransaction.add(R.id.find_discover_content,mResultsFragment);
-        fragmentTransaction.commit();
+            fragmentTransaction.add(R.id.find_discover_content,mResultsFragment);
+            fragmentTransaction.commit();
+        }
+
+
 
     }
 
@@ -180,4 +189,15 @@ public class DiscoverActivity extends NavigationIconActivity {
         return sortByOptions[index];
     }
 
+    @Override
+    protected void startNewActivity(TextView textView) {
+        mResultsFragment.setSave(false);
+        super.startNewActivity(textView);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, FRAGMENT,mResultsFragment);
+    }
 }

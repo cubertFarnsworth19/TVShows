@@ -2,6 +2,8 @@ package com.example.android.tvshows.ui.find;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Parcelable {
 
     Context mContext;
     ResultsContract.Presenter mResultsPresenter;
@@ -60,8 +62,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mPicasso.load(mResultsPresenter.getPosterUrl(mContext,position)).into(holderResults.poster);
         holderResults.setTmdbId(mResultsPresenter.getTmdbId(position));
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -115,5 +115,38 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         }
     }
+
+    protected ResultsAdapter(Parcel in) {
+        mContext = (Context) in.readValue(Context.class.getClassLoader());
+        mResultsPresenter = (ResultsContract.Presenter) in.readValue(ResultsContract.Presenter.class.getClassLoader());
+        mPicasso = (Picasso) in.readValue(Picasso.class.getClassLoader());
+        mSize = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(mContext);
+        dest.writeValue(mResultsPresenter);
+        dest.writeValue(mPicasso);
+        dest.writeInt(mSize);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ResultsAdapter> CREATOR = new Parcelable.Creator<ResultsAdapter>() {
+        @Override
+        public ResultsAdapter createFromParcel(Parcel in) {
+            return new ResultsAdapter(in);
+        }
+
+        @Override
+        public ResultsAdapter[] newArray(int size) {
+            return new ResultsAdapter[size];
+        }
+    };
 
 }

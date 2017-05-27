@@ -2,6 +2,7 @@ package com.example.android.tvshows.ui.find;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 
 import com.example.android.tvshows.data.model.search.DiscoverResults;
@@ -22,7 +23,7 @@ public interface ResultsContract {
         void updateAdapter();
     }
 
-    interface Presenter{
+    interface Presenter extends Parcelable {
         void saveSelectedToDatabase(Context context, Integer id);
         void makeDiscoverRequest(String sortBy, String withGenres, String withoutGenres,
                                  String minVoteAverage, String minVoteCount,

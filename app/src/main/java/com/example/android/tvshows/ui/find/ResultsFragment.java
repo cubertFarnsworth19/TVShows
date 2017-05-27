@@ -31,13 +31,18 @@ import butterknife.ButterKnife;
 
 public class ResultsFragment extends Fragment implements ResultsContract.View {
 
+    private final String OUTSTATE_PRESENTER = "presenter";
+    private final String OUTSTATE_ADAPTER = "adapter";
+
     protected @Inject ResultsContract.Presenter mResultsPresenter;
     protected @Inject ResultsAdapter mResultsAdapter;
-    protected @Inject Picasso mPicasso;
+    //protected @Inject Picasso mPicasso;
 
     protected @BindView(R.id.recyclerview_results) RecyclerView mRecyclerView;
     protected StaggeredGridLayoutManager mGridLayoutManager;
 
+    // true if the savedInstanceState should be set
+    private boolean mSave = true;
 
     @Nullable
     @Override
@@ -47,13 +52,19 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
         ButterKnife.bind(this,rootview);
 
-        ResultsComponent component = DaggerResultsComponent.builder()
-                .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                .resultsModule(new ResultsModule(this,this))
-                .build();
+        if(savedInstanceState!=null){
+            mResultsPresenter = savedInstanceState.getParcelable(OUTSTATE_PRESENTER);
+            mResultsAdapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
+        }
+        else {
+            ResultsComponent component = DaggerResultsComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .resultsModule(new ResultsModule(this, this))
+                    .build();
 
-        component.inject(this);
-
+            component.inject(this);
+        }
+        setRetainInstance(true);
         setupRecyclerView();
 
         return rootview;
@@ -83,16 +94,7 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
     @Override
     public FragmentManager getFragmentManagerForDialog() {
-      //  if(getActivity() instanceof DiscoverActivity){
-       //     DiscoverActivity activity = (DiscoverActivity) getActivity();
-       //     return activity.getSupportFragmentManager();
-     //   }
-      //  else {
-            //SearchActivity activity = (SearchActivity) getActivity();
-            return getActivity().getSupportFragmentManager();
-      //  }
-
- //       return getActivity().getSupportFragmentManager();
+        return getActivity().getSupportFragmentManager();
     }
 
     @Override
@@ -105,4 +107,16 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
         return mResultsPresenter;
     }
 
+    public void setSave(boolean save){
+        mSave = save;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mSave) {
+            super.onSaveInstanceState(outState);
+            outState.putParcelable(OUTSTATE_PRESENTER, mResultsPresenter);
+            outState.putParcelable(OUTSTATE_ADAPTER, mResultsAdapter);
+        }
+    }
 }
