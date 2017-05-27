@@ -71,6 +71,6 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     @Override
     public void updateSelected() {
         ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked = mUpdatesAdapter.getChecked();
-        mUpdatesPresenter.makeUpdatesRequest(checked);
+        mUpdatesPresenter.makeUpdatesRequest(getContext(),checked);
     }
 }

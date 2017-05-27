@@ -23,7 +23,7 @@ public interface ResultsContract {
     }
 
     interface Presenter{
-        void saveSelectedToDatabase(Integer id);
+        void saveSelectedToDatabase(Context context, Integer id);
         void makeDiscoverRequest(String sortBy, String withGenres, String withoutGenres,
                                  String minVoteAverage, String minVoteCount,
                                  String firstAirDateAfter, String firstAirDateBefore);

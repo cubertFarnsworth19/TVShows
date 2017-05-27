@@ -96,7 +96,7 @@ public class DetailsPresenter implements DetailsContract.Presenter{
             Double userScore = mShowDetails.getDouble(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_AVERAGE));
             Integer voteCount = mShowDetails.getInt(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_COUNT));
 
-            mDetailsView.setUserInterfaceText(overview, startYear.toString(), userScore.toString(), voteCount.toString(), getGenres(mShowDetails),
+            mDetailsView.setUserInterfaceText(overview, startYear.toString(), userScore.toString(), voteCount.toString(), getGenres(context,mShowDetails),
                     Utility.getRatingBackgroundColor(context,userScore),Utility.getTextColor(context,userScore));
 
             mDetailsView.setPoster(mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)));
@@ -190,7 +190,7 @@ public class DetailsPresenter implements DetailsContract.Presenter{
     }
 
     @NonNull
-    private String getGenres(Cursor showDetails){
+    private String getGenres(Context context, Cursor showDetails){
 
         boolean[] genres = new boolean[Genres.numberOfGenres()];
 
@@ -211,7 +211,7 @@ public class DetailsPresenter implements DetailsContract.Presenter{
         if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_WAR_POLITICS))==1) genres[14] = true;
         if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_WESTERN))==1) genres[15] = true;
 
-        return Genres.getGenresString(genres,mShowsRepository.getContext());
+        return Genres.getGenresString(genres,context);
     }
 
 }

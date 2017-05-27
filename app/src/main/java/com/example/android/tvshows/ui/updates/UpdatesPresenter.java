@@ -134,10 +134,10 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
     }
 
     @Override
-    public void makeUpdatesRequest(ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked) {
+    public void makeUpdatesRequest(Context context, ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked) {
         for(int i=0;i<checked.size();i++){
             if(checked.get(i).first){
-                Context context = mShowsRepository.getContext();
+                //Context context = mShowsRepository.getContext();
                 Intent intent = new Intent(context,DownloadService.class);
                 intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_DETAILS);
                 intent.putExtra(DownloadService.TMDB_ID,mTVShows.get(i).id);
@@ -154,7 +154,7 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
 
             if(seasonsNumber.size()>0) {
                 //updateSeasons(mTVShows.get(i).id, seasonsNumber);
-                Context context = mShowsRepository.getContext();
+                //Context context = mShowsRepository.getContext();
                 Intent intent = new Intent(context,DownloadService.class);
                 intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_SEASONS);
                 intent.putExtra(DownloadService.TMDB_ID,mTVShows.get(i).id);

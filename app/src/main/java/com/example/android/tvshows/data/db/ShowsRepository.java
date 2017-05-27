@@ -19,10 +19,6 @@ public class ShowsRepository {
 
     private Context mContext;
 
-    public Context getContext() {
-        return mContext;
-    }
-
     public ShowsRepository(Context context){
         mContext = context;
     };

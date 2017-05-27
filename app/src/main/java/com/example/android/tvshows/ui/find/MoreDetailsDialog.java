@@ -87,7 +87,7 @@ public class MoreDetailsDialog extends DialogFragment implements View.OnClickLis
     void click(Button button){
         if(button.getId()==R.id.add_show){
             mPresenter.showAdded();
-            mPresenter.saveSelectedToDatabase(mTvShowDetailed.getId());
+            mPresenter.saveSelectedToDatabase(getContext(),mTvShowDetailed.getId());
             Toast.makeText(getContext(),"Downloading " + mTvShowDetailed.getName(),Toast.LENGTH_SHORT).show();
             dismiss();
         }

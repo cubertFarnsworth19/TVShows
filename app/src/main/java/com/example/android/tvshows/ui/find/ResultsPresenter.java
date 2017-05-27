@@ -61,10 +61,10 @@ public class ResultsPresenter implements ResultsContract.Presenter {
     }
 
     @Override
-    public void saveSelectedToDatabase(Integer id) {
+    public void saveSelectedToDatabase(Context context, Integer id) {
 
         mAllShowIds.add(id);
-        Context context = mShowsRepository.getContext();
+        //Context context = mShowsRepository.getContext();
         Intent intent = new Intent(context,DownloadService.class);
         intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.RESULTS);
         intent.putExtra(DownloadService.TMDB_ID,id);

@@ -92,7 +92,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 buttonAdd.setVisibility(View.INVISIBLE);
                 showMoreDetails.setVisibility(View.INVISIBLE);
                 Toast.makeText(mContext,"Downloading " + title.getText().toString(),Toast.LENGTH_SHORT).show();
-                mResultsPresenter.saveSelectedToDatabase(tmdbId);
+                mResultsPresenter.saveSelectedToDatabase(mContext,tmdbId);
             }
             else if(view.getId() == showMoreDetails.getId()){
                 mResultsPresenter.openMoreDetailsDialog(getAdapterPosition());
