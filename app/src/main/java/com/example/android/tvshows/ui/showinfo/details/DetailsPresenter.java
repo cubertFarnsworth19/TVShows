@@ -46,8 +46,6 @@ public class DetailsPresenter implements DetailsContract.Presenter{
 
     @Override
     public void loadShowDetails(final Context context) {
-        //Cursor showDetails = mShowsRepository.getShow(tmdbId);
-        //mShowDetails = mShowsRepository.getShow(tmdbId);
 
         Observable<Cursor> showDetailsObservable = Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
@@ -61,7 +59,6 @@ public class DetailsPresenter implements DetailsContract.Presenter{
             public void accept(@io.reactivex.annotations.NonNull Cursor cursor) throws Exception {
                 mShowDetails = cursor;
                 loadCreators(context);
-                //setDetailsView(context);
             }
         };
 
