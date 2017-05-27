@@ -33,14 +33,12 @@ import io.reactivex.schedulers.Schedulers;
 public class UpdatesPresenter implements UpdatesContract.Presenter{
 
     private UpdatesContract.View mUpdatesView;
-    //private ApiService mApiService;
     private ShowsRepository mShowsRepository;
     private ArrayList<TVShow> mTVShows = new ArrayList<>();
     private Hashtable<Integer,ArrayList<SeasonForUpdate>> mHashtableSeasons = new Hashtable<>();
 
     public UpdatesPresenter(UpdatesContract.View updatesView, ShowsRepository showsRepository) {
         mUpdatesView = updatesView;
-        //mApiService = apiService;
         mShowsRepository = showsRepository;
     }
 
@@ -137,7 +135,6 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
     public void makeUpdatesRequest(Context context, ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked) {
         for(int i=0;i<checked.size();i++){
             if(checked.get(i).first){
-                //Context context = mShowsRepository.getContext();
                 Intent intent = new Intent(context,DownloadService.class);
                 intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_DETAILS);
                 intent.putExtra(DownloadService.TMDB_ID,mTVShows.get(i).id);
@@ -153,8 +150,6 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
             }
 
             if(seasonsNumber.size()>0) {
-                //updateSeasons(mTVShows.get(i).id, seasonsNumber);
-                //Context context = mShowsRepository.getContext();
                 Intent intent = new Intent(context,DownloadService.class);
                 intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_SEASONS);
                 intent.putExtra(DownloadService.TMDB_ID,mTVShows.get(i).id);
