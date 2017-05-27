@@ -20,8 +20,8 @@ public class UpdatesModule {
 
     @Provides
     @UpdatesScope
-    public UpdatesContract.Presenter providesUupdatesContractPresenter(ApiService service,ShowsRepository showsRepository){
-        return new UpdatesPresenter(mView,service,showsRepository);
+    public UpdatesContract.Presenter providesUupdatesContractPresenter(ShowsRepository showsRepository){
+        return new UpdatesPresenter(mView,showsRepository);
     }
 
     @Provides

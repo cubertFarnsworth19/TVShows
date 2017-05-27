@@ -53,7 +53,6 @@ public class ActorPresenter implements ActorContract.Presenter {
                 .retryWhen(new RetryUntilDownloaded(2000));;
 
 
-
         Observable< ActorFullDetails> observableZipped = Observable.zip(actorObservable, actorTVCreditsObservable, externalIdsObservable,
                 new Function3<Actor, ActorTVCredits, ExternalIds, ActorFullDetails>() {
             @Override

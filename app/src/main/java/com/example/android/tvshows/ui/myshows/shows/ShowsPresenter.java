@@ -24,7 +24,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
 
     private ShowsRepository mShowsRepository;
     private ShowsContract.View mShowsView;
-  //  private Cursor mShowsCursor;
     private ArrayList<ShowInfo> mShowsInfo = new ArrayList<>();
 
     public ShowsPresenter(ShowsContract.View showsView,ShowsRepository showsRepository){
@@ -34,9 +33,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
 
     @Override
     public void loadShowsFromDatabase(final Context context) {
-
-//        mShowsCursor = mShowsRepository.getAllShows();
-//        mShowsView.showsDataLoaded(mShowsCursor.getCount());
 
         Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
@@ -48,7 +44,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         Consumer<Cursor> consumer = new Consumer<Cursor>() {
             @Override
             public void accept(@NonNull Cursor cursor) throws Exception {
-               // mShowsCursor = cursor;
 
                 while (cursor.moveToNext()){
                     mShowsInfo.add(new ShowInfo(
@@ -62,7 +57,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
                     ));
                 }
 
-
                 mShowsView.showsDataLoaded(cursor.getCount());
                 cursor.close();
             }
@@ -74,47 +68,31 @@ public class ShowsPresenter implements ShowsContract.Presenter {
 
     @Override
     public String getTitle(int position) {
-//        mShowsCursor.moveToPosition(position);
-//        return mShowsCursor.getString(mShowsCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
         return mShowsInfo.get(position).getTitle();
     }
 
     @Override
     public String getPosterUrl(int position) {
-//        mShowsCursor.moveToPosition(position);
-//        String posterUrl = context.getString(R.string.poster_path)
-//                + mShowsCursor.getString(mShowsCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH));
-//        return posterUrl;
         return mShowsInfo.get(position).getPosterUrl();
     }
 
     @Override
     public String getNumberOfSeasons(int position) {
-//        mShowsCursor.moveToPosition(position);
-//        Integer seasons = mShowsCursor.getInt(mShowsCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS));
-//        return seasons.toString();
         return mShowsInfo.get(position).getNumberOfSeasons();
     }
 
     @Override
     public String getNumberOfEpisodes(int position) {
-//        mShowsCursor.moveToPosition(position);
-//        Integer episodes = mShowsCursor.getInt(mShowsCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_EPISODES));
-//        return episodes.toString();
         return mShowsInfo.get(position).getNumberOfEpisodes();
     }
 
     @Override
     public String getInProduction(int position) {
-//        mShowsCursor.moveToPosition(position);
-//        int inProduction = mShowsCursor.getInt(mShowsCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION));
-//        return inProduction==1 ? context.getString(R.string.continuing) : context.getString(R.string.finished);
         return mShowsInfo.get(position).getInProduction();
     }
 
     @Override
     public void startShowInfoActivity(Context context, int position) {
-//        mShowsCursor.moveToPosition(position);
         Intent intent = new Intent(context, ShowInfoActivity.class);
         intent.putExtra(ShowsDbContract.ShowsEntry._ID,mShowsInfo.get(position).getId());
 
@@ -124,9 +102,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
 
     @Override
     public void removeShow(int position) {
-//        mShowsCursor.moveToPosition(position);
-//        Log.v("position"," "+position);
-//        Log.v("remove",mShowsCursor.getString(mShowsCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)));
         int removeId = mShowsInfo.get(position).getId();
         mShowsInfo.remove(position);
         mShowsRepository.deleteShow(removeId);

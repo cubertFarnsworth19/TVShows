@@ -33,14 +33,14 @@ import io.reactivex.schedulers.Schedulers;
 public class UpdatesPresenter implements UpdatesContract.Presenter{
 
     private UpdatesContract.View mUpdatesView;
-    private ApiService mApiService;
+    //private ApiService mApiService;
     private ShowsRepository mShowsRepository;
     private ArrayList<TVShow> mTVShows = new ArrayList<>();
     private Hashtable<Integer,ArrayList<SeasonForUpdate>> mHashtableSeasons = new Hashtable<>();
 
-    public UpdatesPresenter(UpdatesContract.View updatesView, ApiService apiService, ShowsRepository showsRepository) {
+    public UpdatesPresenter(UpdatesContract.View updatesView, ShowsRepository showsRepository) {
         mUpdatesView = updatesView;
-        mApiService = apiService;
+        //mApiService = apiService;
         mShowsRepository = showsRepository;
     }
 
@@ -137,7 +137,6 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
     public void makeUpdatesRequest(ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked) {
         for(int i=0;i<checked.size();i++){
             if(checked.get(i).first){
-                //updateShowDetails(mTVShows.get(i).id,checked.get(i).second.size());
                 Context context = mShowsRepository.getContext();
                 Intent intent = new Intent(context,DownloadService.class);
                 intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_DETAILS);
@@ -164,120 +163,6 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
             }
 
         }
-    }
-
-    private void updateShowDetails(final Integer id, final int numberOfSeasons){
-        final String strId = id.toString();
-        Observable<TVShowDetailed> observableTvShow = mApiService.getTVShowDetailed(strId, BuildConfig.TMDB_API_KEY)
-                .retryWhen(new RetryUntilDownloaded(2000));
-        Observable<Credits> observableCredits = mApiService.getCredits(strId,BuildConfig.TMDB_API_KEY,"1")
-                .retryWhen(new RetryUntilDownloaded(2000));
-
-        Observable<Object[]> observableZipped = Observable.zip(observableTvShow,observableCredits, new BiFunction<TVShowDetailed, Credits, Object[]>(){
-            @Override
-            public Object[] apply(@io.reactivex.annotations.NonNull TVShowDetailed tvShowDetailed,
-                                  @io.reactivex.annotations.NonNull Credits credits) throws Exception {
-                return new Object[]{tvShowDetailed, credits};
-            }
-        });
-
-        observableZipped.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object[]>() {
-                    @Override
-                    public void accept(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
-                        TVShowDetailed tvShowDetailed = (TVShowDetailed)objects[0];
-                        mShowsRepository.updateTVShowDetails(tvShowDetailed,(Credits)objects[1]);
-
-                        if(tvShowDetailed.getSeasonsListSize()>numberOfSeasons)
-                            downloadNewSeasons(numberOfSeasons,tvShowDetailed);
-                    }
-                });
-    }
-
-    // download any additional seasons since the last update
-    private void downloadNewSeasons(int numberOfSeasons,final TVShowDetailed tvShowDetailed){
-        int seasonsListSize = tvShowDetailed.getSeasonsListSize() - numberOfSeasons;
-
-        Observable<Season>[] observableSeasons = new Observable[seasonsListSize];
-
-        for(Integer i=numberOfSeasons;i<tvShowDetailed.getSeasonsListSize();i++){
-            observableSeasons[i-numberOfSeasons] = mApiService
-                    .getSeason(tvShowDetailed.getId().toString(),tvShowDetailed.getSeasons().get(i).getSeasonNumber().toString(),BuildConfig.TMDB_API_KEY,"1")
-                    .retryWhen(new RetryUntilDownloaded(2000));
-        }
-
-        Observable<Season[]> observableZipped = Observable.zipArray(new Function<Object[],Season[]>(){
-            @Override
-            public Season[] apply(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
-                Season[] seasons = new Season[objects.length];
-                for(int i=0;i<objects.length;i++)
-                    seasons[i] = (Season) objects[i];
-                return seasons;
-            }
-        },false,100,observableSeasons);
-
-        observableZipped.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<Season[]>() {
-//                    @Override
-//                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
-//                        Log.i("Completed TMDB id",tvShowDetailed.getId().toString());
-//                        mShowsRepository.insertShowIntoDatabase(tvShowDetailed,credits,seasons);
-//                    }
-//                });
-                .subscribe(new Observer<Season[]>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Season[] seasons) {
-                        Log.e("Downloaded No Error","");
-                        mShowsRepository.insertAdditionalSeasonsIntoDatabase(tvShowDetailed.getId(),seasons);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-    }
-
-    private void updateSeasons(final Integer id,ArrayList<Integer> seasonsNumber){
-
-        Observable<Season>[] observableSeasons = new Observable[seasonsNumber.size()];
-
-        for(Integer i=0;i<observableSeasons.length;i++){
-            observableSeasons[i] = mApiService.getSeason(id.toString(),seasonsNumber.get(i).toString(),BuildConfig.TMDB_API_KEY,"1")
-                    .retryWhen(new RetryUntilDownloaded(2000));
-        }
-
-        Observable<Season[]> observableZipped = Observable.zipArray(new Function<Object[],Season[]>(){
-            @Override
-            public Season[] apply(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
-                Season[] seasons = new Season[objects.length];
-                for(int i=0;i<objects.length;i++)
-                    seasons[i] = (Season) objects[i];
-                return seasons;
-            }
-        },false,100,observableSeasons);
-
-        observableZipped.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Season[]>() {
-                    @Override
-                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
-                        mShowsRepository.updateSeasons(id,seasons);
-                    }
-                });
-
     }
 
     private class TVShow{
