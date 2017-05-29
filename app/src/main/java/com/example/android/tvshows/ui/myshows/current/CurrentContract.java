@@ -2,6 +2,8 @@ package com.example.android.tvshows.ui.myshows.current;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 public interface CurrentContract {
 
     interface View{
@@ -9,7 +11,7 @@ public interface CurrentContract {
     }
 
     interface Presenter{
-        void loadShowsFromDatabase();
+        void loadShowsFromDatabase(final Context context);
         String getDate(int position);
         int getNumberOfShowsOnDate(int position);
         // day position is the adapter position in the day
@@ -18,5 +20,7 @@ public interface CurrentContract {
         String getShowName(int dayPosition, int showPosition);
         String getEpisodeName(int dayPosition, int showPosition);
         String getShowOverview(int dayPosition, int showPosition);
+        ArrayList<CurrentInfo> getCurrentInfo();
+        ArrayList<ShowDate> getDates();
     }
 }

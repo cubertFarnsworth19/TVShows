@@ -62,7 +62,7 @@ public class CurrentFragment extends Fragment implements CurrentContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        mCurrentPresenter.loadShowsFromDatabase();
+        mCurrentPresenter.loadShowsFromDatabase(getActivity());
     }
 
     @Override

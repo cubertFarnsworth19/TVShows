@@ -28,9 +28,8 @@ public class CurrentPresenter implements CurrentContract.Presenter{
 
     private ShowsRepository mShowsRepository;
     private CurrentContract.View mCurrentView;
-    private Cursor mCurrentCursor;
     private int mCurrentType;
-
+    private ArrayList<CurrentInfo> mCurrent;
     private ArrayList<ShowDate> mDates;
 
     public CurrentPresenter(CurrentContract.View currentView,ShowsRepository showsRepository,int currentType){
@@ -40,14 +39,7 @@ public class CurrentPresenter implements CurrentContract.Presenter{
     }
 
     @Override
-    public void loadShowsFromDatabase() {
-
-//        if(mCurrentType == UPCOMING){
-//            mCurrentCursor = mShowsRepository.getEpisodesNextMonth();
-//        }
-//        else{
-//            mCurrentCursor = mShowsRepository.getEpisodesLastMonth();
-//        }
+    public void loadShowsFromDatabase(final Context context) {
 
         Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
@@ -64,8 +56,18 @@ public class CurrentPresenter implements CurrentContract.Presenter{
         Consumer<Cursor> consumer = new Consumer<Cursor>() {
             @Override
             public void accept(@NonNull Cursor cursor) throws Exception {
-                mCurrentCursor = cursor;
-                setDates();
+
+                mCurrent = new ArrayList<>(cursor.getCount());
+
+                while (cursor.moveToNext()){
+                    mCurrent.add(new CurrentInfo(
+                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
+                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME)),
+                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW)),
+                            context.getString(R.string.poster_path) + cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH))));
+                }
+
+                setDates(cursor);
             }
         };
 
@@ -73,12 +75,13 @@ public class CurrentPresenter implements CurrentContract.Presenter{
 
     }
 
-    private void setDates(){
+    private void setDates(Cursor cursor){
         mDates = new ArrayList<>();
-        while(mCurrentCursor.moveToNext()){
-            String date = Utility.getDateAsString(mCurrentCursor.getInt(mCurrentCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY)),
-                    mCurrentCursor.getInt(mCurrentCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH)),
-                    mCurrentCursor.getInt(mCurrentCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR)));
+        cursor.moveToPosition(-1);
+        while(cursor.moveToNext()){
+            String date = Utility.getDateAsString(cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR)));
 
             if(mDates.size()==0 || !mDates.get(mDates.size()-1).sameDate(date)) {
                 if(mDates.size()==0)
@@ -107,53 +110,38 @@ public class CurrentPresenter implements CurrentContract.Presenter{
 
     @Override
     public String getShowPosterUrl(Context context, int dayPosition, int showPosition){
-       mCurrentCursor.moveToPosition(getCursorPosition(dayPosition,showPosition));
-        String posterUrl = context.getString(R.string.poster_path)
-                + mCurrentCursor.getString(mCurrentCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH));
-        return posterUrl;
+        return mCurrent.get(getCursorPosition(dayPosition,showPosition)).getPosterUrl();
     }
 
     @Override
     public String getShowName(int dayPosition, int showPosition) {
-        mCurrentCursor.moveToPosition(getCursorPosition(dayPosition,showPosition));
-        return mCurrentCursor.getString(mCurrentCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+        return mCurrent.get(getCursorPosition(dayPosition,showPosition)).getShowName();
     }
 
     @Override
     public String getEpisodeName(int dayPosition, int showPosition) {
-        mCurrentCursor.moveToPosition(getCursorPosition(dayPosition,showPosition));
-        return mCurrentCursor.getString(mCurrentCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME));
+        return mCurrent.get(getCursorPosition(dayPosition,showPosition)).getEpisodeName();
     }
 
     @Override
     public String getShowOverview(int dayPosition, int showPosition) {
-        mCurrentCursor.moveToPosition(getCursorPosition(dayPosition,showPosition));
-        return mCurrentCursor.getString(mCurrentCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW));
+        return mCurrent.get(getCursorPosition(dayPosition,showPosition)).getOverview();
+    }
+
+    @Override
+    public ArrayList<CurrentInfo> getCurrentInfo() {
+        return mCurrent;
+    }
+
+    @Override
+    public ArrayList<ShowDate> getDates() {
+        return mDates;
     }
 
     private int getCursorPosition(int dayPosition, int showPosition) {
         return mDates.get(dayPosition).cumulativeNumberOfShows + showPosition;
     }
 
-    class ShowDate{
-        String date;
-        int numberOfShows;
-        // the number of shows prior to this day in the adapter
-        int cumulativeNumberOfShows;
 
-        public ShowDate(String date,int cumulativeNumberOfShows) {
-            this.date = date;
-            this.numberOfShows = 1;
-            this.cumulativeNumberOfShows = cumulativeNumberOfShows;
-        }
-
-        void addShow(){
-            numberOfShows++;
-        }
-
-        boolean sameDate(String date){
-            return this.date.equals(date);
-        }
-    }
 
 }
