@@ -268,7 +268,6 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
         mResultsView.updateAdapter();
     }
 
-
     protected ResultsPresenter(Parcel in) {
         mResultsView = (ResultsContract.View) in.readValue(ResultsContract.View.class.getClassLoader());
         mApiService = (ApiService) in.readValue(ApiService.class.getClassLoader());

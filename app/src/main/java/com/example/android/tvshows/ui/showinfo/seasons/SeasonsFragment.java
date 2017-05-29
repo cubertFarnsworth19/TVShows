@@ -15,12 +15,19 @@ import com.example.android.tvshows.data.db.ShowsRepository;
 import com.example.android.tvshows.ui.myshows.shows.ShowsAdapter;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SeasonsFragment extends Fragment implements SeasonsContract.View{
+
+    private final String OUTSTATE_SEASONS_INFO = "season_info";
+    private final String OUTSTATE_ADAPTER = "adapter";
+    private final String OUTSTATE_TMDB_ID = "tmdb_id";
+
 
     private static int mTmdbId;
 
@@ -34,19 +41,39 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
 
     @BindView(R.id.recyclerview_seasons) RecyclerView mRecyclerView;
 
+    private boolean mSave = true;
+    private boolean mLoaded;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.show_info_seasons_fragment,container,false);
         ButterKnife.bind(this,rootview);
 
-        SeasonsComponent component = DaggerSeasonsComponent.builder()
-                .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                .seasonsModule(new SeasonsModule(this,this,mTmdbId))
-                .build();
 
-        component.inject(this);
 
+        if(savedInstanceState!=null){
+            ArrayList<SeasonInfo> seasonsInfo = savedInstanceState.getParcelableArrayList(OUTSTATE_SEASONS_INFO);
+            SeasonsAdapter adapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
+            mLoaded = true;
+            SeasonsComponent component = DaggerSeasonsComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .seasonsModule(new SeasonsModule(this, this, mTmdbId,seasonsInfo,adapter))
+                    .build();
+
+            component.inject(this);
+        }
+        else {
+
+            mLoaded = false;
+
+            SeasonsComponent component = DaggerSeasonsComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .seasonsModule(new SeasonsModule(this, this, mTmdbId))
+                    .build();
+
+            component.inject(this);
+       }
         setupRecyclerView();
 
         return rootview;
@@ -55,19 +82,14 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        mSeasonsPresenter.loadSeasonsData();
-    }
-
-    @Override
-    public void onDestroy() {
-        mSeasonsPresenter.closeCursor();
-        super.onDestroy();
+        if(!mLoaded) mSeasonsPresenter.loadSeasonsData(getActivity());
     }
 
     private void setupRecyclerView(){
         mRecyclerView.setAdapter(mSeasonsAdapter);
         GridLayoutManager glm = new GridLayoutManager(getActivity(),1);
         mRecyclerView.setLayoutManager(glm);
+
     }
 
     @Override
@@ -75,4 +97,37 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
         mSeasonsAdapter.displaySeasons(size);
     }
 
+    @Override
+    public void setSave(boolean save) {
+        mSave = save;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        //int position = mRecyclerView.computeVerticalScrollOffset();
+
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(OUTSTATE_ADAPTER, mSeasonsAdapter);
+        outState.putParcelableArrayList(OUTSTATE_SEASONS_INFO, mSeasonsPresenter.getSeasonsInfo());
+        outState.putInt(OUTSTATE_TMDB_ID, mTmdbId);
+
+    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        //if(getActivity().isChangingConfigurations()) {
+//        super.onSaveInstanceState(outState);
+//
+//        boolean saved = true;
+//        try {
+//            outState.putParcelable(OUTSTATE_PRESENTER, mSeasonsPresenter);
+//            outState.putParcelable(OUTSTATE_ADAPTER, mSeasonsAdapter);
+//        }catch (RuntimeException e){
+//            saved = false;
+//        }
+//        finally {
+//            outState.putBoolean(OUTSTATE_SAVED,saved);
+//        }
+//        //}
+//    }
 }

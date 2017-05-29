@@ -1,6 +1,8 @@
 package com.example.android.tvshows.ui.showinfo.cast;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +20,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Parcelable {
 
     Context mContext;
     CastContract.Presenter mCastPresenter;
@@ -75,6 +77,39 @@ public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mCastPresenter.startActorActivity(mContext,getAdapterPosition());
         }
     }
+
+    protected CastAdapter(Parcel in) {
+        mContext = (Context) in.readValue(Context.class.getClassLoader());
+        mCastPresenter = (CastContract.Presenter) in.readValue(CastContract.Presenter.class.getClassLoader());
+        mPicasso = (Picasso) in.readValue(Picasso.class.getClassLoader());
+        mSize = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(mContext);
+        dest.writeValue(mCastPresenter);
+        dest.writeValue(mPicasso);
+        dest.writeInt(mSize);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<CastAdapter> CREATOR = new Parcelable.Creator<CastAdapter>() {
+        @Override
+        public CastAdapter createFromParcel(Parcel in) {
+            return new CastAdapter(in);
+        }
+
+        @Override
+        public CastAdapter[] newArray(int size) {
+            return new CastAdapter[size];
+        }
+    };
 
 
 }

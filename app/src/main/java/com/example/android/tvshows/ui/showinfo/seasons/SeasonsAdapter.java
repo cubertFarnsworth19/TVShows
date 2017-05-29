@@ -2,6 +2,8 @@ package com.example.android.tvshows.ui.showinfo.seasons;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Parcelable {
 
     Context mContext;
     SeasonsContract.Presenter mSeasonsPresenter;
@@ -27,6 +29,12 @@ public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     int mSize = 0;
 
     SeasonsAdapter(Context context, SeasonsContract.Presenter seasonsPresenter, Picasso picasso){
+        mContext = context;
+        mSeasonsPresenter = seasonsPresenter;
+        mPicasso = picasso;
+    }
+
+    public void setVariables(Context context, SeasonsContract.Presenter seasonsPresenter, Picasso picasso){
         mContext = context;
         mSeasonsPresenter = seasonsPresenter;
         mPicasso = picasso;
@@ -79,5 +87,39 @@ public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mSeasonsPresenter.startEpisodesActivity(mContext,getAdapterPosition());
         }
     }
+
+
+    protected SeasonsAdapter(Parcel in) {
+       //mContext = (Context) in.readValue(Context.class.getClassLoader());
+       // mSeasonsPresenter = (SeasonsContract.Presenter) in.readValue(SeasonsContract.Presenter.class.getClassLoader());
+       // mPicasso = (Picasso) in.readValue(Picasso.class.getClassLoader());
+        mSize = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags){
+        //dest.writeValue(mContext);
+        //dest.writeValue(mSeasonsPresenter);
+       // dest.writeValue(mPicasso);
+        dest.writeInt(mSize);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<SeasonsAdapter> CREATOR = new Parcelable.Creator<SeasonsAdapter>() {
+        @Override
+        public SeasonsAdapter createFromParcel(Parcel in) {
+            return new SeasonsAdapter(in);
+        }
+
+        @Override
+        public SeasonsAdapter[] newArray(int size) {
+            return new SeasonsAdapter[size];
+        }
+    };
 
 }

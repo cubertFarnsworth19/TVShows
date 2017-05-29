@@ -3,11 +3,16 @@ package com.example.android.tvshows.ui.showinfo.seasons;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.data.db.ShowsDbContract;
 import com.example.android.tvshows.data.db.ShowsRepository;
 import com.example.android.tvshows.ui.episodes.EpisodesActivity;
 import com.example.android.tvshows.util.Utility;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -22,17 +27,23 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
     private SeasonsContract.View mSeasonsView;
     private ShowsRepository mShowsRepository;
     private int tmdbId;
-    private Cursor mSeasonsCursor;
+    private ArrayList<SeasonInfo> mSeasonsInfo;
 
     public SeasonsPresenter(SeasonsContract.View seasonsView,ShowsRepository showsRepository,int tmdbId){
         mSeasonsView = seasonsView;
         mShowsRepository = showsRepository;
         this.tmdbId = tmdbId;
+    }
 
+    public SeasonsPresenter(SeasonsContract.View seasonsView,ShowsRepository showsRepository,int tmdbId,ArrayList<SeasonInfo> seasonsInfo){
+        mSeasonsView = seasonsView;
+        mShowsRepository = showsRepository;
+        this.tmdbId = tmdbId;
+        mSeasonsInfo = seasonsInfo;
     }
 
     @Override
-    public void loadSeasonsData() {
+    public void loadSeasonsData(final Context context) {
 
         Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
@@ -44,8 +55,24 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
         Consumer<Cursor> consumer = new Consumer<Cursor>() {
             @Override
             public void accept(@NonNull Cursor cursor) throws Exception {
-                mSeasonsCursor = cursor;
-                mSeasonsView.seasonDataLoaded(mSeasonsCursor.getCount());
+
+                mSeasonsInfo = new ArrayList<>();
+
+                while (cursor.moveToNext()){
+
+                    mSeasonsInfo.add(new SeasonInfo(
+                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME)),
+                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_DAY)),
+                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_MONTH)),
+                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_YEAR)),
+                            context.getString(R.string.poster_path) + cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_POSTER_PATH)),
+                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_OVERVIEW)),
+                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_NUMBER_OF_EPISODES)),
+                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER))));
+                }
+
+                cursor.close();
+                mSeasonsView.seasonDataLoaded(mSeasonsInfo.size());
             }
         };
 
@@ -54,65 +81,58 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
 
     @Override
     public String getSeasonName(int adapterPosition) {
-        mSeasonsCursor.moveToPosition(adapterPosition);
-        return mSeasonsCursor.getString(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME));
+        return mSeasonsInfo.get(adapterPosition).seasonName;
     }
 
     @Override
     public String getPosterUrl(Context context, int adapterPosition) {
-        mSeasonsCursor.moveToPosition(adapterPosition);
-        String posterPath = mSeasonsCursor.getString(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_POSTER_PATH));
-        return context.getString(R.string.poster_path) + posterPath;
+        return mSeasonsInfo.get(adapterPosition).posterUrl;
     }
 
     @Override
-    public String getAirDate(int position) {
-        mSeasonsCursor.moveToPosition(position);
-        Integer day = mSeasonsCursor.getInt(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_DAY));
-        Integer month = mSeasonsCursor.getInt(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_MONTH));
-        Integer year = mSeasonsCursor.getInt(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_YEAR));
-        return Utility.getDateAsString(day,month,year);
+    public String getAirDate(int adapterPosition) {
+        return mSeasonsInfo.get(adapterPosition).airDate;
     }
 
     @Override
-    public String getOverview(int position) {
-        mSeasonsCursor.moveToPosition(position);
-        return mSeasonsCursor.getString(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_OVERVIEW));
+    public String getOverview(int adapterPosition) {
+        return mSeasonsInfo.get(adapterPosition).overview;
     }
 
     @Override
-    public String getNumberOfEpisodes(int position) {
-        mSeasonsCursor.moveToPosition(position);
-        Integer episodes = mSeasonsCursor.getInt(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_NUMBER_OF_EPISODES));
-        return episodes.toString();
+    public String getNumberOfEpisodes(int adapterPosition) {
+        return mSeasonsInfo.get(adapterPosition).numberOfEpisodes;
     }
 
     @Override
     public void startEpisodesActivity(Context context,int adapterPosition) {
-        mSeasonsCursor.moveToPosition(adapterPosition);
 
         Intent intent = new Intent(context, EpisodesActivity.class);
         intent.putExtra(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY,tmdbId);
-        String[] seasonsName = new String[mSeasonsCursor.getCount()];
-        int [] seasonNumbers = new int[mSeasonsCursor.getCount()];
+        String[] seasonsName = new String[mSeasonsInfo.size()];
+        int [] seasonNumbers = new int[mSeasonsInfo.size()];
 
         for (int i=0;i<seasonsName.length;i++){
-            mSeasonsCursor.moveToPosition(i);
-            seasonsName[i] = mSeasonsCursor.getString(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME));
-            seasonNumbers[i] = mSeasonsCursor.getInt(mSeasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER));
+            seasonsName[i] = mSeasonsInfo.get(i).seasonName;
+            seasonNumbers[i] = mSeasonsInfo.get(i).seasonNumber;
         }
 
         intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME,seasonsName);
         intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER,seasonNumbers);
         intent.putExtra("adapter_position",adapterPosition);
 
+        mSeasonsView.setSave(false);
+
         context.startActivity(intent);
     }
 
     @Override
-    public void closeCursor() {
-        mSeasonsCursor.close();
+    public ArrayList<SeasonInfo> getSeasonsInfo() {
+        return mSeasonsInfo;
     }
 
 
 }
+
+
+

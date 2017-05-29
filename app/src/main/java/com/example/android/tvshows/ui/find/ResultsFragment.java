@@ -113,7 +113,7 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if(mSave) {
+        if(getActivity().isChangingConfigurations()) {
             super.onSaveInstanceState(outState);
             outState.putParcelable(OUTSTATE_PRESENTER, mResultsPresenter);
             outState.putParcelable(OUTSTATE_ADAPTER, mResultsAdapter);

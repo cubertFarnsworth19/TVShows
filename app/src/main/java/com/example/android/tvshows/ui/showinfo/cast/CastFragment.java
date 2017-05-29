@@ -24,6 +24,9 @@ import butterknife.ButterKnife;
 
 public class CastFragment extends Fragment implements CastContract.View{
 
+    private final String OUTSTATE_PRESENTER = "presenter";
+    private final String OUTSTATE_ADAPTER = "adapter";
+
     private static int mTmdbId;
 
     public static CastFragment getInstance(int tmdbId){
@@ -36,19 +39,30 @@ public class CastFragment extends Fragment implements CastContract.View{
     @Inject CastAdapter mCastAdapter;
     @Inject CastContract.Presenter mCastPresenter;
 
+    private boolean mSave = true;
+    private boolean mLoaded;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.show_info_cast_fragment,container,false);
         ButterKnife.bind(this,rootview);
 
-        CastComponent component = DaggerCastComponent.builder()
-                .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                .castModule(new CastModule(this,this,mTmdbId))
-                .build();
+//        if(savedInstanceState!=null){
+//            mCastPresenter = savedInstanceState.getParcelable(OUTSTATE_PRESENTER);
+//            mCastAdapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
+//            mLoaded = true;
+//        }
+//        else {
+//            mLoaded = false;
 
-        component.inject(this);
+            CastComponent component = DaggerCastComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .castModule(new CastModule(this, this, mTmdbId))
+                    .build();
 
+            component.inject(this);
+      //  }
         setupRecyclerView();
 
         return rootview;
@@ -57,13 +71,7 @@ public class CastFragment extends Fragment implements CastContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        mCastPresenter.loadCastData();
-    }
-
-    @Override
-    public void onDestroy() {
-        mCastPresenter.closeCursor();
-        super.onDestroy();
+        if(!mLoaded) mCastPresenter.loadCastData(getActivity());
     }
 
     private void setupRecyclerView(){
@@ -77,4 +85,17 @@ public class CastFragment extends Fragment implements CastContract.View{
         mCastAdapter.displayCast(size);
     }
 
+    @Override
+    public void setSave(boolean save) {
+        mSave = save;
+    }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        if(getActivity().isChangingConfigurations()) {
+//            super.onSaveInstanceState(outState);
+//            outState.putParcelable(OUTSTATE_PRESENTER, mCastPresenter);
+//            outState.putParcelable(OUTSTATE_ADAPTER, mCastAdapter);
+//        }
+//    }
 }
