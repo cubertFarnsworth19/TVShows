@@ -41,7 +41,6 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
 
     @BindView(R.id.recyclerview_seasons) RecyclerView mRecyclerView;
 
-    private boolean mSave = true;
     private boolean mLoaded;
 
     @Nullable
@@ -97,10 +96,6 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
         mSeasonsAdapter.displaySeasons(size);
     }
 
-    @Override
-    public void setSave(boolean save) {
-        mSave = save;
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -9,7 +9,6 @@ public interface SeasonsContract {
 
     interface View{
         void seasonDataLoaded(int size);
-        void setSave(boolean save);
     }
 
     interface Presenter {
