@@ -1,6 +1,9 @@
 package com.example.android.tvshows.ui.myshows.current;
 
-class ShowDate{
+import android.os.Parcel;
+import android.os.Parcelable;
+
+class ShowDate implements Parcelable{
     String date;
     int numberOfShows;
     // the number of shows prior to this day in the adapter
@@ -19,4 +22,35 @@ class ShowDate{
     boolean sameDate(String date){
         return this.date.equals(date);
     }
+
+    protected ShowDate(Parcel in) {
+        date = in.readString();
+        numberOfShows = in.readInt();
+        cumulativeNumberOfShows = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(date);
+        dest.writeInt(numberOfShows);
+        dest.writeInt(cumulativeNumberOfShows);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ShowDate> CREATOR = new Parcelable.Creator<ShowDate>() {
+        @Override
+        public ShowDate createFromParcel(Parcel in) {
+            return new ShowDate(in);
+        }
+
+        @Override
+        public ShowDate[] newArray(int size) {
+            return new ShowDate[size];
+        }
+    };
 }

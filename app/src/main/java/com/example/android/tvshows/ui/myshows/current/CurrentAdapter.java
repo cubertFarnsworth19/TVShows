@@ -1,6 +1,8 @@
 package com.example.android.tvshows.ui.myshows.current;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Parcelable {
 
     private Context mContext;
     private Picasso mPicasso;
@@ -26,6 +28,12 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mSize = 0;
 
     public CurrentAdapter(Context context, CurrentContract.Presenter currentPresenter, Picasso picasso){
+        mContext = context;
+        mCurrentPresenter = currentPresenter;
+        mPicasso = picasso;
+    }
+
+    public void setVariables(Context context, CurrentContract.Presenter currentPresenter, Picasso picasso){
         mContext = context;
         mCurrentPresenter = currentPresenter;
         mPicasso = picasso;
@@ -128,5 +136,32 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
     }
+
+    protected CurrentAdapter(Parcel in) {
+        mSize = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mSize);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<CurrentAdapter> CREATOR = new Parcelable.Creator<CurrentAdapter>() {
+        @Override
+        public CurrentAdapter createFromParcel(Parcel in) {
+            return new CurrentAdapter(in);
+        }
+
+        @Override
+        public CurrentAdapter[] newArray(int size) {
+            return new CurrentAdapter[size];
+        }
+    };
 
 }

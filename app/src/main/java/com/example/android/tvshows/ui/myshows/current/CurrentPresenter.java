@@ -38,6 +38,15 @@ public class CurrentPresenter implements CurrentContract.Presenter{
         mCurrentType = currentType;
     }
 
+    public CurrentPresenter(CurrentContract.View currentView,ShowsRepository showsRepository,int currentType,
+                            ArrayList<CurrentInfo> current, ArrayList<ShowDate> dates){
+        mCurrentView = currentView;
+        mShowsRepository = showsRepository;
+        mCurrentType = currentType;
+        mCurrent = current;
+        mDates = dates;
+    }
+
     @Override
     public void loadShowsFromDatabase(final Context context) {
 
