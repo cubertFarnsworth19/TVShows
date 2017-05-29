@@ -1,7 +1,6 @@
 package com.example.android.tvshows.ui.showinfo.seasons;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.tvshows.R;
-import com.example.android.tvshows.data.db.ShowsDbContract;
-import com.example.android.tvshows.ui.episodes.EpisodesActivity;
-import com.example.android.tvshows.ui.showinfo.ShowInfoActivity;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -90,9 +86,6 @@ public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     protected SeasonsAdapter(Parcel in) {
-       //mContext = (Context) in.readValue(Context.class.getClassLoader());
-       // mSeasonsPresenter = (SeasonsContract.Presenter) in.readValue(SeasonsContract.Presenter.class.getClassLoader());
-       // mPicasso = (Picasso) in.readValue(Picasso.class.getClassLoader());
         mSize = in.readInt();
     }
 
@@ -103,9 +96,6 @@ public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void writeToParcel(Parcel dest, int flags){
-        //dest.writeValue(mContext);
-        //dest.writeValue(mSeasonsPresenter);
-       // dest.writeValue(mPicasso);
         dest.writeInt(mSize);
     }
 

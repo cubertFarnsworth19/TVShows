@@ -37,6 +37,12 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mPicasso = picasso;
     }
 
+    public void setVariables(Context context,ResultsContract.Presenter resultsPresenter,Picasso picasso){
+        mContext = context;
+        mResultsPresenter = resultsPresenter;
+        mPicasso = picasso;
+    }
+
     public void updateDiscoverResults(int size){
         mSize = size;
         notifyDataSetChanged();
@@ -117,9 +123,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     protected ResultsAdapter(Parcel in) {
-        mContext = (Context) in.readValue(Context.class.getClassLoader());
-        mResultsPresenter = (ResultsContract.Presenter) in.readValue(ResultsContract.Presenter.class.getClassLoader());
-        mPicasso = (Picasso) in.readValue(Picasso.class.getClassLoader());
         mSize = in.readInt();
     }
 
@@ -130,9 +133,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(mContext);
-        dest.writeValue(mResultsPresenter);
-        dest.writeValue(mPicasso);
         dest.writeInt(mSize);
     }
 

@@ -28,7 +28,6 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
     private final String OUTSTATE_ADAPTER = "adapter";
     private final String OUTSTATE_TMDB_ID = "tmdb_id";
 
-
     private static int mTmdbId;
 
     public static SeasonsFragment getInstance(int tmdbId){
@@ -100,29 +99,11 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        //int position = mRecyclerView.computeVerticalScrollOffset();
-
         super.onSaveInstanceState(outState);
         outState.putParcelable(OUTSTATE_ADAPTER, mSeasonsAdapter);
         outState.putParcelableArrayList(OUTSTATE_SEASONS_INFO, mSeasonsPresenter.getSeasonsInfo());
         outState.putInt(OUTSTATE_TMDB_ID, mTmdbId);
 
     }
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        //if(getActivity().isChangingConfigurations()) {
-//        super.onSaveInstanceState(outState);
-//
-//        boolean saved = true;
-//        try {
-//            outState.putParcelable(OUTSTATE_PRESENTER, mSeasonsPresenter);
-//            outState.putParcelable(OUTSTATE_ADAPTER, mSeasonsAdapter);
-//        }catch (RuntimeException e){
-//            saved = false;
-//        }
-//        finally {
-//            outState.putBoolean(OUTSTATE_SAVED,saved);
-//        }
-//        //}
-//    }
+
 }

@@ -42,7 +42,7 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     protected StaggeredGridLayoutManager mGridLayoutManager;
 
     // true if the savedInstanceState should be set
-    private boolean mSave = true;
+   //private boolean mSave = true;
 
     @Nullable
     @Override
@@ -107,16 +107,16 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
         return mResultsPresenter;
     }
 
-    public void setSave(boolean save){
-        mSave = save;
-    }
+    //public void setSave(boolean save){
+    //    mSave = save;
+    //}
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if(getActivity().isChangingConfigurations()) {
-            super.onSaveInstanceState(outState);
-            outState.putParcelable(OUTSTATE_PRESENTER, mResultsPresenter);
-            outState.putParcelable(OUTSTATE_ADAPTER, mResultsAdapter);
-        }
+      //  if(getActivity().isChangingConfigurations()) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(OUTSTATE_PRESENTER, mResultsPresenter);
+        outState.putParcelable(OUTSTATE_ADAPTER, mResultsAdapter);
+      //  }
     }
 }

@@ -190,12 +190,6 @@ public class DiscoverActivity extends NavigationIconActivity {
     }
 
     @Override
-    protected void startNewActivity(TextView textView) {
-        mResultsFragment.setSave(false);
-        super.startNewActivity(textView);
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, FRAGMENT,mResultsFragment);
