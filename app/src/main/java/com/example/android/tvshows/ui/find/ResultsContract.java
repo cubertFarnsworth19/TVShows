@@ -37,10 +37,12 @@ public interface ResultsContract {
         int getVoteAverageTextColor(Context context, int position);
         String getVoteAverage(int position);
         String getPosterUrl(Context context, int position);
+        public String getLastWithGenres();
         boolean showAddButton(int position);
         int getTmdbId(int position);
         void openMoreDetailsDialog(int position);
         void showAdded();
+        SaveResultsPresenterState getSaveResultsPresenterState();
     }
 
 }

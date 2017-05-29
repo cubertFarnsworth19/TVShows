@@ -1,11 +1,15 @@
 
 package com.example.android.tvshows.data.model.search;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result {
+public class Result implements Parcelable {
 
     @SerializedName("poster_path")
     @Expose
@@ -151,4 +155,95 @@ public class Result {
         this.originalName = originalName;
     }
 
+
+    protected Result(Parcel in) {
+        posterPath = in.readString();
+        popularity = in.readByte() == 0x00 ? null : in.readDouble();
+        id = in.readByte() == 0x00 ? null : in.readInt();
+        backdropPath = in.readString();
+        voteAverage = in.readByte() == 0x00 ? null : in.readDouble();
+        overview = in.readString();
+        firstAirDate = in.readString();
+        if (in.readByte() == 0x01) {
+            originCountry = new ArrayList<String>();
+            in.readList(originCountry, String.class.getClassLoader());
+        } else {
+            originCountry = null;
+        }
+        if (in.readByte() == 0x01) {
+            genreIds = new ArrayList<Integer>();
+            in.readList(genreIds, Integer.class.getClassLoader());
+        } else {
+            genreIds = null;
+        }
+        originalLanguage = in.readString();
+        voteCount = in.readByte() == 0x00 ? null : in.readInt();
+        name = in.readString();
+        originalName = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(posterPath);
+        if (popularity == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(popularity);
+        }
+        if (id == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(id);
+        }
+        dest.writeString(backdropPath);
+        if (voteAverage == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(voteAverage);
+        }
+        dest.writeString(overview);
+        dest.writeString(firstAirDate);
+        if (originCountry == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(originCountry);
+        }
+        if (genreIds == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(genreIds);
+        }
+        dest.writeString(originalLanguage);
+        if (voteCount == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(voteCount);
+        }
+        dest.writeString(name);
+        dest.writeString(originalName);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Result> CREATOR = new Parcelable.Creator<Result>() {
+        @Override
+        public Result createFromParcel(Parcel in) {
+            return new Result(in);
+        }
+
+        @Override
+        public Result[] newArray(int size) {
+            return new Result[size];
+        }
+    };
 }

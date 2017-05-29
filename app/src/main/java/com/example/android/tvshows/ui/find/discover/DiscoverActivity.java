@@ -37,6 +37,8 @@ import butterknife.OnClick;
 public class DiscoverActivity extends NavigationIconActivity {
 
     private final String FRAGMENT = "Results Fragment";
+    private final String OUTSTATE_INCLUDE_GENRES = "include_genres";
+    private final String OUTSTATE_EXCLUDE_GENRES = "exclude_genres";
 
     @BindView(R.id.discover_filters) View mViewDiscoverFilters;
     @BindView(R.id.find_discover_activity)  LinearLayout mRootLayout;
@@ -61,7 +63,6 @@ public class DiscoverActivity extends NavigationIconActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.find_discover_activity);
 
         ButterKnife.bind(this);
 
@@ -69,6 +70,10 @@ public class DiscoverActivity extends NavigationIconActivity {
 
         if(savedInstanceState != null){
             mResultsFragment = (DiscoverFragment) getSupportFragmentManager().getFragment(savedInstanceState,FRAGMENT);
+            mIncludeGenres = savedInstanceState.getBooleanArray(OUTSTATE_INCLUDE_GENRES);
+            mExcludeGenres = savedInstanceState.getBooleanArray(OUTSTATE_EXCLUDE_GENRES);
+            mTextViewIncludeGenres.setText(Genres.getGenresString(mIncludeGenres,this));
+            mTextViewExcludeGenres.setText(Genres.getGenresString(mExcludeGenres,this));
         }
         else {
             mResultsFragment = new DiscoverFragment();
@@ -77,8 +82,6 @@ public class DiscoverActivity extends NavigationIconActivity {
             fragmentTransaction.add(R.id.find_discover_content,mResultsFragment);
             fragmentTransaction.commit();
         }
-
-
 
     }
 
@@ -193,5 +196,7 @@ public class DiscoverActivity extends NavigationIconActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, FRAGMENT,mResultsFragment);
+        outState.putBooleanArray(OUTSTATE_INCLUDE_GENRES,mIncludeGenres);
+        outState.putBooleanArray(OUTSTATE_EXCLUDE_GENRES,mExcludeGenres);
     }
 }

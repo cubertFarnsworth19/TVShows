@@ -12,10 +12,22 @@ public class ResultsModule {
 
     private final ResultsFragment mResultsFragment;
     private final ResultsContract.View mView;
+    private SaveResultsPresenterState mSaveResultsPresenterState;
+    private ResultsAdapter mResultsAdapter;
+    private boolean mSaved;
 
     public ResultsModule(ResultsFragment resultsFragment, ResultsContract.View view) {
         mResultsFragment = resultsFragment;
         mView = view;
+        mSaved = false;
+    }
+
+    public ResultsModule(ResultsFragment resultsFragment, ResultsContract.View view,SaveResultsPresenterState saveResultsPresenterState,ResultsAdapter resultsAdapter) {
+        mResultsFragment = resultsFragment;
+        mView = view;
+        mSaveResultsPresenterState = saveResultsPresenterState;
+        mResultsAdapter = resultsAdapter;
+        mSaved = true;
     }
 
     @Provides
@@ -29,13 +41,24 @@ public class ResultsModule {
     @Provides
     @FragmentScoped
     public ResultsContract.Presenter provideResultsContractPresenter(ResultsContract.View view, ApiService service, ShowsRepository showsRepository){
-        return new ResultsPresenter(view,service,showsRepository);
+        if(mSaved){
+            return new ResultsPresenter(view, service, showsRepository,mSaveResultsPresenterState);
+        }
+        else {
+            return new ResultsPresenter(view, service, showsRepository);
+        }
     }
 
     @Provides
     @FragmentScoped
     public ResultsAdapter provideResultsAdapter(ResultsContract.Presenter presenter, Picasso picasso){
-        return new ResultsAdapter(mResultsFragment.getActivity(),presenter,picasso);
+        if(mSaved){
+            mResultsAdapter.setVariables(mResultsFragment.getActivity(), presenter, picasso);
+            return mResultsAdapter;
+        }
+        else {
+            return new ResultsAdapter(mResultsFragment.getActivity(), presenter, picasso);
+        }
     }
 
 }

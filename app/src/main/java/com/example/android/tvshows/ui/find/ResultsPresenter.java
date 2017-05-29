@@ -62,6 +62,24 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
         mAllShowIds = mShowsRepository.getAllShowIds();
     }
 
+    public ResultsPresenter(@NonNull ResultsContract.View resultsView,ApiService apiService,ShowsRepository showsRepository,SaveResultsPresenterState saveResultsPresenterState){
+        mResultsView = resultsView;
+        mApiService = apiService;
+        mShowsRepository = showsRepository;
+        mAllShowIds = saveResultsPresenterState.getAllShowIds();
+        mResults = saveResultsPresenterState.getResults();
+        mPage = saveResultsPresenterState.getPage();
+        mTotalPages = saveResultsPresenterState.getTotalPages();
+        mTotalResults = saveResultsPresenterState.getTotalResults();
+        mLastSortBy = saveResultsPresenterState.getLastSortBy();
+        mLastWithGenres = saveResultsPresenterState.getLastWithGenres();
+        mLastWithoutGenres = saveResultsPresenterState.getLastWithoutGenres();
+        mLastMinVoteAverage = saveResultsPresenterState.getLastMinVoteAverage();
+        mLastMinVoteCount = saveResultsPresenterState.getLastMinVoteCount();
+        mLastFirstAirDateAfter = saveResultsPresenterState.getLastFirstAirDateAfter();
+        mLastFirstAirDateBefore = saveResultsPresenterState.getLastFirstAirDateBefore();
+    }
+
     @Override
     public void saveSelectedToDatabase(Context context, Integer id) {
 
@@ -224,6 +242,11 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
     }
 
     @Override
+    public String getLastWithGenres() {
+        return mLastWithGenres;
+    }
+
+    @Override
     public boolean showAddButton(int position) {
         return !mAllShowIds.contains(mResults.get(position).getId());
     }
@@ -266,6 +289,13 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
     @Override
     public void showAdded() {
         mResultsView.updateAdapter();
+    }
+
+    @Override
+    public SaveResultsPresenterState getSaveResultsPresenterState() {
+        return new SaveResultsPresenterState(mResults,mPage,mTotalPages,mTotalResults,mLastSortBy,
+                mLastWithGenres,mLastWithoutGenres,mLastMinVoteAverage,mLastMinVoteCount,
+                mLastFirstAirDateAfter,mLastFirstAirDateBefore,mAllShowIds);
     }
 
     protected ResultsPresenter(Parcel in) {

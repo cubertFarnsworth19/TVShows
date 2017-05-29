@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 
 public class ResultsFragment extends Fragment implements ResultsContract.View {
 
-    private final String OUTSTATE_PRESENTER = "presenter";
+    private final String OUTSTATE_PRESENTER_STATE = "presenter";
     private final String OUTSTATE_ADAPTER = "adapter";
 
     protected @Inject ResultsContract.Presenter mResultsPresenter;
@@ -53,8 +53,16 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
         ButterKnife.bind(this,rootview);
 
         if(savedInstanceState!=null){
-            mResultsPresenter = savedInstanceState.getParcelable(OUTSTATE_PRESENTER);
-            mResultsAdapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
+
+            SaveResultsPresenterState saveResultsPresenterState = savedInstanceState.getParcelable(OUTSTATE_PRESENTER_STATE);
+            ResultsAdapter adapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
+
+            ResultsComponent component = DaggerResultsComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .resultsModule(new ResultsModule(this, this,saveResultsPresenterState,adapter))
+                    .build();
+
+            component.inject(this);
         }
         else {
             ResultsComponent component = DaggerResultsComponent.builder()
@@ -115,7 +123,7 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     public void onSaveInstanceState(Bundle outState) {
       //  if(getActivity().isChangingConfigurations()) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(OUTSTATE_PRESENTER, mResultsPresenter);
+        outState.putParcelable(OUTSTATE_PRESENTER_STATE, mResultsPresenter.getSaveResultsPresenterState());
         outState.putParcelable(OUTSTATE_ADAPTER, mResultsAdapter);
       //  }
     }
