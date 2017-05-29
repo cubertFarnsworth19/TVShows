@@ -48,8 +48,6 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
         View rootview = inflater.inflate(R.layout.show_info_seasons_fragment,container,false);
         ButterKnife.bind(this,rootview);
 
-
-
         if(savedInstanceState!=null){
             ArrayList<SeasonInfo> seasonsInfo = savedInstanceState.getParcelableArrayList(OUTSTATE_SEASONS_INFO);
             SeasonsAdapter adapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);

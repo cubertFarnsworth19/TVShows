@@ -15,6 +15,8 @@ import com.example.android.tvshows.ShowsApplication;
 import com.example.android.tvshows.data.db.ShowsRepository;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -22,6 +24,9 @@ import butterknife.ButterKnife;
 
 
 public class ShowsFragment extends Fragment implements ShowsContract.View{
+
+    private final String OUTSTATE_SHOWS_INFO = "show_info";
+    private final String OUTSTATE_ADAPTER = "adapter";
 
     public static ShowsFragment getInstance(){
         ShowsFragment showsFragment = new ShowsFragment();
@@ -31,6 +36,8 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
     @Inject ShowsAdapter mShowsAdapter;
     @Inject ShowsContract.Presenter mShowsPresenter;
 
+    private boolean mLoaded;
+
     @BindView(R.id.recyclerview_shows) RecyclerView mRecyclerView;
 
     @Nullable
@@ -39,12 +46,29 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
         View rootview = inflater.inflate(R.layout.myshows_shows_fragment,container,false);
         ButterKnife.bind(this,rootview);
 
-        ShowsComponent component = DaggerShowsComponent.builder()
-                .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                .showsModule(new ShowsModule(this,this))
-                .build();
+        if(savedInstanceState!=null){
 
-        component.inject(this);
+            ArrayList<ShowInfo> showInfo = savedInstanceState.getParcelableArrayList(OUTSTATE_SHOWS_INFO);
+            ShowsAdapter adapter = savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
+            ShowsComponent component = DaggerShowsComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .showsModule(new ShowsModule(this, this,showInfo,adapter))
+                    .build();
+
+            component.inject(this);
+
+            mLoaded = true;
+        }
+        else {
+            ShowsComponent component = DaggerShowsComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .showsModule(new ShowsModule(this, this))
+                    .build();
+
+            component.inject(this);
+
+            mLoaded = false;
+        }
 
         setupRecyclerView();
 
@@ -54,7 +78,7 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        mShowsPresenter.loadShowsFromDatabase(getActivity());
+        if(!mLoaded) mShowsPresenter.loadShowsFromDatabase(getActivity());
     }
 
     private void setupRecyclerView(){
@@ -68,4 +92,10 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
         mShowsAdapter.displayShows(size);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(OUTSTATE_SHOWS_INFO,mShowsPresenter.getShowsInfo());
+        outState.putParcelable(OUTSTATE_ADAPTER,mShowsAdapter);
+    }
 }

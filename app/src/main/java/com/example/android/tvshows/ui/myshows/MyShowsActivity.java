@@ -34,7 +34,6 @@ public class MyShowsActivity extends NavigationIconActivity {
         ButterKnife.bind(this);
         mNestedScrollView.setFillViewport(true);
         mNestedScrollView.setNestedScrollingEnabled(true);
-        //test.setText("test complete");
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         mSlidingTabLayout.setViewPager(mPager);
         mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer(){

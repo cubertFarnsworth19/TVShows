@@ -24,11 +24,17 @@ public class ShowsPresenter implements ShowsContract.Presenter {
 
     private ShowsRepository mShowsRepository;
     private ShowsContract.View mShowsView;
-    private ArrayList<ShowInfo> mShowsInfo = new ArrayList<>();
+    private ArrayList<ShowInfo> mShowsInfo;
 
     public ShowsPresenter(ShowsContract.View showsView,ShowsRepository showsRepository){
         mShowsView = showsView;
         mShowsRepository = showsRepository;
+    }
+
+    public ShowsPresenter(ShowsContract.View showsView,ShowsRepository showsRepository,ArrayList<ShowInfo> showsInfo){
+        mShowsView = showsView;
+        mShowsRepository = showsRepository;
+        mShowsInfo = showsInfo;
     }
 
     @Override
@@ -44,7 +50,7 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         Consumer<Cursor> consumer = new Consumer<Cursor>() {
             @Override
             public void accept(@NonNull Cursor cursor) throws Exception {
-
+                mShowsInfo = new ArrayList<>();
                 while (cursor.moveToNext()){
                     mShowsInfo.add(new ShowInfo(
                             context,
@@ -106,46 +112,8 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         mShowsInfo.remove(position);
         mShowsRepository.deleteShow(removeId);
     }
-
-    class ShowInfo{
-        int id;
-        String title;
-        String posterUrl;
-        String numberOfSeasons;
-        String numberOfEpisodes;
-        String inProduction;
-
-        public ShowInfo(Context context,int id, String title, String posterPath, Integer numberOfSeasons, Integer numberOfEpisodes,int inProduction) {
-            this.id = id;
-            this.title = title;
-            this.posterUrl = context.getString(R.string.poster_path) + posterPath;
-            this.numberOfSeasons = numberOfSeasons.toString();
-            this.numberOfEpisodes = numberOfEpisodes.toString();
-            this.inProduction = inProduction==1 ? context.getString(R.string.continuing) : context.getString(R.string.finished);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getPosterUrl() {
-            return posterUrl;
-        }
-
-        public String getNumberOfSeasons() {
-            return numberOfSeasons;
-        }
-
-        public String getNumberOfEpisodes() {
-            return numberOfEpisodes;
-        }
-
-        public String getInProduction() {
-            return inProduction;
-        }
+    @Override
+    public ArrayList<ShowInfo> getShowsInfo() {
+        return mShowsInfo;
     }
 }

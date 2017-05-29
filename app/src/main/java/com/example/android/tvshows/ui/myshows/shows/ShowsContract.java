@@ -3,6 +3,8 @@ package com.example.android.tvshows.ui.myshows.shows;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.ArrayList;
+
 public interface ShowsContract {
 
     interface View{
@@ -18,5 +20,6 @@ public interface ShowsContract {
         String getInProduction(int position);
         void startShowInfoActivity(Context context,int position);
         void removeShow(int position);
+        ArrayList<ShowInfo> getShowsInfo();
     }
 }
