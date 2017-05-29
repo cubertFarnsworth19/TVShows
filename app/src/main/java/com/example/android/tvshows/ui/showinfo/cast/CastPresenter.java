@@ -21,18 +21,24 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class CastPresenter implements CastContract.Presenter, Parcelable {
+public class CastPresenter implements CastContract.Presenter {
 
     private CastContract.View mCastView;
     private ShowsRepository mShowsRepository;
     private int tmdbId;
-    private ArrayList<CastInfo> mCastInfo = new ArrayList();
+    private ArrayList<CastInfo> mCastInfo;
 
     public CastPresenter(CastContract.View castView,ShowsRepository showsRepository,int tmdbId){
         mCastView = castView;
         mShowsRepository = showsRepository;
         this.tmdbId = tmdbId;
+    }
 
+    public CastPresenter(CastContract.View castView,ShowsRepository showsRepository,int tmdbId,ArrayList<CastInfo> castInfo){
+        mCastView = castView;
+        mShowsRepository = showsRepository;
+        this.tmdbId = tmdbId;
+        mCastInfo = castInfo;
     }
 
     @Override
@@ -48,6 +54,8 @@ public class CastPresenter implements CastContract.Presenter, Parcelable {
         Consumer<Cursor> consumer = new Consumer<Cursor>() {
             @Override
             public void accept(@NonNull Cursor cursor) throws Exception {
+
+                mCastInfo = new ArrayList();
 
                 while (cursor.moveToNext()){
                     mCastInfo.add(new CastInfo(
@@ -66,87 +74,30 @@ public class CastPresenter implements CastContract.Presenter, Parcelable {
 
     @Override
     public String getCharacterName(int position) {
-        return mCastInfo.get(position).characterName;
+        return mCastInfo.get(position).getCharacterName();
     }
 
     @Override
     public String getActorName(int position) {
-        return mCastInfo.get(position).actorName;
+        return mCastInfo.get(position).getActorName();
     }
 
     @Override
     public String getPhotoUrl(Context context,int position) {
-        return mCastInfo.get(position).photoUrl;
+        return mCastInfo.get(position).getPhotoUrl();
     }
 
     @Override
     public void startActorActivity(Context context, int position) {
         Intent intent = new Intent(context, ActorActivity.class);
-        intent.putExtra(ShowsDbContract.CastEntry.COLUMN_PERSON_ID,mCastInfo.get(position).personId);
-
-        mCastView.setSave(false);
+        intent.putExtra(ShowsDbContract.CastEntry.COLUMN_PERSON_ID,mCastInfo.get(position).getPersonId());
 
         context.startActivity(intent);
     }
 
-    protected CastPresenter(Parcel in) {
-        mCastView = (CastContract.View) in.readValue(CastContract.View.class.getClassLoader());
-        mShowsRepository = (ShowsRepository) in.readValue(ShowsRepository.class.getClassLoader());
-        tmdbId = in.readInt();
-        if (in.readByte() == 0x01) {
-            mCastInfo = new ArrayList<CastInfo>();
-            in.readList(mCastInfo, CastInfo.class.getClassLoader());
-        } else {
-            mCastInfo = null;
-        }
-    }
-
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(mCastView);
-        dest.writeValue(mShowsRepository);
-        dest.writeInt(tmdbId);
-        if (mCastInfo == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mCastInfo);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<CastPresenter> CREATOR = new Parcelable.Creator<CastPresenter>() {
-        @Override
-        public CastPresenter createFromParcel(Parcel in) {
-            return new CastPresenter(in);
-        }
-
-        @Override
-        public CastPresenter[] newArray(int size) {
-            return new CastPresenter[size];
-        }
-    };
-
-
-//    @Override
-//    public void closeCursor() {
-//        mCastCursor.close();
-//    }
-    class CastInfo{
-        String characterName, actorName, photoUrl;
-        int personId;
-
-        public CastInfo(String characterName, String actorName, String photoUrl,int personId) {
-            this.characterName = characterName;
-            this.actorName = actorName;
-            this.photoUrl = photoUrl;
-            this.personId = personId;
-        }
+    public ArrayList<CastInfo> getCastInfo() {
+        return mCastInfo;
     }
 
 }
