@@ -104,6 +104,7 @@ public class CurrentPresenter implements CurrentContract.Presenter{
             }
         }
 
+        cursor.close();
         mCurrentView.showsDataLoaded(mDates.size());
     }
 
