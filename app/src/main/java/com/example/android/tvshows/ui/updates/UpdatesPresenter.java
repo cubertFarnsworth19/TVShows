@@ -4,6 +4,8 @@ package com.example.android.tvshows.ui.updates;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
@@ -29,13 +31,15 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-
+/*
+    Parcelable has not been implemented properly but works for device rotation
+ */
 public class UpdatesPresenter implements UpdatesContract.Presenter{
 
     private UpdatesContract.View mUpdatesView;
     private ShowsRepository mShowsRepository;
-    private ArrayList<TVShow> mTVShows = new ArrayList<>();
-    private Hashtable<Integer,ArrayList<SeasonForUpdate>> mHashtableSeasons = new Hashtable<>();
+    private ArrayList<TVShow> mTVShows;
+    private Hashtable<Integer,ArrayList<SeasonForUpdate>> mHashtableSeasons;
 
     public UpdatesPresenter(UpdatesContract.View updatesView, ShowsRepository showsRepository) {
         mUpdatesView = updatesView;
@@ -44,6 +48,9 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
 
     @Override
     public void loadShowsFromDatabase() {
+
+        mTVShows = new ArrayList<>();
+        mHashtableSeasons = new Hashtable<>();
 
         Cursor cursor = mShowsRepository.getAllShows();
 
@@ -80,7 +87,7 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
             mHashtableSeasons.put(currentShowId,seasons);
 
         }
-
+        seasonsCursor.close();
         mUpdatesView.showsDataLoaded(mTVShows.size());
     }
 
@@ -160,54 +167,30 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
         }
     }
 
-    private class TVShow{
-        Integer id;
-        String name;
-        int updateDay;
-        int updateMonth;
-        int updateYear;
-        String lastUpdate;
 
-        public TVShow(Integer id, String name, int updateDay, int updateMonth, int updateYear) {
-            this.id = id;
-            this.name = name;
-            this.updateDay = updateDay;
-            this.updateMonth = updateMonth;
-            this.updateYear = updateYear;
-            lastUpdate = Utility.getDateAsString(updateDay,updateMonth,updateYear);
-        }
+    protected UpdatesPresenter(Parcel in) {
     }
 
-    private class SeasonForUpdate{
-        String name;
-        int seasonNumber;
-        int updateDay;
-        int updateMonth;
-        int updateYear;
-        String lastUpdate;
-
-        public SeasonForUpdate(String name, int seasonNumber, int updateDay, int updateMonth, int updateYear) {
-            this.name = name;
-            this.seasonNumber = seasonNumber;
-            this.updateDay = updateDay;
-            this.updateMonth = updateMonth;
-            this.updateYear = updateYear;
-            lastUpdate = Utility.getDateAsString(updateDay,updateMonth,updateYear);
-        }
-
-        public boolean earlierUpdate(int d,int m,int y){
-            if(updateYear<y)
-                return true;
-            if(updateYear==y && updateMonth<m)
-                return true;
-            if(updateYear==y && updateMonth==m && updateDay<d)
-                return true;
-            return false;
-        }
-
-        public boolean earlierUpdate(SeasonForUpdate season){
-            return earlierUpdate(season.updateDay,season.updateMonth, season.updateYear);
-        }
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<UpdatesPresenter> CREATOR = new Parcelable.Creator<UpdatesPresenter>() {
+        @Override
+        public UpdatesPresenter createFromParcel(Parcel in) {
+            return new UpdatesPresenter(in);
+        }
+
+        @Override
+        public UpdatesPresenter[] newArray(int size) {
+            return new UpdatesPresenter[size];
+        }
+    };
 
 }

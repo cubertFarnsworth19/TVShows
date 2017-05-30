@@ -1,6 +1,7 @@
 package com.example.android.tvshows.ui.updates;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -15,6 +16,7 @@ import com.example.android.tvshows.R;
 import com.example.android.tvshows.ShowsApplication;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.inject.Inject;
 
@@ -22,6 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
+
+    private final String OUTSTATE_PRESENTER = "presenter";
+    private final String OUTSTATE_ADAPTER = "adapter";
 
     protected @Inject UpdatesContract.Presenter mUpdatesPresenter;
     protected @Inject UpdatesAdapter mUpdatesAdapter;
@@ -31,6 +36,8 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     protected @BindView(R.id.recyclerview_updates_detail) RecyclerView mRecyclerView;
     private StaggeredGridLayoutManager mGridLayoutManager;
 
+    private boolean mLoaded;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,13 +45,22 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
 
         ButterKnife.bind(this,rootview);
 
-        UpdatesComponent component = DaggerUpdatesComponent.builder()
-                .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                .updatesModule(new UpdatesModule(this,this))
-                .build();
+        if(savedInstanceState!=null){
+            mUpdatesPresenter = savedInstanceState.getParcelable(OUTSTATE_PRESENTER);
+            mUpdatesAdapter = savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
+            mLoaded = true;
+        }
+        else {
 
-        component.inject(this);
+            mLoaded = false;
 
+            UpdatesComponent component = DaggerUpdatesComponent.builder()
+                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .updatesModule(new UpdatesModule(this, this))
+                    .build();
+
+            component.inject(this);
+        }
         setupRecyclerView();
         return rootview;
 
@@ -60,7 +76,7 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        mUpdatesPresenter.loadShowsFromDatabase();
+        if(!mLoaded) mUpdatesPresenter.loadShowsFromDatabase();
     }
 
     @Override
@@ -72,5 +88,14 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     public void updateSelected() {
         ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked = mUpdatesAdapter.getChecked();
         mUpdatesPresenter.makeUpdatesRequest(getContext(),checked);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(getActivity().isChangingConfigurations()) {
+            super.onSaveInstanceState(outState);
+            outState.putParcelable(OUTSTATE_ADAPTER, mUpdatesAdapter);
+            outState.putParcelable(OUTSTATE_PRESENTER,mUpdatesPresenter);
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.example.android.tvshows.ui.updates;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public interface UpdatesContract {
 
@@ -12,7 +14,7 @@ public interface UpdatesContract {
         void updateSelected();
     }
 
-    interface Presenter{
+    interface Presenter extends Parcelable{
         void loadShowsFromDatabase();
         int getShowId(int position);
         int getNumberOfSeasons(int position);
@@ -22,6 +24,8 @@ public interface UpdatesContract {
         String getSeasonName(Integer showId,int position);
         String getSeasonLastUpdate(Integer showId,int position);
         void makeUpdatesRequest(Context context, ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked);
+        //ArrayList<TVShow> getTVShows();
+        //Hashtable<Integer,ArrayList<SeasonForUpdate>> getSeasonsForUpdate();
     }
 
 }

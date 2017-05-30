@@ -2,6 +2,8 @@ package com.example.android.tvshows.ui.updates;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +24,10 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+/*
+    Parcelable has not been implemented properly but works for device rotation
+ */
+public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Parcelable{
 
     Context mContext;
     UpdatesContract.Presenter mUpdatesPresenter;
@@ -34,6 +38,10 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public UpdatesAdapter(Context context, UpdatesContract.Presenter updatesPresenter) {
         mContext = context;
         mUpdatesPresenter = updatesPresenter;
+    }
+
+    public ArrayList<ArrayList<Boolean>> getCheckedArrayList(){
+        return mChecked;
     }
 
     public void displayUpdates(int size){
@@ -239,5 +247,48 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
+
+    protected UpdatesAdapter(Parcel in) {
+//        mContext = (Context) in.readValue(Context.class.getClassLoader());
+//        mUpdatesPresenter = (UpdatesContract.Presenter) in.readValue(UpdatesContract.Presenter.class.getClassLoader());
+//        mSize = in.readInt();
+//        if (in.readByte() == 0x01) {
+//            mAllChecked = new ArrayList<Boolean>();
+//            in.readList(mAllChecked, Boolean.class.getClassLoader());
+//        } else {
+//            mAllChecked = null;
+//        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeValue(mContext);
+//        dest.writeValue(mUpdatesPresenter);
+//        dest.writeInt(mSize);
+//        if (mAllChecked == null) {
+//            dest.writeByte((byte) (0x00));
+//        } else {
+//            dest.writeByte((byte) (0x01));
+//            dest.writeList(mAllChecked);
+//        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<UpdatesAdapter> CREATOR = new Parcelable.Creator<UpdatesAdapter>() {
+        @Override
+        public UpdatesAdapter createFromParcel(Parcel in) {
+            return new UpdatesAdapter(in);
+        }
+
+        @Override
+        public UpdatesAdapter[] newArray(int size) {
+            return new UpdatesAdapter[size];
+        }
+    };
 
 }
