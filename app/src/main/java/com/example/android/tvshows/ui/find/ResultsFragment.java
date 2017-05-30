@@ -1,5 +1,6 @@
 package com.example.android.tvshows.ui.find;
 
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
 
 public class ResultsFragment extends Fragment implements ResultsContract.View {
@@ -79,6 +82,7 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     }
 
     private void setupRecyclerView(){
+        //int columns = getActivity().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? 2:3;
         mRecyclerView.setAdapter(mResultsAdapter);
         mGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mGridLayoutManager);

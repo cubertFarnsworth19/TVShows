@@ -34,24 +34,34 @@ public class ActorPresenter implements ActorContract.Presenter {
 
     private ExternalIds mExternalIds;
     private ActorTVCredits mActorTVCredits;
+    private Actor mActor;
 
-    @Inject
     public ActorPresenter(ActorContract.View actorView,int tmdbActorId,ApiService apiService) {
         mActorView = actorView;
         mTmdbActorId = tmdbActorId;
         mApiService = apiService;
     }
 
+    public ActorPresenter(ActorContract.View actorView,int tmdbActorId,ApiService apiService,
+                          ExternalIds externalIds,ActorTVCredits actorTVCredits, Actor actor) {
+        mActorView = actorView;
+        mTmdbActorId = tmdbActorId;
+        mApiService = apiService;
+        mExternalIds = externalIds;
+        mActorTVCredits = actorTVCredits;
+        mActor = actor;
+    }
+
+
     @Override
     public void downloadActorData() {
 
         Observable<Actor> actorObservable = mApiService.getActorDetails(mTmdbActorId.toString(), BuildConfig.TMDB_API_KEY)
-                .retryWhen(new RetryUntilDownloaded(2000));;
+                .retryWhen(new RetryUntilDownloaded(2000));
         Observable<ActorTVCredits> actorTVCreditsObservable = mApiService.getActorTVCredits(mTmdbActorId.toString(), BuildConfig.TMDB_API_KEY)
-                .retryWhen(new RetryUntilDownloaded(2000));;
+                .retryWhen(new RetryUntilDownloaded(2000));
         Observable<ExternalIds> externalIdsObservable = mApiService.getExternalIds(mTmdbActorId.toString(), BuildConfig.TMDB_API_KEY)
-                .retryWhen(new RetryUntilDownloaded(2000));;
-
+                .retryWhen(new RetryUntilDownloaded(2000));
 
         Observable< ActorFullDetails> observableZipped = Observable.zip(actorObservable, actorTVCreditsObservable, externalIdsObservable,
                 new Function3<Actor, ActorTVCredits, ExternalIds, ActorFullDetails>() {
@@ -68,15 +78,23 @@ public class ActorPresenter implements ActorContract.Presenter {
                     @Override
                     public void accept(@NonNull ActorFullDetails actorFullDetails) throws Exception {
                         Log.v("accept","");
+                        mActor = actorFullDetails.mActor;
+                        mActorTVCredits = actorFullDetails.mActorTVCredits;
+                        mExternalIds = actorFullDetails.mExternalIds;
                         mActorView.setName(actorFullDetails.mActor.getName());
                         mActorView.setBiography(actorFullDetails.mActor.getBiography());
                         mActorView.setImage(actorFullDetails.mActor.getProfilePath());
-                        mActorTVCredits = actorFullDetails.mActorTVCredits;
-                        mExternalIds = actorFullDetails.mExternalIds;
                         mActorView.displayCredits(mActorTVCredits.getCast().size());
                     }
                 });
+    }
 
+    @Override
+    public void setActorData() {
+        mActorView.setName(mActor.getName());
+        mActorView.setBiography(mActor.getBiography());
+        mActorView.setImage(mActor.getProfilePath());
+        mActorView.displayCredits(mActorTVCredits.getCast().size());
     }
 
     @Override
@@ -98,6 +116,21 @@ public class ActorPresenter implements ActorContract.Presenter {
     @Override
     public String getTVShowTitle(int position) {
         return  mActorTVCredits.getCast().get(position).getName();
+    }
+
+    @Override
+    public ActorTVCredits getActorTVCredits() {
+        return mActorTVCredits;
+    }
+
+    @Override
+    public ExternalIds getExternalIds() {
+        return mExternalIds;
+    }
+
+    @Override
+    public Actor getActor() {
+        return mActor;
     }
 
     class ActorFullDetails{

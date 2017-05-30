@@ -23,6 +23,9 @@ import android.widget.TextView;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ShowsApplication;
 import com.example.android.tvshows.data.db.ShowsDbContract;
+import com.example.android.tvshows.data.model.Actor;
+import com.example.android.tvshows.data.model.ExternalIds;
+import com.example.android.tvshows.data.model.actortvcredits.ActorTVCredits;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -32,6 +35,10 @@ import butterknife.ButterKnife;
 
 
 public class ActorActivity extends AppCompatActivity implements ActorContract.View{
+
+    private final String OUTSTATE_ACTOR = "actor";
+    private final String OUTSTATE_ACTOR_TV_CREDITS = "actor_tv_credits";
+    private final String OUTSTATE_EXTERNAL_IDS = "external_ids";
 
     @BindView(R.id.actor_photo)ImageView mPhoto;
     @BindView(R.id.actor_name) TextView mName;
@@ -44,7 +51,7 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
     @Inject ActorAdapter mActorAdapter;
 
     private int mTmdbActorId;
-
+    private boolean mLoaded;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +60,31 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        mTmdbActorId = intent.getIntExtra(ShowsDbContract.CastEntry.COLUMN_PERSON_ID,-1);
+        mTmdbActorId = intent.getIntExtra(ShowsDbContract.CastEntry.COLUMN_PERSON_ID, -1);
 
-        ActorComponent component = DaggerActorComponent.builder()
-                .applicationComponent(ShowsApplication.get(this).getComponent())
-                .actorModule(new ActorModule(this,this,mTmdbActorId))
-                .build();
-        component.inject(this);
+        if(savedInstanceState!=null) {
+            mLoaded = true;
 
+            ExternalIds externalIds = savedInstanceState.getParcelable(OUTSTATE_EXTERNAL_IDS);
+            ActorTVCredits actorTVCredits = savedInstanceState.getParcelable(OUTSTATE_ACTOR_TV_CREDITS);
+            Actor actor = savedInstanceState.getParcelable(OUTSTATE_ACTOR);;
+
+            ActorComponent component = DaggerActorComponent.builder()
+                    .applicationComponent(ShowsApplication.get(this).getComponent())
+                    .actorModule(new ActorModule(this, this, mTmdbActorId,
+                            externalIds,actorTVCredits,actor))
+                    .build();
+            component.inject(this);
+        }
+        else {
+            mLoaded = false;
+
+            ActorComponent component = DaggerActorComponent.builder()
+                    .applicationComponent(ShowsApplication.get(this).getComponent())
+                    .actorModule(new ActorModule(this, this, mTmdbActorId))
+                    .build();
+            component.inject(this);
+        }
         setupRecyclerView();
         setupToolbar();
 
@@ -69,7 +93,8 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
     @Override
     protected void onStart() {
         super.onStart();
-        mActorPresenter.downloadActorData();
+        if(!mLoaded) mActorPresenter.downloadActorData();
+        else mActorPresenter.setActorData();
     }
 
     private void setupRecyclerView(){
@@ -90,8 +115,6 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //return super.onCreateOptionsMenu(menu);
-        //menu.clear();
         getMenuInflater().inflate(R.menu.links_menu, menu);
         return true;
     }
@@ -147,4 +170,11 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
     }
 
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(OUTSTATE_ACTOR,mActorPresenter.getActor());
+        outState.putParcelable(OUTSTATE_ACTOR_TV_CREDITS,mActorPresenter.getActorTVCredits());
+        outState.putParcelable(OUTSTATE_EXTERNAL_IDS,mActorPresenter.getExternalIds());
+    }
 }

@@ -1,10 +1,14 @@
 package com.example.android.tvshows.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Actor {
+public class Actor implements Parcelable{
 
     @SerializedName("adult")
     @Expose
@@ -150,4 +154,85 @@ public class Actor {
         this.profilePath = profilePath;
     }
 
+
+    protected Actor(Parcel in) {
+        byte adultVal = in.readByte();
+        adult = adultVal == 0x02 ? null : adultVal != 0x00;
+        if (in.readByte() == 0x01) {
+            alsoKnownAs = new ArrayList<Object>();
+            in.readList(alsoKnownAs, Object.class.getClassLoader());
+        } else {
+            alsoKnownAs = null;
+        }
+        biography = in.readString();
+        birthday = in.readString();
+        deathday = in.readString();
+        gender = in.readByte() == 0x00 ? null : in.readInt();
+        homepage = in.readString();
+        id = in.readByte() == 0x00 ? null : in.readInt();
+        imdbId = in.readString();
+        name = in.readString();
+        placeOfBirth = in.readString();
+        popularity = in.readByte() == 0x00 ? null : in.readDouble();
+        profilePath = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (adult == null) {
+            dest.writeByte((byte) (0x02));
+        } else {
+            dest.writeByte((byte) (adult ? 0x01 : 0x00));
+        }
+        if (alsoKnownAs == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(alsoKnownAs);
+        }
+        dest.writeString(biography);
+        dest.writeString(birthday);
+        dest.writeString(deathday);
+        if (gender == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(gender);
+        }
+        dest.writeString(homepage);
+        if (id == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(id);
+        }
+        dest.writeString(imdbId);
+        dest.writeString(name);
+        dest.writeString(placeOfBirth);
+        if (popularity == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(popularity);
+        }
+        dest.writeString(profilePath);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Actor> CREATOR = new Parcelable.Creator<Actor>() {
+        @Override
+        public Actor createFromParcel(Parcel in) {
+            return new Actor(in);
+        }
+
+        @Override
+        public Actor[] newArray(int size) {
+            return new Actor[size];
+        }
+    };
 }
