@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:background="@color/colorItemBackgroundDark"
+    android:layout_gravity="center">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+    <TextView
+        android:textSize="@dimen/text_size_medium"
+        android:padding="@dimen/padding_medium"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTextLight"
+        android:text="@string/my_shows_filters"/>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:columnCount="2"
+        >
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@color/colorTextLight"
+            android:text="@string/continuing"
+            />
+        <CheckBox
+            android:id="@+id/check_box_continuing"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@color/colorTextLight"
+            android:text="@string/favorites"
+            />
+        <CheckBox
+            android:id="@+id/check_box_favorites"/>
+
+    </GridLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingRight="@dimen/padding_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/dismiss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:paddingLeft="@dimen/padding_large"
+                android:paddingRight="@dimen/padding_large"
+                android:textSize="@dimen/text_size_small"
+                android:layout_gravity="center"
+                android:textColor="@color/colorAccent"
+                android:text="@string/dismiss"/>
+
+            <Button
+                android:id="@+id/add_filters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:paddingLeft="@dimen/padding_large"
+                android:paddingRight="@dimen/padding_large"
+                android:textSize="@dimen/text_size_small"
+                android:layout_gravity="center"
+                android:textColor="@color/colorAccent"
+                android:text="@string/filter"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

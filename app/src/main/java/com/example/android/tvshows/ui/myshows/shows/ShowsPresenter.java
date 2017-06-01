@@ -128,4 +128,5 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     public ArrayList<ShowInfo> getShowsInfo() {
         return mShowsInfo;
     }
+
 }

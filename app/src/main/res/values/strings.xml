@@ -64,6 +64,9 @@
     <string name="are_you_sure">Are you sure you wish to delete?</string>
     <string name="continuing">Continuing</string>
     <string name="finished">Finished</string>
+    <string name="favorites">Favorites</string>
+    <string name="my_shows_filters">Filters</string>
+    <string name="filter">Filter</string>
 
     <string-array name="my_shows_tabs">
         <item>SHOWS</item>

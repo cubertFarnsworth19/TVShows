@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ShowsApplication;
 import com.example.android.tvshows.data.db.ShowsRepository;
+import com.example.android.tvshows.ui.myshows.MyShowsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -97,5 +98,14 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(OUTSTATE_SHOWS_INFO,mShowsPresenter.getShowsInfo());
         outState.putParcelable(OUTSTATE_ADAPTER,mShowsAdapter);
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if(menuVisible){
+            MyShowsActivity myShowsActivity = (MyShowsActivity) getActivity();
+            if(myShowsActivity!=null) myShowsActivity.setFilterButtonVisible(true);
+        }
     }
 }

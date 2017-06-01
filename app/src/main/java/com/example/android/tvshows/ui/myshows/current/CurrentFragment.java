@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ShowsApplication;
 import com.example.android.tvshows.data.db.ShowsRepository;
+import com.example.android.tvshows.ui.myshows.MyShowsActivity;
 import com.example.android.tvshows.ui.myshows.shows.ShowsFragment;
 import com.squareup.picasso.Picasso;
 
@@ -103,5 +104,14 @@ public class CurrentFragment extends Fragment implements CurrentContract.View{
         outState.putParcelableArrayList(OUTSTATE_DATES,mCurrentPresenter.getDates());
         outState.putParcelableArrayList(OUTSTATE_CURRENT_INFO,mCurrentPresenter.getCurrentInfo());
         outState.putParcelable(OUTSTATE_ADAPTER,mCurrentAdapter);
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if(menuVisible){
+            MyShowsActivity myShowsActivity = (MyShowsActivity) getActivity();
+            if(myShowsActivity!=null) myShowsActivity.setFilterButtonVisible(false);
+        }
     }
 }

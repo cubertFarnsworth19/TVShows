@@ -9,29 +9,51 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ui.BaseNavigationActivity;
 import com.example.android.tvshows.ui.NavigationIconActivity;
+import com.example.android.tvshows.ui.find.discover.GenresDialog;
 import com.example.android.tvshows.ui.myshows.current.CurrentFragment;
 import com.example.android.tvshows.ui.myshows.shows.ShowsFragment;
 import com.example.android.tvshows.ui.tabs.SlidingTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class MyShowsActivity extends NavigationIconActivity {
 
+    private final String OUTSTATE_CONTINUING = "continuing";
+    private final String OUTSTATE_FAVORITE = "favorite";
+
     @BindView(R.id.tabs)SlidingTabLayout mSlidingTabLayout;
     @BindView(R.id.pager) ViewPager mPager;
     @BindView(R.id.nested_scroll_view)NestedScrollView mNestedScrollView;
+    @BindView(R.id.btn_filter) ImageButton mButtonFilter;
+
+    // if filter includes
+    private boolean mContinuing;
+    private boolean mFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+
+        if(savedInstanceState!=null){
+            mContinuing = savedInstanceState.getBoolean(OUTSTATE_CONTINUING,false);
+            mFavorite = savedInstanceState.getBoolean(OUTSTATE_FAVORITE,false);
+        }
+        else{
+            mContinuing = false;
+            mFavorite = false;
+        }
+
         mNestedScrollView.setFillViewport(true);
         mNestedScrollView.setNestedScrollingEnabled(true);
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
@@ -42,6 +64,7 @@ public class MyShowsActivity extends NavigationIconActivity {
                 return getResources().getColor(R.color.colorAccent);
             }
         });
+
     }
 
     class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -56,8 +79,9 @@ public class MyShowsActivity extends NavigationIconActivity {
         @Override
         public Fragment getItem(int position) {
             Fragment fragment;
-            if(position==0)
+            if(position==0) {
                 fragment = ShowsFragment.getInstance();
+            }
             else {
                 fragment = CurrentFragment.getInstance(position);
             }
@@ -76,8 +100,25 @@ public class MyShowsActivity extends NavigationIconActivity {
         }
     }
 
+    public void setFilterButtonVisible(boolean visible){
+        if(visible) mButtonFilter.setVisibility(View.VISIBLE);
+        else  mButtonFilter.setVisibility(View.INVISIBLE);
+    }
 
+    @OnClick(R.id.btn_filter)
+    public void clickButton() {
+        FragmentManager fm = this.getSupportFragmentManager();
+        FilterMyShowsDialog filterMyShowsDialog = new FilterMyShowsDialog(this,mContinuing,mFavorite);
+        filterMyShowsDialog.show(fm,"dialog_myshows_filter");
+    }
 
+    public void setContinuing(boolean continuing) {
+        mContinuing = continuing;
+    }
+
+    public void setFavorite(boolean favorite) {
+        mFavorite = favorite;
+    }
 
     // navigation drawer methods
     @Override
@@ -101,4 +142,10 @@ public class MyShowsActivity extends NavigationIconActivity {
     }
 
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(OUTSTATE_CONTINUING,mContinuing);
+        outState.putBoolean(OUTSTATE_FAVORITE,mFavorite);
+    }
 }
