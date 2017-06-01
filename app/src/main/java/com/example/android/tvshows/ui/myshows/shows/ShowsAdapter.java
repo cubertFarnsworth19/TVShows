@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -63,6 +64,7 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holderShows.seasons.setText(mShowsPresenter.getNumberOfSeasons(position));
         holderShows.episodes.setText(mShowsPresenter.getNumberOfEpisodes(position));
         holderShows.inProduction.setText(mShowsPresenter.getInProduction(position));
+        holderShows.setFavorite(mShowsPresenter.isFavorite(position));
     }
 
     @Override
@@ -78,49 +80,67 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @BindView(R.id.show_seasons)TextView seasons;
         @BindView(R.id.show_episodes)TextView episodes;
         @BindView(R.id.in_production)TextView inProduction;
-        @BindView(R.id.overflow)ImageView overflow;
-        boolean popupWindowShowing = false;
+        @BindView(R.id.favorite)ImageView favoriteIcon;
+        @BindView(R.id.delete_forever)ImageView deleteForever;
+
+        //boolean popupWindowShowing = false;
+        boolean favorite;
 
         public ViewHolderShows(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
             layout.setOnClickListener(this);
-            overflow.setOnClickListener(this);
+            favoriteIcon.setOnClickListener(this);
+            deleteForever.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
 
-            if(view.getId() == overflow.getId()){
-                if(!popupWindowShowing) {
-
-                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-                    View menu = inflater.inflate(R.layout.myshows_shows_overflow_menu, null);
-
-                    popupWindowShowing = true;
-                    final PopupWindow popupWindow = new PopupWindow(
-                            menu,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                    popupWindow.setOutsideTouchable(true);
-
-                    TextView remove = (TextView) menu.findViewById(R.id.remove);
-                    remove.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mShowsPresenter.removeShow(getAdapterPosition());
-                            notifyItemRemoved(getAdapterPosition());
-                            mSize--;
-                            notifyItemRangeChanged(getAdapterPosition(), mSize);
-                            popupWindow.dismiss();
-                        }
-                    });
-
-                    popupWindow.showAsDropDown(view);
+//            if(view.getId() == overflow.getId()){
+//                if(!popupWindowShowing) {
+//
+//                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+//                    View menu = inflater.inflate(R.layout.myshows_shows_overflow_menu, null);
+//
+//                    popupWindowShowing = true;
+//                    final PopupWindow popupWindow = new PopupWindow(
+//                            menu,
+//                            ViewGroup.LayoutParams.WRAP_CONTENT,
+//                            ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    popupWindow.setOutsideTouchable(true);
+//
+//                    TextView remove = (TextView) menu.findViewById(R.id.remove);
+//                    remove.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            mShowsPresenter.removeShow(getAdapterPosition());
+//                            notifyItemRemoved(getAdapterPosition());
+//                            mSize--;
+//                            notifyItemRangeChanged(getAdapterPosition(), mSize);
+//                            popupWindow.dismiss();
+//                        }
+//                    });
+//
+//                    popupWindow.showAsDropDown(view);
+//                }
+//                else {
+//                    popupWindowShowing = false;
+//                }
+//
+//            }
+            if(view.getId() == favoriteIcon.getId()) {
+                if(!favorite) {
+                    favoriteIcon.setImageResource(R.drawable.ic_favorite_white_24dp);
+                    favorite = true;
                 }
                 else {
-                    popupWindowShowing = false;
+                    favoriteIcon.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                    favorite = false;
                 }
+                mShowsPresenter.setFavorite(getAdapterPosition(),favorite);
+            }
+            else if(view.getId() == deleteForever.getId()) {
 
             }
             else {
@@ -128,6 +148,14 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
 
         }
+
+
+        public void setFavorite(boolean favorite) {
+            this.favorite = favorite;
+            if (favorite) favoriteIcon.setImageResource(R.drawable.ic_favorite_white_24dp);
+            else favoriteIcon.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+        }
+
 
     }
 

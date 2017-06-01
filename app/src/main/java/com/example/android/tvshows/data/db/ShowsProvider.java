@@ -160,6 +160,8 @@ public class ShowsProvider extends ContentProvider {
             Log.v("ShowsProvider insert",""+id);
             return ContentUris.withAppendedId(uri,id);
         }
+
+        getContext().getContentResolver().notifyChange(uri,null);
         return null;
     }
 
@@ -302,9 +304,13 @@ public class ShowsProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        SQLiteDatabase database = mDbHelper.getWritableDatabase();
-       // database.update()
+    public int update(Uri uri, ContentValues contentValues, String where, String[] selectionArgs) {
+
+        final int match = sUriMatcher.match(uri);
+        if(match==TVSHOW){
+            SQLiteDatabase database = mDbHelper.getWritableDatabase();
+            database.update(ShowsEntry.TABLE_NAME,contentValues,where,selectionArgs);
+        }
         return 0;
     }
 

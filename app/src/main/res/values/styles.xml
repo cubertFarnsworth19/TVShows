@@ -17,7 +17,9 @@
         <item name="colorButtonNormal">@color/colorPrimaryDark</item>
     </style>
 
-
+    <style name="AppTheme.ButtonBackground" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorItemBackgroundDark</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

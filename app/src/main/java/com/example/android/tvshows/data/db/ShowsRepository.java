@@ -274,8 +274,14 @@ public class ShowsRepository {
         mContext.getContentResolver().delete(Uri.parse(ShowsDbContract.ShowsEntry.CONTENT_URI + "/full_delete"), fullWhere, selectionArgs);
     }
 
-    public void updateShow(Intent tmdbId){
-
+    // update if has been selected/ deselected as favorite
+    public void setFavorite(Integer tmdbId,boolean favorite){
+        int fav = favorite ? 1:0;
+        ContentValues showsValues = new ContentValues();
+        showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE,fav);
+        String[] selectionArgs = {tmdbId.toString()};
+        String where = ShowsDbContract.ShowsEntry._ID + " =?";
+        mContext.getContentResolver().update(ShowsDbContract.ShowsEntry.CONTENT_URI,showsValues,where,selectionArgs);
     }
 
     public Cursor getAllShows(){

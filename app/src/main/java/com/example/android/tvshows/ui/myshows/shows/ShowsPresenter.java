@@ -59,7 +59,8 @@ public class ShowsPresenter implements ShowsContract.Presenter {
                             cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)),
                             cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS)),
                             cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_EPISODES)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION))
+                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION)),
+                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE))
                     ));
                 }
 
@@ -95,6 +96,17 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     @Override
     public String getInProduction(int position) {
         return mShowsInfo.get(position).getInProduction();
+    }
+
+    @Override
+    public boolean isFavorite(int position) {
+        return mShowsInfo.get(position).isFavorite();
+    }
+
+    @Override
+    public void setFavorite(int position, boolean favorite) {
+        mShowsInfo.get(position).setFavorite(favorite);
+        mShowsRepository.setFavorite(mShowsInfo.get(position).getId(),favorite);
     }
 
     @Override

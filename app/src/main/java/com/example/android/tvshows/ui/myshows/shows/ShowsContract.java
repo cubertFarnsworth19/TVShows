@@ -18,6 +18,8 @@ public interface ShowsContract {
         String getNumberOfSeasons(int position);
         String getNumberOfEpisodes(int position);
         String getInProduction(int position);
+        boolean isFavorite(int position);
+        void setFavorite(int position,boolean favorite);
         void startShowInfoActivity(Context context,int position);
         void removeShow(int position);
         ArrayList<ShowInfo> getShowsInfo();
