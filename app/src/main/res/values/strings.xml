@@ -60,6 +60,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <!-- my shows -->
+    <string name="are_you_sure">Are you sure you wish to delete?</string>
     <string name="continuing">Continuing</string>
     <string name="finished">Finished</string>
 
@@ -75,6 +77,8 @@
         <item>CAST</item>
         <item>RECOMMENDATIONS</item>
     </string-array>
+
+    
 
     <!-- updates -->
     <string name="auto_updates">Update Automatically</string>

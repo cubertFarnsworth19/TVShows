@@ -1,8 +1,12 @@
 package com.example.android.tvshows.ui.myshows.shows;
 
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -97,38 +101,6 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Override
         public void onClick(View view) {
 
-//            if(view.getId() == overflow.getId()){
-//                if(!popupWindowShowing) {
-//
-//                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-//                    View menu = inflater.inflate(R.layout.myshows_shows_overflow_menu, null);
-//
-//                    popupWindowShowing = true;
-//                    final PopupWindow popupWindow = new PopupWindow(
-//                            menu,
-//                            ViewGroup.LayoutParams.WRAP_CONTENT,
-//                            ViewGroup.LayoutParams.WRAP_CONTENT);
-//                    popupWindow.setOutsideTouchable(true);
-//
-//                    TextView remove = (TextView) menu.findViewById(R.id.remove);
-//                    remove.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            mShowsPresenter.removeShow(getAdapterPosition());
-//                            notifyItemRemoved(getAdapterPosition());
-//                            mSize--;
-//                            notifyItemRangeChanged(getAdapterPosition(), mSize);
-//                            popupWindow.dismiss();
-//                        }
-//                    });
-//
-//                    popupWindow.showAsDropDown(view);
-//                }
-//                else {
-//                    popupWindowShowing = false;
-//                }
-//
-//            }
             if(view.getId() == favoriteIcon.getId()) {
                 if(!favorite) {
                     favoriteIcon.setImageResource(R.drawable.ic_favorite_white_24dp);
@@ -141,6 +113,23 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 mShowsPresenter.setFavorite(getAdapterPosition(),favorite);
             }
             else if(view.getId() == deleteForever.getId()) {
+
+                new AlertDialog.Builder(mContext)
+                        .setTitle(R.string.are_you_sure)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mShowsPresenter.removeShow(getAdapterPosition());
+                                notifyItemRemoved(getAdapterPosition());
+                                mSize--;
+                                notifyItemRangeChanged(getAdapterPosition(), mSize);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
 
             }
             else {

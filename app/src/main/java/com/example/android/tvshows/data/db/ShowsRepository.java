@@ -275,13 +275,21 @@ public class ShowsRepository {
     }
 
     // update if has been selected/ deselected as favorite
-    public void setFavorite(Integer tmdbId,boolean favorite){
-        int fav = favorite ? 1:0;
-        ContentValues showsValues = new ContentValues();
-        showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE,fav);
-        String[] selectionArgs = {tmdbId.toString()};
-        String where = ShowsDbContract.ShowsEntry._ID + " =?";
-        mContext.getContentResolver().update(ShowsDbContract.ShowsEntry.CONTENT_URI,showsValues,where,selectionArgs);
+    public void setFavorite(final Integer tmdbId,final boolean favorite){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int fav = favorite ? 1 : 0;
+                ContentValues showsValues = new ContentValues();
+                showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE, fav);
+                String[] selectionArgs = {tmdbId.toString()};
+                String where = ShowsDbContract.ShowsEntry._ID + " =?";
+                mContext.getContentResolver().update(ShowsDbContract.ShowsEntry.CONTENT_URI, showsValues, where, selectionArgs);
+            }
+        });
+
+        thread.start();
+
     }
 
     public Cursor getAllShows(){
