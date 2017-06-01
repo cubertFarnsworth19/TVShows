@@ -38,12 +38,12 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     }
 
     @Override
-    public void loadShowsFromDatabase(final Context context) {
+    public void loadShowsFromDatabase(final Context context, final boolean continuing, final boolean favorite) {
 
         Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
             public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
-                e.onNext(mShowsRepository.getAllShows());
+                e.onNext(mShowsRepository.getAllShows(continuing,favorite));
             }
         });
 

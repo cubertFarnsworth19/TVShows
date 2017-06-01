@@ -12,6 +12,8 @@ import android.widget.CheckBox;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ui.myshows.current.CurrentContract;
+import com.example.android.tvshows.ui.myshows.shows.ShowsComponent;
+import com.example.android.tvshows.ui.myshows.shows.ShowsContract;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,11 +27,11 @@ public class FilterMyShowsDialog extends DialogFragment {
     @BindView(R.id.check_box_favorites) CheckBox mCheckBoxFavorites;
 
     private MyShowsActivity mMyShowsActivity;
-    private CurrentContract.Presenter mPresenter;
+    private ShowsContract.Presenter mPresenter;
     private boolean mContinuing;
     private boolean mFavorite;
 
-    FilterMyShowsDialog(MyShowsActivity myShowsActivity,CurrentContract.Presenter presenter,boolean continuing,boolean favorite){
+    FilterMyShowsDialog(MyShowsActivity myShowsActivity,ShowsContract.Presenter presenter,boolean continuing,boolean favorite){
         mMyShowsActivity = myShowsActivity;
         mPresenter = presenter;
         mContinuing = continuing;
@@ -49,8 +51,12 @@ public class FilterMyShowsDialog extends DialogFragment {
     @OnClick({R.id.add_filters,R.id.dismiss})
     void click(Button button){
         if(button.getId()==R.id.add_filters){
-            mMyShowsActivity.setContinuing(mCheckBoxContinuing.isChecked());
-            mMyShowsActivity.setFavorite(mCheckBoxFavorites.isChecked());
+            mContinuing = mCheckBoxContinuing.isChecked();
+            mFavorite = mCheckBoxFavorites.isChecked();
+            mMyShowsActivity.setContinuing(mContinuing);
+            mMyShowsActivity.setFavorite(mFavorite);
+            mPresenter.loadShowsFromDatabase(mMyShowsActivity,mContinuing,mFavorite);
+            dismiss();
         }
         else if(button.getId()==R.id.dismiss)
             dismiss();

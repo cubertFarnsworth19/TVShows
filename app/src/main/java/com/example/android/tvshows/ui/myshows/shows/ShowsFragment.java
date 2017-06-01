@@ -79,13 +79,17 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        if(!mLoaded) mShowsPresenter.loadShowsFromDatabase(getActivity());
+        if(!mLoaded) mShowsPresenter.loadShowsFromDatabase(getActivity(),false,false);
     }
 
     private void setupRecyclerView(){
         mRecyclerView.setAdapter(mShowsAdapter);
         GridLayoutManager glm = new GridLayoutManager(getActivity(),1);
         mRecyclerView.setLayoutManager(glm);
+    }
+
+    public ShowsContract.Presenter getShowsPresenter(){
+        return mShowsPresenter;
     }
 
     @Override

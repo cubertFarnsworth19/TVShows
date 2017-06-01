@@ -12,7 +12,7 @@ public interface ShowsContract {
     }
 
     interface Presenter{
-        void loadShowsFromDatabase(Context context);
+        void loadShowsFromDatabase(Context context,boolean continuing,boolean favorite);
         String getTitle(int position);
         String getPosterUrl(int position);
         String getNumberOfSeasons(int position);

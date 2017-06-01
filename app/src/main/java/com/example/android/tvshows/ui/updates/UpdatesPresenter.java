@@ -52,7 +52,7 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
         mTVShows = new ArrayList<>();
         mHashtableSeasons = new Hashtable<>();
 
-        Cursor cursor = mShowsRepository.getAllShows();
+        Cursor cursor = mShowsRepository.getAllShows(false,false);
 
         while (cursor.moveToNext()){
             mTVShows.add(new TVShow(

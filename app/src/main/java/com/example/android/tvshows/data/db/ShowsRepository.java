@@ -292,8 +292,24 @@ public class ShowsRepository {
 
     }
 
-    public Cursor getAllShows(){
-        return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,null,null,null);
+    public Cursor getAllShows(boolean continuing,boolean favorites){
+        if(!continuing && !favorites)
+            return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,null,null,null);
+
+        if(continuing && favorites){
+            String where = ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION + " =? AND " + ShowsDbContract.ShowsEntry.COLUMN_FAVORITE + " =?";
+            String[] selectionArgs = {"1","1"};
+            return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,where,selectionArgs,null);
+        }
+        else{
+            String[] selectionArgs = {"1"};
+            String where;
+            if(continuing)
+                where = ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION + " =?";
+            else
+                where = ShowsDbContract.ShowsEntry.COLUMN_FAVORITE + " =?";
+            return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,where,selectionArgs,null);
+        }
     }
 
     public ArrayList<Integer> getAllShowIds(){

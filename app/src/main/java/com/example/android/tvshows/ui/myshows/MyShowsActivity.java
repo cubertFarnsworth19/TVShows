@@ -40,6 +40,8 @@ public class MyShowsActivity extends NavigationIconActivity {
     private boolean mContinuing;
     private boolean mFavorite;
 
+    private ShowsFragment mShowsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,8 @@ public class MyShowsActivity extends NavigationIconActivity {
         public Fragment getItem(int position) {
             Fragment fragment;
             if(position==0) {
-                fragment = ShowsFragment.getInstance();
+                mShowsFragment = ShowsFragment.getInstance();
+                fragment = mShowsFragment;
             }
             else {
                 fragment = CurrentFragment.getInstance(position);
@@ -108,7 +111,7 @@ public class MyShowsActivity extends NavigationIconActivity {
     @OnClick(R.id.btn_filter)
     public void clickButton() {
         FragmentManager fm = this.getSupportFragmentManager();
-        FilterMyShowsDialog filterMyShowsDialog = new FilterMyShowsDialog(this,mContinuing,mFavorite);
+        FilterMyShowsDialog filterMyShowsDialog = new FilterMyShowsDialog(this,mShowsFragment.getShowsPresenter(),mContinuing,mFavorite);
         filterMyShowsDialog.show(fm,"dialog_myshows_filter");
     }
 
