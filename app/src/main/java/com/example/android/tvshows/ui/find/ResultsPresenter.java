@@ -7,6 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 
@@ -254,6 +255,16 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
     @Override
     public int getTmdbId(int position) {
         return mResults.get(position).getId();
+    }
+
+    @Override
+    public int getNumberOfColumns(Context context) {
+        //int columns = getActivity().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? 2:3;
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int columns = (int) (dpWidth / 200);
+        return columns;
     }
 
     @Override

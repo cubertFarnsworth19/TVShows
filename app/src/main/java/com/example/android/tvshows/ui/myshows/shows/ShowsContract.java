@@ -15,8 +15,8 @@ public interface ShowsContract {
         void loadShowsFromDatabase(Context context,boolean continuing,boolean favorite);
         String getTitle(int position);
         String getPosterUrl(int position);
-        String getNumberOfSeasons(int position);
-        String getNumberOfEpisodes(int position);
+        String getNumberOfSeasons(Context context,int position);
+        String getNumberOfEpisodes(Context context,int position);
         String getInProduction(int position);
         boolean isFavorite(int position);
         void setFavorite(int position,boolean favorite);

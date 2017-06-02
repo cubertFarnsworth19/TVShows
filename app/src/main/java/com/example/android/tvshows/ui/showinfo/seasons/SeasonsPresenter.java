@@ -100,8 +100,13 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
     }
 
     @Override
-    public String getNumberOfEpisodes(int adapterPosition) {
-        return mSeasonsInfo.get(adapterPosition).numberOfEpisodes;
+    public String getNumberOfEpisodes(int adapterPosition,Context context) {
+        String episodes = mSeasonsInfo.get(adapterPosition).numberOfEpisodes;
+
+        if(episodes.equals("1")) episodes += context.getString(R.string.episodes1);
+        else episodes += context.getString(R.string.episodes);
+
+        return episodes;
     }
 
     @Override

@@ -84,13 +84,19 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     }
 
     @Override
-    public String getNumberOfSeasons(int position) {
-        return mShowsInfo.get(position).getNumberOfSeasons();
+    public String getNumberOfSeasons(Context context,int position) {
+        String seasons = mShowsInfo.get(position).getNumberOfSeasons();
+        if(seasons.equals("1")) seasons += context.getString(R.string.seasons1);
+        else seasons += context.getString(R.string.seasons);
+        return seasons;
     }
 
     @Override
-    public String getNumberOfEpisodes(int position) {
-        return mShowsInfo.get(position).getNumberOfEpisodes();
+    public String getNumberOfEpisodes(Context context,int position) {
+        String episodes = mShowsInfo.get(position).getNumberOfEpisodes();
+        if(episodes.equals("1")) episodes += context.getString(R.string.episodes1);
+        else episodes += context.getString(R.string.episodes);
+        return episodes;
     }
 
     @Override

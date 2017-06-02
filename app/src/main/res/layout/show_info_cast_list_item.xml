@@ -35,7 +35,7 @@
             android:id="@+id/character_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
             android:paddingBottom="@dimen/padding_medium"
             android:textSize="@dimen/text_size_small"
             android:textColor="@color/colorAccent"/>

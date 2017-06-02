@@ -8,6 +8,8 @@
 
     <string name="seasons">\u0020Seasons</string>
     <string name="episodes">\u0020Episodes</string>
+    <string name="seasons1">\u0020Season</string>
+    <string name="episodes1">\u0020Episode</string>
     <string name="votes">\u0020votes</string>
     <string name="genres">Genres:</string>
     <string name="creators">Creator(s):</string>
@@ -43,8 +45,8 @@
 
     <string name="vote_average_min">Vote Average min:</string>
     <string name="vote_count_min">Vote Count min:</string>
-    <string name="include_genres">Include Genres</string>
-    <string name="exclude_genres">Exclude Genres</string>
+    <string name="include_genres">Include</string>
+    <string name="exclude_genres">Exclude</string>
     <string name="first_air_date_min">First Air Date (after):</string>
     <string name="first_air_date_max">First Air Date (before):</string>
 

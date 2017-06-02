@@ -13,7 +13,6 @@ import java.util.List;
 public interface ResultsContract {
 
     interface View{
-        //void setResultsAdapter(DiscoverResults discoverResults);
         void setResultsAdapter(int size);
         void setFilters(String sortBy, String withGenres, String withoutGenres,
                                     String minVoteAverage, String minVoteCount,
@@ -40,6 +39,7 @@ public interface ResultsContract {
         public String getLastWithGenres();
         boolean showAddButton(int position);
         int getTmdbId(int position);
+        int getNumberOfColumns(Context context);
         void openMoreDetailsDialog(int position);
         void showAdded();
         SaveResultsPresenterState getSaveResultsPresenterState();

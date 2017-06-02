@@ -82,9 +82,10 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     }
 
     private void setupRecyclerView(){
+
         //int columns = getActivity().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? 2:3;
         mRecyclerView.setAdapter(mResultsAdapter);
-        mGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        mGridLayoutManager = new StaggeredGridLayoutManager(mResultsPresenter.getNumberOfColumns(getActivity()),StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
     }
 

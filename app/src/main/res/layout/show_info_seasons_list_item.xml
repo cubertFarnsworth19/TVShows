@@ -45,12 +45,10 @@
                     android:textSize="@dimen/text_size_medium"
                     android:textColor="@color/colorTextLight"
                     />
-
-                <LinearLayout
-                    android:orientation="horizontal"
+                <org.apmem.tools.layouts.FlowLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/padding_small">
+                    >
                     <TextView
                         tools:text="16/04/2009"
                         android:id="@+id/season_air_date"
@@ -59,20 +57,14 @@
                         android:paddingRight="16dp"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/colorTextLight"/>
-                        <TextView
-                        tools:text="10"
+                    <TextView
+                        tools:text="10 Episodes"
                         android:id="@+id/season_episodes_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/colorAccent"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_small"
-                        android:textColor="@color/colorAccent"
-                        android:text="@string/episodes"/>
-                </LinearLayout>
+                </org.apmem.tools.layouts.FlowLayout>
                 <TextView
                     android:id="@+id/season_overview"
                     android:layout_width="wrap_content"

@@ -65,8 +65,8 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ViewHolderShows holderShows = (ViewHolderShows) holder;
         holderShows.title.setText(mShowsPresenter.getTitle(position));
         mPicasso.load(mShowsPresenter.getPosterUrl(position)).into(holderShows.poster);
-        holderShows.seasons.setText(mShowsPresenter.getNumberOfSeasons(position));
-        holderShows.episodes.setText(mShowsPresenter.getNumberOfEpisodes(position));
+        holderShows.seasons.setText(mShowsPresenter.getNumberOfSeasons(mContext,position));
+        holderShows.episodes.setText(mShowsPresenter.getNumberOfEpisodes(mContext,position));
         holderShows.inProduction.setText(mShowsPresenter.getInProduction(position));
         holderShows.setFavorite(mShowsPresenter.isFavorite(position));
     }
@@ -87,7 +87,6 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @BindView(R.id.favorite)ImageView favoriteIcon;
         @BindView(R.id.delete_forever)ImageView deleteForever;
 
-        //boolean popupWindowShowing = false;
         boolean favorite;
 
         public ViewHolderShows(View itemView) {

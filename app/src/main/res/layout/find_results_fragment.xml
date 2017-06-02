@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:gravity="center"
-              android:layout_gravity="center"
+              android:background="@color/colorBackgroundDark"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -13,10 +12,10 @@
         android:layout_weight="1"
         android:scrollbars="vertical"
         android:background="@color/colorBackgroundDark"
-        android:gravity="center"
-        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_height="0dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/find_results_list_item"
         >

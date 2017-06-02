@@ -4,22 +4,27 @@ import android.annotation.SuppressLint;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.GridLayout;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.util.Genres;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 @SuppressLint("ValidFragment")
 public class GenresDialog extends DialogFragment implements View.OnClickListener{
 
     View rootview;
+
+    @BindView(R.id.genres_grid)GridLayout mGridGenres;
 
     private DiscoverActivity mDiscoverActivity;
     private boolean[] mGenresSelected;
@@ -37,6 +42,7 @@ public class GenresDialog extends DialogFragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootview =  inflater.inflate(R.layout.find_discover_genre_dialog, container, false);
+        ButterKnife.bind(this,rootview);
         setCheckedGenres();
         setButtons();
         return rootview;
@@ -64,6 +70,11 @@ public class GenresDialog extends DialogFragment implements View.OnClickListener
         for (int i=0;i<mCheckBoxesGenres.length;i++){
             mCheckBoxesGenres[i].setChecked(mGenresSelected[i]);
         }
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int columns = (int) (dpWidth / 100);
+        columns = columns>=4 ? 4 : 2;
+        mGridGenres.setColumnCount(columns);
     }
 
     //set the buttons at the bottom of the dialog

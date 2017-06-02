@@ -61,6 +61,7 @@
                 android:textSize="@dimen/text_size_small"
                 android:layout_gravity="center"
                 android:textColor="@color/colorAccent"
+                android:textAllCaps="true"
                 android:text="@string/dismiss"/>
 
             <Button
@@ -73,6 +74,7 @@
                 android:textSize="@dimen/text_size_small"
                 android:layout_gravity="center"
                 android:textColor="@color/colorAccent"
+                android:textAllCaps="true"
                 android:text="@string/filter"/>
 
         </LinearLayout>
