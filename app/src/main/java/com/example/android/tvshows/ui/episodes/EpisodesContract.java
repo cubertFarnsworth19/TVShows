@@ -10,7 +10,7 @@ public interface EpisodesContract {
     }
 
     interface Presenter{
-        void loadEpisodesData();
+        void loadEpisodesData(Context context);
         EpisodeData getEpisodeData(Context context,int position);
         void startNewEpisodesActvity(Context context,int index);
         String[] getSeasonNames();
@@ -18,7 +18,7 @@ public interface EpisodesContract {
         void visitTMDBPage(Context context,int tmdbId);
         void searchGoogle(Context context,String episodeName);
         void searchYouTube(Context context,String episodeName);
-        void closeCursor();
+
     }
 
 }

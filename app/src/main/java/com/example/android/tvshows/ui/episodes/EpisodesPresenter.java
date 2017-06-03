@@ -15,6 +15,8 @@ import com.example.android.tvshows.data.rest.ApiService;
 import com.example.android.tvshows.data.rest.ApiUtils;
 import com.example.android.tvshows.util.Utility;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
@@ -36,8 +38,9 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     // the numbers of each season in the spinner
     private int[] mSeasonNumbers;
     private String[] mSeasonNames;
-    private Cursor mEpisodesCursor;
+    //private Cursor mEpisodesCursor;
     private ApiService mApiService;
+    private ArrayList<EpisodeData> mEpisodeData;
 
     @Inject
     public EpisodesPresenter(EpisodesContract.View episodeView,ShowsRepository showsRepository,ApiService apiService,int showId,int seasonNumber,int[] seasonNumbers,String[] seasonNames){
@@ -51,7 +54,7 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     }
 
     @Override
-    public void loadEpisodesData() {
+    public void loadEpisodesData(final Context context) {
         //mEpisodesCursor = mShowsRepository.getEpisodes(mShowId, mSeasonNumber);
 
         Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
@@ -64,8 +67,21 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
         Consumer<Cursor> consumer = new Consumer<Cursor>() {
             @Override
             public void accept(@NonNull Cursor cursor) throws Exception {
-                mEpisodesCursor = cursor;
-                mEpisodeView.episodeDataLoaded(mEpisodesCursor.getCount());
+                mEpisodeData = new ArrayList<>();
+                while (cursor.moveToNext()){
+                    int tmdbId = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry._ID));
+                    String name = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME));
+                    String overview = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW));
+                    String stillPath = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_STILL_PATH));
+
+                    Integer day = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY));
+                    Integer month = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH));
+                    Integer year = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR));
+                    mEpisodeData.add(new EpisodeData(tmdbId,name,overview,context.getString(R.string.poster_path) +stillPath, Utility.getDateAsString(day,month,year),cursor.getPosition()));
+                }
+                cursor.close();
+                //mEpisodesCursor = cursor;
+                mEpisodeView.episodeDataLoaded(cursor.getCount());
             }
         };
 
@@ -77,18 +93,18 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     @Override
     public EpisodeData getEpisodeData(Context context, int position) {
 
-        mEpisodesCursor.moveToPosition(position);
-        int tmdbId = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry._ID));
-        String name = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME));
-        String overview = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW));
-        String stillPath = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_STILL_PATH));
+//        mEpisodesCursor.moveToPosition(position);
+//        int tmdbId = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry._ID));
+//        String name = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME));
+//        String overview = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW));
+//        String stillPath = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_STILL_PATH));
+//
+//        Integer day = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY));
+//        Integer month = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH));
+//        Integer year = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR));
 
-        Integer day = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY));
-        Integer month = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH));
-        Integer year = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR));
-
-        EpisodeData episodeData = new EpisodeData(tmdbId,name,overview,context.getString(R.string.poster_path) +stillPath, Utility.getDateAsString(day,month,year),position);
-        return episodeData;
+       // EpisodeData episodeData = new EpisodeData(tmdbId,name,overview,context.getString(R.string.poster_path) +stillPath, Utility.getDateAsString(day,month,year),position);
+        return mEpisodeData.get(position);
     }
 
     @Override
@@ -172,9 +188,5 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
         showCursor.close();
     }
 
-    @Override
-    public void closeCursor() {
-        mEpisodesCursor.close();
-    }
 
 }

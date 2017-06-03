@@ -78,13 +78,7 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
     @Override
     protected void onStart() {
         super.onStart();
-        mEpisodesPresenter.loadEpisodesData();
-    }
-
-    @Override
-    protected void onDestroy() {
-        mEpisodesPresenter.closeCursor();
-        super.onDestroy();
+        mEpisodesPresenter.loadEpisodesData(this);
     }
 
     private void setupSpinner(){
@@ -124,7 +118,6 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
 
     @Override
     public void endActivity() {
-        mEpisodesPresenter.closeCursor();
         finish();
     }
 
