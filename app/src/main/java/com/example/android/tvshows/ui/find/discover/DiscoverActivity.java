@@ -39,6 +39,7 @@ public class DiscoverActivity extends NavigationIconActivity {
     private final String FRAGMENT = "Results Fragment";
     private final String OUTSTATE_INCLUDE_GENRES = "include_genres";
     private final String OUTSTATE_EXCLUDE_GENRES = "exclude_genres";
+    private final String OUTSTATE_EXPANDED = "expanded";
 
     @BindView(R.id.discover_filters) View mViewDiscoverFilters;
     @BindView(R.id.find_discover_activity)  LinearLayout mRootLayout;
@@ -60,6 +61,8 @@ public class DiscoverActivity extends NavigationIconActivity {
     boolean[] mIncludeGenres = new boolean[Genres.numberOfGenres()];
     boolean[] mExcludeGenres = new boolean[Genres.numberOfGenres()];
 
+    boolean mExpanded;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,12 @@ public class DiscoverActivity extends NavigationIconActivity {
             mExcludeGenres = savedInstanceState.getBooleanArray(OUTSTATE_EXCLUDE_GENRES);
             mTextViewIncludeGenres.setText(Genres.getGenresString(mIncludeGenres,this));
             mTextViewExcludeGenres.setText(Genres.getGenresString(mExcludeGenres,this));
+            mExpanded = savedInstanceState.getBoolean(OUTSTATE_EXPANDED);
+            ImageButton button = (ImageButton) findViewById(R.id.btn_expand);
+            if(mExpanded)
+                button.setImageResource(R.drawable.ic_expand_less_white_24dp);
+            else
+                button.setImageResource(R.drawable.ic_expand_more_white_24dp);
         }
         else {
             mResultsFragment = new DiscoverFragment();
@@ -81,7 +90,12 @@ public class DiscoverActivity extends NavigationIconActivity {
 
             fragmentTransaction.add(R.id.find_discover_content,mResultsFragment);
             fragmentTransaction.commit();
+
+            mExpanded = false;
         }
+
+
+
 
     }
 
@@ -106,13 +120,21 @@ public class DiscoverActivity extends NavigationIconActivity {
     }
 
     @OnClick(R.id.btn_expand)
-    public void clickExpand(ImageButton button){
+    public void clickExpandButtonImage(ImageButton button){
        // mExpandableWeightLayout.setExpandWeight(1.5);
         mExpandableWeightLayout.toggle();
-        if(mExpandableWeightLayout.getHeight()==0)
+        setExpandButtonImage(button);
+    }
+
+    private void setExpandButtonImage(ImageButton button){
+        if(mExpandableWeightLayout.getHeight()==0) {
             button.setImageResource(R.drawable.ic_expand_less_white_24dp);
-        else
+            mExpanded = true;
+        }
+        else {
             button.setImageResource(R.drawable.ic_expand_more_white_24dp);
+            mExpanded = false;
+        }
     }
 
     @OnClick(R.id.btn_find)
@@ -198,5 +220,6 @@ public class DiscoverActivity extends NavigationIconActivity {
         getSupportFragmentManager().putFragment(outState, FRAGMENT,mResultsFragment);
         outState.putBooleanArray(OUTSTATE_INCLUDE_GENRES,mIncludeGenres);
         outState.putBooleanArray(OUTSTATE_EXCLUDE_GENRES,mExcludeGenres);
+        outState.putBoolean(OUTSTATE_EXPANDED,mExpanded);
     }
 }
