@@ -1,6 +1,8 @@
 package com.example.android.tvshows.ui.find.discover;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -110,5 +112,11 @@ public class GenresDialog extends DialogFragment implements View.OnClickListener
         }
     }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
+    }
 
 }

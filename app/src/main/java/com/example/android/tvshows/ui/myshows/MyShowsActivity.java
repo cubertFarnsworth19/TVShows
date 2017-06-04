@@ -25,7 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
 public class MyShowsActivity extends NavigationIconActivity {
 
     private final String OUTSTATE_CONTINUING = "continuing";
@@ -144,11 +143,11 @@ public class MyShowsActivity extends NavigationIconActivity {
         return (Toolbar) findViewById(R.id.toolbar);
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(OUTSTATE_CONTINUING,mContinuing);
         outState.putBoolean(OUTSTATE_FAVORITE,mFavorite);
     }
+
 }

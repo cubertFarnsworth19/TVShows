@@ -1,5 +1,6 @@
 package com.example.android.tvshows.ui.find.discover;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Build;
@@ -94,9 +95,6 @@ public class DiscoverActivity extends NavigationIconActivity {
             mExpanded = false;
         }
 
-
-
-
     }
 
     @Override
@@ -171,11 +169,13 @@ public class DiscoverActivity extends NavigationIconActivity {
     public void setIncludeGenres(boolean[] includeGenres){
         mIncludeGenres = includeGenres;
         mTextViewIncludeGenres.setText(Genres.getGenresString(includeGenres,this));
+        mTextViewIncludeGenres.invalidate();
     }
 
     public void setExcludeGenres(boolean[] excludeGenres){
         mExcludeGenres = excludeGenres;
         mTextViewExcludeGenres.setText(Genres.getGenresString(excludeGenres,this));
+        mTextViewExcludeGenres.invalidate();
     }
 
     // convert the boolean selected genres into a comma separated list of integer ids
@@ -222,4 +222,5 @@ public class DiscoverActivity extends NavigationIconActivity {
         outState.putBooleanArray(OUTSTATE_EXCLUDE_GENRES,mExcludeGenres);
         outState.putBoolean(OUTSTATE_EXPANDED,mExpanded);
     }
+
 }

@@ -1,6 +1,7 @@
 package com.example.android.tvshows.ui.myshows;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -61,4 +62,11 @@ public class FilterMyShowsDialog extends DialogFragment {
         else if(button.getId()==R.id.dismiss)
             dismiss();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
+    }
+
 }

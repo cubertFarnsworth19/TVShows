@@ -1,6 +1,7 @@
 package com.example.android.tvshows.ui.find;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 @SuppressLint("ValidFragment")
-public class MoreDetailsDialog extends DialogFragment implements View.OnClickListener{
+public class MoreDetailsDialog extends DialogFragment{
 
     private View rootview;
     @BindView(R.id.title)TextView mTitle;
@@ -33,7 +34,6 @@ public class MoreDetailsDialog extends DialogFragment implements View.OnClickLis
     @BindView(R.id.genres_list) TextView mGenresList;
     @BindView(R.id.creators_list) TextView mCreatorsList;
     @BindView(R.id.overview) TextView mOverview;
-
 
     private TVShowDetailed mTvShowDetailed;
     private ResultsContract.Presenter mPresenter;
@@ -52,6 +52,16 @@ public class MoreDetailsDialog extends DialogFragment implements View.OnClickLis
         mTvShowDetailed = tvShowDetailed;
         mPresenter = presenter;
         mAdapterPosition = adapterPosition;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        }
     }
 
     public void setText(){
@@ -95,8 +105,11 @@ public class MoreDetailsDialog extends DialogFragment implements View.OnClickLis
             dismiss();
     }
 
-    @Override
-    public void onClick(View view) {
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
     }
+
 }
