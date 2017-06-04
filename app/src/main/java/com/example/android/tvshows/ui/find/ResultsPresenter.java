@@ -263,7 +263,7 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int columns = (int) (dpWidth / 200);
+        int columns = (int) (dpWidth / 180);
         return columns;
     }
 
