@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,8 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     protected @BindView(R.id.recyclerview_results) RecyclerView mRecyclerView;
     protected StaggeredGridLayoutManager mGridLayoutManager;
 
-    // true if the savedInstanceState should be set
-   //private boolean mSave = true;
+    // true if the find_results_item should be wide
+    private boolean mWide;
 
     @Nullable
     @Override
@@ -82,11 +83,39 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     }
 
     private void setupRecyclerView(){
-
+        int columnsStandard = numberColumnsStandard();
+        int columnsWide = numberColumnsWide();
+        mWide = columnsStandard==columnsWide;
         //int columns = getActivity().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? 2:3;
+        mResultsAdapter.setLayoutType(mWide);
         mRecyclerView.setAdapter(mResultsAdapter);
-        mGridLayoutManager = new StaggeredGridLayoutManager(mResultsPresenter.getNumberOfColumns(getActivity()),StaggeredGridLayoutManager.VERTICAL);
+        mGridLayoutManager = new StaggeredGridLayoutManager(columnsStandard,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
+    }
+
+    private int numberColumnsStandard() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        int itemWidth = (int) (( 2*getResources().getDimension(R.dimen.padding_results_item) +
+                2*getResources().getDimension(R.dimen.padding_small) +
+                getResources().getDimension(R.dimen.results_item_title_width))/ displayMetrics.density);
+
+        return (int) (dpWidth / itemWidth);
+    }
+
+    private int numberColumnsWide() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        int itemWidth = (int) (( 2*getResources().getDimension(R.dimen.padding_results_item) +
+                3*getResources().getDimension(R.dimen.padding_small) +
+                getResources().getDimension(R.dimen.image_view_width) +
+                getResources().getDimension(R.dimen.results_item_title_width_wide))/ displayMetrics.density);
+
+        return (int) (dpWidth / itemWidth);
     }
 
     @Override

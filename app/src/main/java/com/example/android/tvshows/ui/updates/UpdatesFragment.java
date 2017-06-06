@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,8 +68,13 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     }
 
     private void setupRecyclerView(){
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int columns = (int) dpWidth/ 400;
+        columns = columns>=1 ? columns:1;
         mRecyclerView.setAdapter(mUpdatesAdapter);
-        mGridLayoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+        mGridLayoutManager = new StaggeredGridLayoutManager(columns,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
     }

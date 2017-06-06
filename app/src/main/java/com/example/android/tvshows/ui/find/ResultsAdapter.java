@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     ResultsContract.Presenter mResultsPresenter;
     Picasso mPicasso;
     private int mSize;
+    private boolean mWide = false;
 
     @Inject
     public ResultsAdapter(Context context,ResultsContract.Presenter resultsPresenter,Picasso picasso){
@@ -48,10 +50,16 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void setLayoutType(boolean wide){
+        mWide = wide;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+       int layout = mWide ? R.layout.find_results_list_item_wide : R.layout.find_results_list_item;
+
             View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.find_results_list_item,parent,false);
+            .inflate(layout,parent,false);
             return new ViewHolderResults(view);
     }
 

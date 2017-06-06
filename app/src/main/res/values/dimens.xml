@@ -6,15 +6,20 @@
     <dimen name="btn_square_side">48dp</dimen>
     <dimen name="btn_square_margin">2dp</dimen>
 
-
     <dimen name="text_size_small">16sp</dimen>
     <dimen name="text_size_medium">20sp</dimen>
 
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_results_item">6dp</dimen>
 
     <dimen name="card_elevation">24dp</dimen>
     <dimen name="card_corner_radius">4dp</dimen>
 
+    <dimen name="image_view_height">150dp</dimen>
+    <dimen name="image_view_width">100dp</dimen>
+    <dimen name="results_item_title_width">160dp</dimen>
+    <dimen name="results_item_title_width_wide">140dp</dimen>
+    <dimen name="results_item_info_width">60dp</dimen>
 </resources>

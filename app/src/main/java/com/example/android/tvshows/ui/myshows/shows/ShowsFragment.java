@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,8 +85,13 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
     }
 
     private void setupRecyclerView(){
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int columns = (int) dpWidth/ 400;
+        columns = columns>=1 ? columns:1;
         mRecyclerView.setAdapter(mShowsAdapter);
-        GridLayoutManager glm = new GridLayoutManager(getActivity(),1);
+        StaggeredGridLayoutManager glm = new StaggeredGridLayoutManager(columns,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(glm);
     }
 

@@ -85,7 +85,6 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
     public void saveSelectedToDatabase(Context context, Integer id) {
 
         mAllShowIds.add(id);
-        //Context context = mShowsRepository.getContext();
         Intent intent = new Intent(context,DownloadService.class);
         intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.RESULTS);
         intent.putExtra(DownloadService.TMDB_ID,id);
@@ -259,11 +258,14 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
 
     @Override
     public int getNumberOfColumns(Context context) {
-        //int columns = getActivity().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? 2:3;
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int columns = (int) (dpWidth / 180);
+
+       int itemWidth = (int) (( 2*context.getResources().getDimension(R.dimen.padding_results_item) +
+               2*context.getResources().getDimension(R.dimen.padding_small) +
+               context.getResources().getDimension(R.dimen.results_item_title_width))/ displayMetrics.density);
+        int columns = (int) (dpWidth / itemWidth);
         return columns;
     }
 

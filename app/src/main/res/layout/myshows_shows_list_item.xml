@@ -50,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_medium"
                     android:textColor="@color/colorTextLight"
+                    android:maxLines="2"
                     />
                 <org.apmem.tools.layouts.FlowLayout
                     android:layout_width="wrap_content"
@@ -96,6 +97,7 @@
 
 
             </LinearLayout>
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
