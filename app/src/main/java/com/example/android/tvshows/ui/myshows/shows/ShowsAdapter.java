@@ -118,9 +118,10 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 mShowsPresenter.removeShow(getAdapterPosition());
-                                notifyItemRemoved(getAdapterPosition());
+                                int adapterPosition = getAdapterPosition();
+                                notifyItemRemoved(adapterPosition);
                                 mSize--;
-                                notifyItemRangeChanged(getAdapterPosition(), mSize);
+                                notifyItemRangeChanged(adapterPosition, mSize);
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

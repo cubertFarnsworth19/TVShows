@@ -30,7 +30,7 @@ public class ShowInfoActivity extends BaseNavigationActivity {
     @BindView(R.id.pager) ViewPager mPager;
     @BindView(R.id.nested_scroll_view)NestedScrollView mNestedScrollView;
     @BindView(R.id.show_name)TextView mShowName;
-    int tmdbId = -1;
+    private int tmdbId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

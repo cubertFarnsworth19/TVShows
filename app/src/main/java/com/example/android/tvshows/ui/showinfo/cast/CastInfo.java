@@ -31,6 +31,9 @@ class CastInfo implements Parcelable{
     }
 
     protected CastInfo(Parcel in) {
+        characterName = in.readString();
+        actorName = in.readString();
+        photoUrl = in.readString();;
         personId = in.readInt();
     }
 
@@ -41,6 +44,9 @@ class CastInfo implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(characterName);
+        dest.writeString(actorName);
+        dest.writeString(photoUrl);
         dest.writeInt(personId);
     }
 

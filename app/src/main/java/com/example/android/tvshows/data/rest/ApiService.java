@@ -4,7 +4,6 @@ import com.example.android.tvshows.data.model.Actor;
 import com.example.android.tvshows.data.model.ExternalIds;
 import com.example.android.tvshows.data.model.ExternalIdsTvShow;
 import com.example.android.tvshows.data.model.actortvcredits.ActorTVCredits;
-import com.example.android.tvshows.data.model.changes.Changes;
 import com.example.android.tvshows.data.model.credits.Credits;
 import com.example.android.tvshows.data.model.search.DiscoverResults;
 import com.example.android.tvshows.data.model.season.Season;
@@ -103,9 +102,5 @@ public interface ApiService {
             @Path(value = "person_id",encoded = true)String personId,
             @Query("api_key") String apiKey);
 
-    @GET("/3/tv/changes")
-    Observable<Changes> getChanges(
-            @Query("api_key") String apiKey,
-            @Query("page") String pageNumber);
 
 }

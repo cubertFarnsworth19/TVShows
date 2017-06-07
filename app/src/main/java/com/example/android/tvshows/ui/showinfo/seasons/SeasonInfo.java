@@ -6,7 +6,11 @@ import android.os.Parcelable;
 import com.example.android.tvshows.util.Utility;
 
 class SeasonInfo implements Parcelable {
-    String seasonName,airDate,posterUrl,overview,numberOfEpisodes;
+    String seasonName;
+    String airDate;
+    String posterUrl;
+    String overview;
+    String numberOfEpisodes;
     int seasonNumber;
 
     public SeasonInfo(String seasonName,Integer day ,Integer month,Integer year, String posterUrl, String overview, Integer numberOfEpisodes, int seasonNumber) {
@@ -19,6 +23,11 @@ class SeasonInfo implements Parcelable {
     }
 
     protected SeasonInfo(Parcel in) {
+        seasonName = in.readString();
+        airDate = in.readString();
+        posterUrl = in.readString();
+        overview = in.readString();
+        numberOfEpisodes = in.readString();
         seasonNumber = in.readInt();
     }
 
@@ -29,6 +38,11 @@ class SeasonInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(seasonName);
+        dest.writeString(airDate);
+        dest.writeString(posterUrl);
+        dest.writeString(overview);
+        dest.writeString(numberOfEpisodes);
         dest.writeInt(seasonNumber);
     }
 

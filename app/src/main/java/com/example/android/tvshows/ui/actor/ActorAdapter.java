@@ -20,7 +20,6 @@ public class ActorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     Context mContext;
     int mSize;
 
-    @Inject
     public ActorAdapter(Context context,ActorContract.Presenter presenter) {
         mPresenter = presenter;
         mContext = context;

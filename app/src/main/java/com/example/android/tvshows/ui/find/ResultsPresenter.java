@@ -38,7 +38,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
+public class ResultsPresenter implements ResultsContract.Presenter {
 
     private ResultsContract.View mResultsView;
     private ApiService mApiService;
@@ -276,10 +276,6 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
         return context.getString(R.string.poster_path) + mResults.get(position).getPosterPath();
     }
 
-    @Override
-    public String getLastWithGenres() {
-        return mLastWithGenres;
-    }
 
     @Override
     public boolean showAddButton(int position) {
@@ -291,18 +287,6 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
         return mResults.get(position).getId();
     }
 
-    @Override
-    public int getNumberOfColumns(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-
-       int itemWidth = (int) (( 2*context.getResources().getDimension(R.dimen.padding_results_item) +
-               2*context.getResources().getDimension(R.dimen.padding_small) +
-               context.getResources().getDimension(R.dimen.results_item_title_width))/ displayMetrics.density);
-        int columns = (int) (dpWidth / itemWidth);
-        return columns;
-    }
 
     @Override
     public void openMoreDetailsDialog(Context context,final int position) {
@@ -355,78 +339,4 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
                 mLastFirstAirDateAfter,mLastFirstAirDateBefore,mAllShowIds);
     }
 
-    protected ResultsPresenter(Parcel in) {
-        mResultsView = (ResultsContract.View) in.readValue(ResultsContract.View.class.getClassLoader());
-        mApiService = (ApiService) in.readValue(ApiService.class.getClassLoader());
-        mShowsRepository = (ShowsRepository) in.readValue(ShowsRepository.class.getClassLoader());
-        if (in.readByte() == 0x01) {
-            mResults = new ArrayList<Result>();
-            in.readList(mResults, Result.class.getClassLoader());
-        } else {
-            mResults = null;
-        }
-        mPage = in.readInt();
-        mTotalPages = in.readInt();
-        mTotalResults = in.readInt();
-        mLastSortBy = in.readString();
-        mLastWithGenres = in.readString();
-        mLastWithoutGenres = in.readString();
-        mLastMinVoteAverage = in.readString();
-        mLastMinVoteCount = in.readString();
-        mLastFirstAirDateAfter = in.readString();
-        mLastFirstAirDateBefore = in.readString();
-        if (in.readByte() == 0x01) {
-            mAllShowIds = new ArrayList<Integer>();
-            in.readList(mAllShowIds, Integer.class.getClassLoader());
-        } else {
-            mAllShowIds = null;
-        }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(mResultsView);
-        dest.writeValue(mApiService);
-        dest.writeValue(mShowsRepository);
-        if (mResults == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mResults);
-        }
-        dest.writeInt(mPage);
-        dest.writeInt(mTotalPages);
-        dest.writeInt(mTotalResults);
-        dest.writeString(mLastSortBy);
-        dest.writeString(mLastWithGenres);
-        dest.writeString(mLastWithoutGenres);
-        dest.writeString(mLastMinVoteAverage);
-        dest.writeString(mLastMinVoteCount);
-        dest.writeString(mLastFirstAirDateAfter);
-        dest.writeString(mLastFirstAirDateBefore);
-        if (mAllShowIds == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mAllShowIds);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<ResultsPresenter> CREATOR = new Parcelable.Creator<ResultsPresenter>() {
-        @Override
-        public ResultsPresenter createFromParcel(Parcel in) {
-            return new ResultsPresenter(in);
-        }
-
-        @Override
-        public ResultsPresenter[] newArray(int size) {
-            return new ResultsPresenter[size];
-        }
-    };
 }

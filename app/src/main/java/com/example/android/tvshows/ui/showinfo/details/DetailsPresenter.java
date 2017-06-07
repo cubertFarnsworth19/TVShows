@@ -5,19 +5,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.android.tvshows.BuildConfig;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.data.db.ShowsDbContract;
 import com.example.android.tvshows.data.db.ShowsRepository;
 import com.example.android.tvshows.data.model.ExternalIdsTvShow;
-import com.example.android.tvshows.data.model.search.DiscoverResults;
 import com.example.android.tvshows.data.rest.ApiService;
-import com.example.android.tvshows.data.rest.ApiUtils;
 import com.example.android.tvshows.util.Genres;
 import com.example.android.tvshows.util.Utility;
-import com.squareup.picasso.Picasso;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;

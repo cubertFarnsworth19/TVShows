@@ -66,6 +66,7 @@ public class CastPresenter implements CastContract.Presenter {
                     ));
                 }
                 mCastView.castDataLoaded(mCastInfo.size());
+                cursor.close();
             }
         };
 

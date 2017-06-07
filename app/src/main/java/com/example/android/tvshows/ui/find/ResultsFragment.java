@@ -42,7 +42,6 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
     protected @Inject ResultsContract.Presenter mResultsPresenter;
     protected @Inject ResultsAdapter mResultsAdapter;
-    //protected @Inject Picasso mPicasso;
 
     protected @BindView(R.id.recyclerview_results) RecyclerView mRecyclerView;
     protected @BindView(R.id.loading_indicator)ProgressBar mProgressBar;
@@ -90,8 +89,8 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     private void setupRecyclerView(){
         int columnsStandard = numberColumnsStandard();
         int columnsWide = numberColumnsWide();
+
         mWide = columnsStandard==columnsWide;
-        //int columns = getActivity().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? 2:3;
         mResultsAdapter.setLayoutType(mWide);
         mRecyclerView.setAdapter(mResultsAdapter);
         mGridLayoutManager = new StaggeredGridLayoutManager(columnsStandard,StaggeredGridLayoutManager.VERTICAL);
@@ -100,7 +99,6 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
     private int numberColumnsStandard() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
         int itemWidth = (int) (( 2*getResources().getDimension(R.dimen.padding_results_item) +
@@ -191,16 +189,10 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
         return mResultsPresenter;
     }
 
-    //public void setSave(boolean save){
-    //    mSave = save;
-    //}
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-      //  if(getActivity().isChangingConfigurations()) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(OUTSTATE_PRESENTER_STATE, mResultsPresenter.getSaveResultsPresenterState());
         outState.putParcelable(OUTSTATE_ADAPTER, mResultsAdapter);
-      //  }
     }
 }

@@ -25,8 +25,6 @@ public interface UpdatesContract {
         String getSeasonName(Integer showId,int position);
         String getSeasonLastUpdate(Integer showId,int position);
         void makeUpdatesRequest(Context context, ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked);
-        //ArrayList<TVShow> getTVShows();
-        //Hashtable<Integer,ArrayList<SeasonForUpdate>> getSeasonsForUpdate();
     }
 
 }

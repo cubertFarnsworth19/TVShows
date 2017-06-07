@@ -25,7 +25,7 @@ public interface ResultsContract {
         void noConnectionRetryNewPage(Integer page);
     }
 
-    interface Presenter extends Parcelable {
+    interface Presenter{
         void saveSelectedToDatabase(Context context, Integer id);
         void makeDiscoverRequest(Context context, String sortBy, String withGenres, String withoutGenres,
                                  String minVoteAverage, String minVoteCount,
@@ -39,10 +39,8 @@ public interface ResultsContract {
         int getVoteAverageTextColor(Context context, int position);
         String getVoteAverage(int position);
         String getPosterUrl(Context context, int position);
-        public String getLastWithGenres();
         boolean showAddButton(int position);
         int getTmdbId(int position);
-        int getNumberOfColumns(Context context);
         void openMoreDetailsDialog(Context context,int position);
         void showAdded();
         SaveResultsPresenterState getSaveResultsPresenterState();

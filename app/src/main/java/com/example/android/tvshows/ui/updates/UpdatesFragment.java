@@ -33,8 +33,6 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     protected @Inject UpdatesContract.Presenter mUpdatesPresenter;
     protected @Inject UpdatesAdapter mUpdatesAdapter;
 
-    //@BindView(R.id.check_box_auto_update) CheckBox mCheckBoxAutoUpdate;
-
     protected @BindView(R.id.recyclerview_updates_detail) RecyclerView mRecyclerView;
 
     private View mRootview;
@@ -102,14 +100,6 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     @Override
     public void noConnection() {
         Snackbar.make(mRootview,getResources().getString(R.string.no_connection),Snackbar.LENGTH_INDEFINITE).show();
-//                setAction("Try again",
-//                        new View.OnClickListener(){
-//                            @Override
-//                            public void onClick(View v) {
-//
-//                            }
-//                        }
-//                ).show();
     }
 
     @Override

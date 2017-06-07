@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.android.tvshows.BuildConfig;
 import com.example.android.tvshows.R;
@@ -12,7 +11,6 @@ import com.example.android.tvshows.data.db.ShowsDbContract;
 import com.example.android.tvshows.data.db.ShowsRepository;
 import com.example.android.tvshows.data.model.ExternalIdsTvShow;
 import com.example.android.tvshows.data.rest.ApiService;
-import com.example.android.tvshows.data.rest.ApiUtils;
 import com.example.android.tvshows.util.Utility;
 
 import java.util.ArrayList;
@@ -38,7 +36,6 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     // the numbers of each season in the spinner
     private int[] mSeasonNumbers;
     private String[] mSeasonNames;
-    //private Cursor mEpisodesCursor;
     private ApiService mApiService;
     private ArrayList<EpisodeData> mEpisodeData;
 
@@ -55,7 +52,6 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
 
     @Override
     public void loadEpisodesData(final Context context) {
-        //mEpisodesCursor = mShowsRepository.getEpisodes(mShowId, mSeasonNumber);
 
         Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
@@ -80,30 +76,16 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
                     mEpisodeData.add(new EpisodeData(tmdbId,name,overview,context.getString(R.string.poster_path) +stillPath, Utility.getDateAsString(day,month,year),cursor.getPosition()));
                 }
                 cursor.close();
-                //mEpisodesCursor = cursor;
                 mEpisodeView.episodeDataLoaded(cursor.getCount());
             }
         };
 
         observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
 
-        //mEpisodeView.episodeDataLoaded(mEpisodesCursor.getCount());
     }
 
     @Override
     public EpisodeData getEpisodeData(Context context, int position) {
-
-//        mEpisodesCursor.moveToPosition(position);
-//        int tmdbId = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry._ID));
-//        String name = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME));
-//        String overview = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW));
-//        String stillPath = mEpisodesCursor.getString(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_STILL_PATH));
-//
-//        Integer day = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY));
-//        Integer month = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH));
-//        Integer year = mEpisodesCursor.getInt(mEpisodesCursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR));
-
-       // EpisodeData episodeData = new EpisodeData(tmdbId,name,overview,context.getString(R.string.poster_path) +stillPath, Utility.getDateAsString(day,month,year),position);
         return mEpisodeData.get(position);
     }
 

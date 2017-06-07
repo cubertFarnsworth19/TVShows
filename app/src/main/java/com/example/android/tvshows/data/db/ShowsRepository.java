@@ -21,7 +21,7 @@ public class ShowsRepository {
 
     public ShowsRepository(Context context){
         mContext = context;
-    };
+    }
 
     public void insertShowIntoDatabase(final TVShowDetailed tvShowDetailed, final Credits credits, final Season[] seasons){
         Log.v("ShowsRepository","insert");
@@ -241,7 +241,7 @@ public class ShowsRepository {
         thread.start();
     }
 
-    public synchronized void deleteCreators(Integer tmdbId) {
+    private synchronized void deleteCreators(Integer tmdbId) {
         //first query the database;
         // the cursor returns a creator, creator_show inner join
         // returning all creators of the given show
@@ -260,7 +260,7 @@ public class ShowsRepository {
                 mContext.getContentResolver().delete(ShowsDbContract.CreatorEntry.CONTENT_URI, where, selectionArgs);
             }
         }
-
+        creatorsCursor.close();
     }
 
     private synchronized void completeDelete(Integer tmdbId){

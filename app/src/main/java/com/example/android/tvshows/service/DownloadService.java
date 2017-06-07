@@ -154,13 +154,6 @@ public class DownloadService extends Service {
 
         observableZipped.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<Season[]>() {
-//                    @Override
-//                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
-//                        Log.i("Completed TMDB id",tvShowDetailed.getId().toString());
-//                        mShowsRepository.insertShowIntoDatabase(tvShowDetailed,credits,seasons);
-//                    }
-//                });
                 .subscribe(new Observer<Season[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -225,18 +218,6 @@ public class DownloadService extends Service {
 
                     }
                 });
-
-
-//                .subscribe(new Consumer<Object[]>() {
-//                    @Override
-//                    public void accept(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
-//                        TVShowDetailed tvShowDetailed = (TVShowDetailed)objects[0];
-//                        mShowsRepository.updateTVShowDetails(tvShowDetailed,(Credits)objects[1]);
-//
-//                        if(tvShowDetailed.getSeasonsListSize()>numberOfSeasons)
-//                            downloadNewSeasons(numberOfSeasons,tvShowDetailed);
-//                    }
-//                });
     }
 
     // download any additional seasons since the last update
@@ -328,13 +309,6 @@ public class DownloadService extends Service {
 
                     }
                 });
-
-//                .subscribe(new Consumer<Season[]>() {
-//                    @Override
-//                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
-//                        mShowsRepository.updateSeasons(id,seasons);
-//                    }
-//                });
 
     }
 }
