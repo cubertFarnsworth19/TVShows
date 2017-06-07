@@ -3,6 +3,7 @@ package com.example.android.tvshows.ui.updates;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
@@ -32,9 +33,11 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     protected @Inject UpdatesContract.Presenter mUpdatesPresenter;
     protected @Inject UpdatesAdapter mUpdatesAdapter;
 
-    @BindView(R.id.check_box_auto_update) CheckBox mCheckBoxAutoUpdate;
+    //@BindView(R.id.check_box_auto_update) CheckBox mCheckBoxAutoUpdate;
 
     protected @BindView(R.id.recyclerview_updates_detail) RecyclerView mRecyclerView;
+
+    private View mRootview;
     private StaggeredGridLayoutManager mGridLayoutManager;
 
     private boolean mLoaded;
@@ -42,9 +45,9 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.updates_fragment, container, false);
+        mRootview = inflater.inflate(R.layout.updates_fragment, container, false);
 
-        ButterKnife.bind(this,rootview);
+        ButterKnife.bind(this,mRootview);
 
         if(savedInstanceState!=null){
             mUpdatesPresenter = savedInstanceState.getParcelable(OUTSTATE_PRESENTER);
@@ -63,7 +66,7 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
             component.inject(this);
         }
         setupRecyclerView();
-        return rootview;
+        return mRootview;
 
     }
 
@@ -94,6 +97,19 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     public void updateSelected() {
         ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked = mUpdatesAdapter.getChecked();
         mUpdatesPresenter.makeUpdatesRequest(getContext(),checked);
+    }
+
+    @Override
+    public void noConnection() {
+        Snackbar.make(mRootview,getResources().getString(R.string.no_connection),Snackbar.LENGTH_INDEFINITE).show();
+//                setAction("Try again",
+//                        new View.OnClickListener(){
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                            }
+//                        }
+//                ).show();
     }
 
     @Override

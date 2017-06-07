@@ -1,6 +1,7 @@
 package com.example.android.tvshows.ui.find;
 
 import android.graphics.drawable.GradientDrawable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ShowsApplication;
@@ -23,6 +25,7 @@ import com.example.android.tvshows.data.model.search.DiscoverResults;
 //import com.example.android.tvshows.ui.find.DaggerResultsComponent;
 import com.example.android.tvshows.ui.find.discover.DiscoverActivity;
 import com.example.android.tvshows.ui.find.search.SearchActivity;
+import com.example.android.tvshows.ui.updates.UpdatesContract;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -31,7 +34,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
-
 
 public class ResultsFragment extends Fragment implements ResultsContract.View {
 
@@ -43,6 +45,9 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     //protected @Inject Picasso mPicasso;
 
     protected @BindView(R.id.recyclerview_results) RecyclerView mRecyclerView;
+    protected @BindView(R.id.loading_indicator)ProgressBar mProgressBar;
+
+    protected View mRootview;
     protected StaggeredGridLayoutManager mGridLayoutManager;
 
     // true if the find_results_item should be wide
@@ -52,9 +57,9 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootview = inflater.inflate(R.layout.find_results_fragment, container, false);
+        mRootview = inflater.inflate(R.layout.find_results_fragment, container, false);
 
-        ButterKnife.bind(this,rootview);
+        ButterKnife.bind(this,mRootview);
 
         if(savedInstanceState!=null){
 
@@ -79,7 +84,7 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
         setRetainInstance(true);
         setupRecyclerView();
 
-        return rootview;
+        return mRootview;
     }
 
     private void setupRecyclerView(){
@@ -120,18 +125,20 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
     @Override
     public void setResultsAdapter(int size) {
-       // mResultsAdapter = new ResultsAdapter(this.getActivity(),discoverResults,mResultsPresenter,mPicasso);
+        mProgressBar.setVisibility(View.INVISIBLE);
         mResultsAdapter.updateDiscoverResults(size);
     }
 
     @Override
     public void setFilters(String sortBy, String withGenres, String withoutGenres, String minVoteAverage, String minVoteCount, String firstAirDateAfter, String firstAirDateBefore) {
-        mResultsPresenter.makeDiscoverRequest(sortBy,withGenres,withoutGenres,minVoteAverage,minVoteCount,firstAirDateAfter,firstAirDateBefore);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mResultsPresenter.makeDiscoverRequest(getActivity(),sortBy,withGenres,withoutGenres,minVoteAverage,minVoteCount,firstAirDateAfter,firstAirDateBefore);
     }
 
     @Override
     public void search(String searchTerm) {
-        mResultsPresenter.search(searchTerm);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mResultsPresenter.search(getActivity(),searchTerm);
     }
 
     @Override
@@ -141,9 +148,44 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
     @Override
     public void updateAdapter() {
+        mProgressBar.setVisibility(View.INVISIBLE);
         mResultsAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void noConnection() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        Snackbar.make(mRootview,getResources().getString(R.string.no_connection),Snackbar.LENGTH_INDEFINITE).show();
+    }
+
+    @Override
+    public void noConnectionWithRetry(final Integer tmdbId) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        Snackbar.make(mRootview, getResources().getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getResources().getString(R.string.retry),
+                        new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                mProgressBar.setVisibility(View.VISIBLE);
+                                mResultsPresenter.getRecommendations(getActivity(),tmdbId);
+                            }
+                        }
+                ).show();
+    }
+
+    @Override
+    public void noConnectionRetryNewPage(final Integer page) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        Snackbar.make(mRootview, getResources().getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getResources().getString(R.string.retry),
+                        new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                mResultsPresenter.getDiscoverPage(getActivity(),page);
+                            }
+                        }
+                ).show();
+    }
 
     public ResultsContract.Presenter getResultsPresenter(){
         return mResultsPresenter;

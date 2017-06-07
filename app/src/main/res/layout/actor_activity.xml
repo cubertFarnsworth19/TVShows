@@ -10,6 +10,9 @@
     android:background="@color/colorBackgroundDark"
     tools:context="com.example.android.tvshows.ui.find.discover.DiscoverActivity"
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
   <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -49,7 +52,6 @@
                 android:paddingRight="@dimen/padding_large"
                 android:paddingBottom="@dimen/padding_large"
                 >
-
             <ImageView
                 android:id="@+id/actor_photo"
                 android:layout_width="250dp"
@@ -59,12 +61,15 @@
                 tools:background="@mipmap/ic_launcher"/>
 
                 <TextView
+                    android:id="@+id/title_biography"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorTextLight"
                     android:textSize="@dimen/text_size_medium"
                     android:paddingBottom="@dimen/padding_small"
-                    android:text="@string/biography"/>
+                    android:text="@string/biography"
+                    tools:visibility="visible"/>
 
                 <TextView
                     android:id="@+id/actor_biography"
@@ -75,12 +80,15 @@
                     tools:text="Actor biography goes here. Actor biography goes here. Actor biography goes here.Actor biography goes here. Actor biography goes here. Actor biography goes here."/>
 
                 <TextView
+                    android:id="@+id/title_tv_credits"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorTextLight"
                     android:textSize="@dimen/text_size_medium"
                     android:paddingBottom="@dimen/padding_small"
-                    android:text="@string/tv_credits"/>
+                    android:text="@string/tv_credits"
+                    tools:visibility="visible"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_actor"
@@ -94,6 +102,15 @@
 
             </LinearLayout>
 
+
         </android.support.v4.widget.NestedScrollView>
    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

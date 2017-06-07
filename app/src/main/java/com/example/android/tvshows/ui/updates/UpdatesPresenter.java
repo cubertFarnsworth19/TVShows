@@ -4,6 +4,8 @@ package com.example.android.tvshows.ui.updates;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.util.Pair;
@@ -140,31 +142,42 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
 
     @Override
     public void makeUpdatesRequest(Context context, ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked) {
-        for(int i=0;i<checked.size();i++){
-            if(checked.get(i).first){
-                Intent intent = new Intent(context,DownloadService.class);
-                intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_DETAILS);
-                intent.putExtra(DownloadService.TMDB_ID,mTVShows.get(i).id);
-                intent.putExtra(DownloadService.NUMBER_OF_SEASONS,checked.get(i).second.size());
-                context.startService(intent);
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+
+            for (int i = 0; i < checked.size(); i++) {
+                if (checked.get(i).first) {
+                    Intent intent = new Intent(context, DownloadService.class);
+                    intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_DETAILS);
+                    intent.putExtra(DownloadService.TMDB_ID, mTVShows.get(i).id);
+                    intent.putExtra(DownloadService.NUMBER_OF_SEASONS, checked.get(i).second.size());
+                    context.startService(intent);
+                }
+
+                ArrayList<Integer> seasonsNumber = new ArrayList<>();
+                for (int j = 0; j < checked.get(i).second.size(); j++) {
+                    if (checked.get(i).second.get(j))
+                        seasonsNumber.add(mHashtableSeasons.get(mTVShows.get(i).id).get(j).seasonNumber);
+                }
+
+                if (seasonsNumber.size() > 0) {
+                    Intent intent = new Intent(context, DownloadService.class);
+                    intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_SEASONS);
+                    intent.putExtra(DownloadService.TMDB_ID, mTVShows.get(i).id);
+                    intent.putExtra(DownloadService.SEASONS_NUMBER, seasonsNumber);
+                    context.startService(intent);
+                }
+
             }
-
-
-            ArrayList<Integer> seasonsNumber = new ArrayList<>();
-            for(int j=0;j<checked.get(i).second.size();j++){
-                if(checked.get(i).second.get(j))
-                    seasonsNumber.add(mHashtableSeasons.get(mTVShows.get(i).id).get(j).seasonNumber);
-            }
-
-            if(seasonsNumber.size()>0) {
-                Intent intent = new Intent(context,DownloadService.class);
-                intent.putExtra(DownloadService.DOWNLOAD_TYPE, DownloadService.UPDATE_SEASONS);
-                intent.putExtra(DownloadService.TMDB_ID,mTVShows.get(i).id);
-                intent.putExtra(DownloadService.SEASONS_NUMBER,seasonsNumber);
-                context.startService(intent);
-            }
-
+        }else{
+            mUpdatesView.noConnection();
         }
+
     }
 
 

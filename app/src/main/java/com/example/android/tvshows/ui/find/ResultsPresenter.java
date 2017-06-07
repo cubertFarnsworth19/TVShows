@@ -3,6 +3,8 @@ package com.example.android.tvshows.ui.find;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -95,7 +97,7 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
     }
 
     @Override
-    public void makeDiscoverRequest(String sortBy, String withGenres, String withoutGenres, String minVoteAverage,
+    public void makeDiscoverRequest(Context context, String sortBy, String withGenres, String withoutGenres, String minVoteAverage,
                                     String minVoteCount, String firstAirDateAfter, String firstAirDateBefore) {
         mLastSortBy = sortBy;
         mLastWithGenres = withGenres;
@@ -104,21 +106,67 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
         mLastMinVoteCount = minVoteCount;
         mLastFirstAirDateAfter = firstAirDateAfter;
         mLastFirstAirDateBefore = firstAirDateBefore;
-        getDiscoverPage(1);
+        getDiscoverPage(context,1);
     }
 
     @Override
-    public void getDiscoverPage(Integer page) {
+    public void getDiscoverPage(Context context,final Integer page) {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        Log.v("Results","Page: "+mPage+", total pages: "+mTotalPages+", total results: "+mTotalResults);
-        if(page==1 || mPage < mTotalPages) {
-            mApiService.getDiscoverResults(BuildConfig.TMDB_API_KEY, mLastSortBy, mLastWithGenres, mLastWithoutGenres, mLastMinVoteAverage,
-                    mLastMinVoteCount, mLastFirstAirDateAfter, mLastFirstAirDateBefore, page.toString())
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            Log.v("Results", "Page: " + mPage + ", total pages: " + mTotalPages + ", total results: " + mTotalResults);
+            if (page == 1 || mPage < mTotalPages) {
+                mApiService.getDiscoverResults(BuildConfig.TMDB_API_KEY, mLastSortBy, mLastWithGenres, mLastWithoutGenres, mLastMinVoteAverage,
+                        mLastMinVoteCount, mLastFirstAirDateAfter, mLastFirstAirDateBefore, page.toString())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<DiscoverResults>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                            }
+
+                            @Override
+                            public void onNext(DiscoverResults discoverResults) {
+                                setDiscoverResultsInfo(discoverResults);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                mResultsView.noConnectionRetryNewPage(page);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                            }
+                        });
+            }
+        }else{
+            if(page==1)
+                mResultsView.noConnection();
+            else
+                mResultsView.noConnectionRetryNewPage(page);
+        }
+    }
+
+    @Override
+    public void search(Context context, String searchTerm) {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            mApiService.getSearchResults(BuildConfig.TMDB_API_KEY, searchTerm)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<DiscoverResults>() {
                         @Override
-                        public void onSubscribe(Disposable d) {}
+                        public void onSubscribe(Disposable d) {
+
+                        }
 
                         @Override
                         public void onNext(DiscoverResults discoverResults) {
@@ -126,67 +174,54 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
                         }
 
                         @Override
-                        public void onError(Throwable e) {}
+                        public void onError(Throwable e) {
+
+                        }
 
                         @Override
-                        public void onComplete() {}
+                        public void onComplete() {
+
+                        }
                     });
+        }else{
+            mResultsView.noConnection();
         }
     }
 
     @Override
-    public void search(String searchTerm) {
-        mApiService.getSearchResults(BuildConfig.TMDB_API_KEY,searchTerm)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<DiscoverResults>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+    public void getRecommendations(Context context,final Integer tmdbId) {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                    }
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-                    @Override
-                    public void onNext(DiscoverResults discoverResults) {
-                        setDiscoverResultsInfo(discoverResults);
-                    }
+        if (networkInfo != null && networkInfo.isConnected()) {
+            mApiService.getRecommendations(tmdbId.toString(), BuildConfig.TMDB_API_KEY, "1").subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<DiscoverResults>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    @Override
-                    public void onError(Throwable e) {
+                        }
 
-                    }
+                        @Override
+                        public void onNext(DiscoverResults discoverResults) {
+                            setDiscoverResultsInfo(discoverResults);
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            mResultsView.noConnectionWithRetry(tmdbId);
+                        }
 
-                    }
-                });
-    }
+                        @Override
+                        public void onComplete() {
 
-    @Override
-    public void getRecommendations(Integer tmdbId) {
-        mApiService.getRecommendations(tmdbId.toString(),BuildConfig.TMDB_API_KEY,"1").subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<DiscoverResults>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(DiscoverResults discoverResults) {
-                        setDiscoverResultsInfo(discoverResults);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        }else{
+            mResultsView.noConnectionWithRetry(tmdbId);
+        }
     }
 
     private void setDiscoverResultsInfo(DiscoverResults discoverResults){
@@ -270,33 +305,42 @@ public class ResultsPresenter implements ResultsContract.Presenter, Parcelable {
     }
 
     @Override
-    public void openMoreDetailsDialog(final int position) {
-        mApiService.getTVShowDetailed(mResults.get(position).getId().toString(),BuildConfig.TMDB_API_KEY)
-                .retryWhen(new RetryUntilDownloaded(2000)).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<TVShowDetailed>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+    public void openMoreDetailsDialog(Context context,final int position) {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                    }
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-                    @Override
-                    public void onNext(TVShowDetailed tvShowDetailed) {
-                        FragmentManager fm = mResultsView.getFragmentManagerForDialog();
-                        MoreDetailsDialog moreDetailsDialog = new MoreDetailsDialog(tvShowDetailed,ResultsPresenter.this,position);
-                        moreDetailsDialog.show(fm,"dialog_more_details");
-                    }
+        if (networkInfo != null && networkInfo.isConnected()) {
+            mApiService.getTVShowDetailed(mResults.get(position).getId().toString(), BuildConfig.TMDB_API_KEY)
+                    .retryWhen(new RetryUntilDownloaded(2000)).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<TVShowDetailed>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    @Override
-                    public void onError(Throwable e) {
+                        }
 
-                    }
+                        @Override
+                        public void onNext(TVShowDetailed tvShowDetailed) {
+                            FragmentManager fm = mResultsView.getFragmentManagerForDialog();
+                            MoreDetailsDialog moreDetailsDialog = new MoreDetailsDialog(tvShowDetailed, ResultsPresenter.this, position);
+                            moreDetailsDialog.show(fm, "dialog_more_details");
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
 
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }else{
+            mResultsView.noConnection();
+        }
     }
 
     @Override

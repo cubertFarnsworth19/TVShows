@@ -83,7 +83,8 @@
         <item>RECOMMENDATIONS</item>
     </string-array>
 
-    
+    <string name="no_connection">No Connection</string>
+    <string name="retry">Retry</string>
 
     <!-- updates -->
     <string name="auto_updates">Update Automatically</string>

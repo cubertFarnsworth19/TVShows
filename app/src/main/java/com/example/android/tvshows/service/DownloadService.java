@@ -120,6 +120,7 @@ public class DownloadService extends Service {
 
                     @Override
                     public void onError(Throwable e) {
+
                     }
 
                     @Override
@@ -200,16 +201,42 @@ public class DownloadService extends Service {
 
         observableZipped.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object[]>() {
+                .subscribe(new Observer<Object[]>() {
                     @Override
-                    public void accept(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext( Object[] objects) {
                         TVShowDetailed tvShowDetailed = (TVShowDetailed)objects[0];
                         mShowsRepository.updateTVShowDetails(tvShowDetailed,(Credits)objects[1]);
 
                         if(tvShowDetailed.getSeasonsListSize()>numberOfSeasons)
                             downloadNewSeasons(numberOfSeasons,tvShowDetailed);
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
+
+
+//                .subscribe(new Consumer<Object[]>() {
+//                    @Override
+//                    public void accept(@io.reactivex.annotations.NonNull Object[] objects) throws Exception {
+//                        TVShowDetailed tvShowDetailed = (TVShowDetailed)objects[0];
+//                        mShowsRepository.updateTVShowDetails(tvShowDetailed,(Credits)objects[1]);
+//
+//                        if(tvShowDetailed.getSeasonsListSize()>numberOfSeasons)
+//                            downloadNewSeasons(numberOfSeasons,tvShowDetailed);
+//                    }
+//                });
     }
 
     // download any additional seasons since the last update
@@ -236,13 +263,6 @@ public class DownloadService extends Service {
 
         observableZipped.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<Season[]>() {
-//                    @Override
-//                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
-//                        Log.i("Completed TMDB id",tvShowDetailed.getId().toString());
-//                        mShowsRepository.insertShowIntoDatabase(tvShowDetailed,credits,seasons);
-//                    }
-//                });
                 .subscribe(new Observer<Season[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -288,12 +308,33 @@ public class DownloadService extends Service {
 
         observableZipped.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Season[]>() {
+                .subscribe(new Observer<Season[]>() {
                     @Override
-                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Season[] seasons) {
                         mShowsRepository.updateSeasons(id,seasons);
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
+
+//                .subscribe(new Consumer<Season[]>() {
+//                    @Override
+//                    public void accept(@io.reactivex.annotations.NonNull Season[] seasons) throws Exception {
+//                        mShowsRepository.updateSeasons(id,seasons);
+//                    }
+//                });
 
     }
 }

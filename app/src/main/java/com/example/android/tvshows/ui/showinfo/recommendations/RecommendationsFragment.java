@@ -17,7 +17,7 @@ public class RecommendationsFragment extends ResultsFragment {
     @Override
     public void onStart() {
         super.onStart();
-        getResultsPresenter().getRecommendations(mTmdbId);
+        getResultsPresenter().getRecommendations(getActivity(),mTmdbId);
     }
 
 }

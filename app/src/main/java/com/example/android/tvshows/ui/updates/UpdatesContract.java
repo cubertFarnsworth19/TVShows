@@ -12,6 +12,7 @@ public interface UpdatesContract {
     interface View{
         void showsDataLoaded(int size);
         void updateSelected();
+        void noConnection();
     }
 
     interface Presenter extends Parcelable{

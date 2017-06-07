@@ -15,7 +15,7 @@ public class DiscoverFragment extends ResultsFragment {
        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                mResultsPresenter.getDiscoverPage(page+1);
+                mResultsPresenter.getDiscoverPage(getActivity(),page+1);
             }
         });
     }

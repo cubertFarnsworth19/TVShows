@@ -282,6 +282,14 @@ public class TVShowDetailed {
         return voteAverage;
     }
 
+    public String getVoteAverageString(){
+        String strVoteAverage = "";
+        if(voteAverage>0){
+            strVoteAverage = voteAverage == 10.0 ? "10" : voteAverage.toString();
+        }
+        return strVoteAverage;
+    }
+
     public void setVoteAverage(Double voteAverage) {
         this.voteAverage = voteAverage;
     }
@@ -303,6 +311,12 @@ public class TVShowDetailed {
     public int getFirstAirDateYear(){
         return firstAirDate!=null ? Integer.valueOf(firstAirDate.substring(0,4)) : -1;
 
+    }
+
+    public String getFirstAirDateYearString(){
+        if (firstAirDate!=null && firstAirDate.length()>=4)
+            return firstAirDate.substring(0,4);
+        return "";
     }
 
     public int getFirstAirDateMonth(){

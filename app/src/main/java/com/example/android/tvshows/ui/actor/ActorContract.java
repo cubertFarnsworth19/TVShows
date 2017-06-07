@@ -14,10 +14,11 @@ public interface ActorContract {
         void setName(String name);
         void setBiography(String biography);
         void displayCredits(int size);
+        void noConnection();
     }
 
     interface Presenter{
-        void downloadActorData();
+        void downloadActorData(Context context);
         void setActorData();
         ActorTVCredits getActorTVCredits();
         ExternalIds getExternalIds();

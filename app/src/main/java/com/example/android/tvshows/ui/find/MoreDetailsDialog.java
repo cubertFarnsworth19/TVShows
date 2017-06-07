@@ -66,9 +66,9 @@ public class MoreDetailsDialog extends DialogFragment{
 
     public void setText(){
         mTitle.setText(mTvShowDetailed.getName());
-        mStartYear.setText(mTvShowDetailed.getFirstAirDate().substring(0,4));
+        mStartYear.setText(mTvShowDetailed.getFirstAirDateYearString());
         mInProduction.setText(mTvShowDetailed.getStatus());
-        mUserScore.setText(mTvShowDetailed.getVoteAverage().toString());
+        mUserScore.setText(mTvShowDetailed.getVoteAverageString());
         mVoteCount.setText(mTvShowDetailed.getVoteCount().toString());
         String genresList = "";
         for(int i=0;i<mTvShowDetailed.getGenres().size();i++){

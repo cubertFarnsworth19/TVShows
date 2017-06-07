@@ -109,7 +109,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 mResultsPresenter.saveSelectedToDatabase(mContext,tmdbId);
             }
             else if(view.getId() == showMoreDetails.getId()){
-                mResultsPresenter.openMoreDetailsDialog(getAdapterPosition());
+                mResultsPresenter.openMoreDetailsDialog(mContext,getAdapterPosition());
             }
         }
 

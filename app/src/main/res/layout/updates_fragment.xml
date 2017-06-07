@@ -1,51 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:background="@color/colorBackgroundDark"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/padding_medium"
-
-        android:paddingLeft="@dimen/padding_large"
-        android:paddingRight="@dimen/padding_large"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/padding_medium"
-            android:textSize="@dimen/text_size_medium"
-            android:textColor="@color/colorTextLight"
-            android:text="@string/auto_updates"/>
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/check_box_auto_update"
-            />
-
-
-    </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/padding_large"
-            android:paddingRight="@dimen/padding_large"
-            android:paddingBottom="@dimen/padding_medium"
-            android:textSize="@dimen/text_size_small"
-            android:textColor="@color/colorTextLight"
-            android:text="@string/auto_updates_info"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_updates_detail"
@@ -54,5 +13,4 @@
 
         </android.support.v7.widget.RecyclerView>
 
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+</LinearLayout>

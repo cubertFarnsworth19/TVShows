@@ -20,16 +20,19 @@ public interface ResultsContract {
         void search(String searchTerm);
         FragmentManager getFragmentManagerForDialog();
         void updateAdapter();
+        void noConnection();
+        void noConnectionWithRetry(Integer tmdbId);
+        void noConnectionRetryNewPage(Integer page);
     }
 
     interface Presenter extends Parcelable {
         void saveSelectedToDatabase(Context context, Integer id);
-        void makeDiscoverRequest(String sortBy, String withGenres, String withoutGenres,
+        void makeDiscoverRequest(Context context, String sortBy, String withGenres, String withoutGenres,
                                  String minVoteAverage, String minVoteCount,
                                  String firstAirDateAfter, String firstAirDateBefore);
-        void getDiscoverPage(Integer page);
-        void search(String searchTerm);
-        void getRecommendations(Integer tmddId);
+        void getDiscoverPage(Context context, Integer page);
+        void search(Context context, String searchTerm);
+        void getRecommendations(Context context, Integer tmddId);
         String getName(int position);
         String getFirstAirDate(int position);
         int getVoteAverageBackgroundColor(Context context, int position);
@@ -40,7 +43,7 @@ public interface ResultsContract {
         boolean showAddButton(int position);
         int getTmdbId(int position);
         int getNumberOfColumns(Context context);
-        void openMoreDetailsDialog(int position);
+        void openMoreDetailsDialog(Context context,int position);
         void showAdded();
         SaveResultsPresenterState getSaveResultsPresenterState();
     }
