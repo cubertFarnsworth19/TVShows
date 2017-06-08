@@ -152,6 +152,4 @@ public class CurrentPresenter implements CurrentContract.Presenter{
         return mDates.get(dayPosition).cumulativeNumberOfShows + showPosition;
     }
 
-
-
 }
