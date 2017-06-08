@@ -2,9 +2,11 @@ package com.example.android.tvshows.ui.myshows;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,10 @@ import butterknife.OnClick;
 @SuppressLint("ValidFragment")
 public class FilterMyShowsDialog extends DialogFragment {
 
+    static final public String FILTER_SHOWS = "filter_shows";
+    static final public String CONTINUING = "continuing";
+    static final public String FAVORITE = "favorite";
+
     View rootview;
     @BindView(R.id.check_box_continuing) CheckBox mCheckBoxContinuing;
     @BindView(R.id.check_box_favorites) CheckBox mCheckBoxFavorites;
@@ -31,6 +37,7 @@ public class FilterMyShowsDialog extends DialogFragment {
     private ShowsContract.Presenter mPresenter;
     private boolean mContinuing;
     private boolean mFavorite;
+    //LocalBroadcastManager mLocalBroadcastManager;
 
     FilterMyShowsDialog(MyShowsActivity myShowsActivity,ShowsContract.Presenter presenter,boolean continuing,boolean favorite){
         mMyShowsActivity = myShowsActivity;
@@ -56,7 +63,14 @@ public class FilterMyShowsDialog extends DialogFragment {
             mFavorite = mCheckBoxFavorites.isChecked();
             mMyShowsActivity.setContinuing(mContinuing);
             mMyShowsActivity.setFavorite(mFavorite);
-            mPresenter.loadShowsFromDatabase(mMyShowsActivity,mContinuing,mFavorite);
+
+
+            LocalBroadcastManager mLocalBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+            Intent intent = new Intent(FILTER_SHOWS);
+            intent.putExtra(CONTINUING,mContinuing);
+            intent.putExtra(FAVORITE,mFavorite);
+            mLocalBroadcastManager.sendBroadcast(intent);
+           // mPresenter.loadShowsFromDatabase(mMyShowsActivity,mContinuing,mFavorite);
             dismiss();
         }
         else if(button.getId()==R.id.dismiss)

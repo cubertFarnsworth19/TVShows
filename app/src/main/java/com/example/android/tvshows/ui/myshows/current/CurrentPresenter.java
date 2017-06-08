@@ -1,7 +1,11 @@
 package com.example.android.tvshows.ui.myshows.current;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.util.Pair;
 
@@ -31,11 +35,20 @@ public class CurrentPresenter implements CurrentContract.Presenter{
     private int mCurrentType;
     private ArrayList<CurrentInfo> mCurrent;
     private ArrayList<ShowDate> mDates;
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadShowsFromDatabase(context);
+        }
+    };
 
     public CurrentPresenter(CurrentContract.View currentView,ShowsRepository showsRepository,int currentType){
         mCurrentView = currentView;
         mShowsRepository = showsRepository;
         mCurrentType = currentType;
+        LocalBroadcastManager.getInstance(mCurrentView.getActivity()).registerReceiver((mBroadcastReceiver),
+                new IntentFilter(ShowsRepository.INSERT_COMPLETE)
+        );
     }
 
     public CurrentPresenter(CurrentContract.View currentView,ShowsRepository showsRepository,int currentType,
@@ -45,6 +58,9 @@ public class CurrentPresenter implements CurrentContract.Presenter{
         mCurrentType = currentType;
         mCurrent = current;
         mDates = dates;
+        LocalBroadcastManager.getInstance(mCurrentView.getActivity()).registerReceiver((mBroadcastReceiver),
+                new IntentFilter(ShowsRepository.INSERT_COMPLETE)
+        );
     }
 
     @Override

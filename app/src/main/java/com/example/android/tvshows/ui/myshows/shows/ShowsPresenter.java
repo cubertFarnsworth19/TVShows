@@ -1,13 +1,17 @@
 package com.example.android.tvshows.ui.myshows.shows;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.data.db.ShowsDbContract;
 import com.example.android.tvshows.data.db.ShowsRepository;
+import com.example.android.tvshows.ui.myshows.FilterMyShowsDialog;
 import com.example.android.tvshows.ui.showinfo.ShowInfoActivity;
 
 import java.util.ArrayList;
@@ -25,16 +29,46 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     private ShowsRepository mShowsRepository;
     private ShowsContract.View mShowsView;
     private ArrayList<ShowInfo> mShowsInfo;
+    private BroadcastReceiver mBroadcastReceiver;
+    private boolean mContinuing = false;
+    private boolean mFavorite = false;
 
     public ShowsPresenter(ShowsContract.View showsView,ShowsRepository showsRepository){
         mShowsView = showsView;
         mShowsRepository = showsRepository;
+        setBrodcastReciever();
+        registerReceivers();
     }
 
     public ShowsPresenter(ShowsContract.View showsView,ShowsRepository showsRepository,ArrayList<ShowInfo> showsInfo){
         mShowsView = showsView;
         mShowsRepository = showsRepository;
         mShowsInfo = showsInfo;
+        setBrodcastReciever();
+        registerReceivers();
+    }
+
+    private void setBrodcastReciever(){
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(ShowsRepository.INSERT_COMPLETE))
+                    loadShowsFromDatabase(context,mContinuing,mFavorite);
+                else if((intent.getAction().equals(FilterMyShowsDialog.FILTER_SHOWS))){
+                    mContinuing = intent.getBooleanExtra(FilterMyShowsDialog.CONTINUING,false);
+                    mFavorite = intent.getBooleanExtra(FilterMyShowsDialog.FAVORITE,false);
+                    loadShowsFromDatabase(context,mContinuing,mFavorite);
+                }
+
+            }
+        };
+    }
+
+    private void registerReceivers(){
+        LocalBroadcastManager.getInstance(mShowsView.getActivity()).registerReceiver((mBroadcastReceiver),
+                new IntentFilter(ShowsRepository.INSERT_COMPLETE));
+        LocalBroadcastManager.getInstance(mShowsView.getActivity()).registerReceiver((mBroadcastReceiver),
+                new IntentFilter(FilterMyShowsDialog.FILTER_SHOWS));
     }
 
     @Override

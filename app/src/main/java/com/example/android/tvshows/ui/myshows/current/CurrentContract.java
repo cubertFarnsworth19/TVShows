@@ -8,6 +8,7 @@ public interface CurrentContract {
 
     interface View{
         void showsDataLoaded(int size);
+        Context getActivity();
     }
 
     interface Presenter{

@@ -83,6 +83,7 @@ public class MyShowsActivity extends NavigationIconActivity {
             if(position==0) {
                 mShowsFragment = ShowsFragment.getInstance();
                 fragment = mShowsFragment;
+                //fragment = ShowsFragment.getInstance();
             }
             else {
                 fragment = CurrentFragment.getInstance(position);
@@ -120,6 +121,14 @@ public class MyShowsActivity extends NavigationIconActivity {
 
     public void setFavorite(boolean favorite) {
         mFavorite = favorite;
+    }
+
+    public boolean getContinuing() {
+        return mContinuing;
+    }
+
+    public boolean getFavorite() {
+        return mFavorite;
     }
 
     // navigation drawer methods

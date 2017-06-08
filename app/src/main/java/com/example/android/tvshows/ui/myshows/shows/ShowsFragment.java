@@ -1,5 +1,6 @@
 package com.example.android.tvshows.ui.myshows.shows;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -102,6 +103,18 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
     @Override
     public void showsDataLoaded(int size) {
         mShowsAdapter.displayShows(size);
+    }
+
+    @Override
+    public boolean getContinuing() {
+        MyShowsActivity myShowsActivity = (MyShowsActivity) getActivity();
+        return myShowsActivity.getContinuing();
+    }
+
+    @Override
+    public boolean getFavorite() {
+        MyShowsActivity myShowsActivity = (MyShowsActivity) getActivity();
+        return myShowsActivity.getFavorite();
     }
 
     @Override

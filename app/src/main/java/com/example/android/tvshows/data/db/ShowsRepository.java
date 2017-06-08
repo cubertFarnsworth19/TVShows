@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 public class ShowsRepository {
 
     private Context mContext;
+    LocalBroadcastManager mLocalBroadcastManager;
+
+    static final public String INSERT_COMPLETE = "insert_complete";
 
     public ShowsRepository(Context context){
         mContext = context;
@@ -159,6 +163,12 @@ public class ShowsRepository {
         mContext.getContentResolver().bulkInsert(ShowsDbContract.EpisodeEntry.CONTENT_URI,episodesValues);
         mContext.getContentResolver().bulkInsert(ShowsDbContract.CreatorEntry.CONTENT_URI,creatorValues);
         mContext.getContentResolver().bulkInsert(ShowsDbContract.CreatorShowEntry.CONTENT_URI,creatorShowValues);
+
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+        Intent intent = new Intent(INSERT_COMPLETE);
+
+        mLocalBroadcastManager.sendBroadcast(intent);
+
     }
 
     public void insertAdditionalSeasonsIntoDatabase(final int tmdbId, final Season[] seasons){

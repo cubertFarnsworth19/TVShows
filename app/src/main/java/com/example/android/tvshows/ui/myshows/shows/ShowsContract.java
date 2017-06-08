@@ -9,6 +9,9 @@ public interface ShowsContract {
 
     interface View{
         void showsDataLoaded(int size);
+        Context getActivity();
+        boolean getContinuing();
+        boolean getFavorite();
     }
 
     interface Presenter{
