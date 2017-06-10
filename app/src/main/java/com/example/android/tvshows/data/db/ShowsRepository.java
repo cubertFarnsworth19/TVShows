@@ -22,9 +22,12 @@ public class ShowsRepository {
     LocalBroadcastManager mLocalBroadcastManager;
 
     static final public String INSERT_COMPLETE = "insert_complete";
+    static final public String DELETE_COMPLETE = "delete_complete";
+    static final public String UPDATE_COMPLETE = "update_complete";
 
     public ShowsRepository(Context context){
         mContext = context;
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
     }
 
     public void insertShowIntoDatabase(final TVShowDetailed tvShowDetailed, final Credits credits, final Season[] seasons){
@@ -164,9 +167,7 @@ public class ShowsRepository {
         mContext.getContentResolver().bulkInsert(ShowsDbContract.CreatorEntry.CONTENT_URI,creatorValues);
         mContext.getContentResolver().bulkInsert(ShowsDbContract.CreatorShowEntry.CONTENT_URI,creatorShowValues);
 
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
         Intent intent = new Intent(INSERT_COMPLETE);
-
         mLocalBroadcastManager.sendBroadcast(intent);
 
     }
@@ -282,6 +283,9 @@ public class ShowsRepository {
         // delete all show details
         String fullWhere = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
         mContext.getContentResolver().delete(Uri.parse(ShowsDbContract.ShowsEntry.CONTENT_URI + "/full_delete"), fullWhere, selectionArgs);
+
+        Intent intent = new Intent(DELETE_COMPLETE);
+        mLocalBroadcastManager.sendBroadcast(intent);
     }
 
     // update if has been selected/ deselected as favorite
@@ -529,6 +533,9 @@ public class ShowsRepository {
         mContext.getContentResolver().bulkInsert(ShowsDbContract.CastEntry.CONTENT_URI,castValues);
         mContext.getContentResolver().bulkInsert(ShowsDbContract.CreatorEntry.CONTENT_URI,creatorValues);
         mContext.getContentResolver().bulkInsert(ShowsDbContract.CreatorShowEntry.CONTENT_URI,creatorShowValues);
+
+        Intent intent = new Intent(UPDATE_COMPLETE);
+        mLocalBroadcastManager.sendBroadcast(intent);
     }
 
     public void updateSeasons(final Integer showId,final Season[] seasons){
@@ -608,6 +615,9 @@ public class ShowsRepository {
 
         mContext.getContentResolver().bulkInsert(ShowsDbContract.SeasonEntry.CONTENT_URI,seasonsValues);
         mContext.getContentResolver().bulkInsert(ShowsDbContract.EpisodeEntry.CONTENT_URI,episodesValues);
+
+        Intent intent = new Intent(UPDATE_COMPLETE);
+        mLocalBroadcastManager.sendBroadcast(intent);
     }
 
 }

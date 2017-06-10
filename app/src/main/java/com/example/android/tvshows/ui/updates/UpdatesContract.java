@@ -13,10 +13,12 @@ public interface UpdatesContract {
         void showsDataLoaded(int size);
         void updateSelected();
         void noConnection();
+        void displayUpdate();
+        Context getActivity();
     }
 
     interface Presenter extends Parcelable{
-        void loadShowsFromDatabase();
+        void loadShowsFromDatabase(boolean update);
         int getShowId(int position);
         int getNumberOfSeasons(int position);
         String getShowName(int position);

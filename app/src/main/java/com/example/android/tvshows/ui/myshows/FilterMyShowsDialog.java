@@ -34,14 +34,11 @@ public class FilterMyShowsDialog extends DialogFragment {
     @BindView(R.id.check_box_favorites) CheckBox mCheckBoxFavorites;
 
     private MyShowsActivity mMyShowsActivity;
-    private ShowsContract.Presenter mPresenter;
     private boolean mContinuing;
     private boolean mFavorite;
-    //LocalBroadcastManager mLocalBroadcastManager;
 
-    FilterMyShowsDialog(MyShowsActivity myShowsActivity,ShowsContract.Presenter presenter,boolean continuing,boolean favorite){
+    FilterMyShowsDialog(MyShowsActivity myShowsActivity,boolean continuing,boolean favorite){
         mMyShowsActivity = myShowsActivity;
-        mPresenter = presenter;
         mContinuing = continuing;
         mFavorite = favorite;
     }
@@ -64,13 +61,12 @@ public class FilterMyShowsDialog extends DialogFragment {
             mMyShowsActivity.setContinuing(mContinuing);
             mMyShowsActivity.setFavorite(mFavorite);
 
-
             LocalBroadcastManager mLocalBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
             Intent intent = new Intent(FILTER_SHOWS);
             intent.putExtra(CONTINUING,mContinuing);
             intent.putExtra(FAVORITE,mFavorite);
             mLocalBroadcastManager.sendBroadcast(intent);
-           // mPresenter.loadShowsFromDatabase(mMyShowsActivity,mContinuing,mFavorite);
+
             dismiss();
         }
         else if(button.getId()==R.id.dismiss)

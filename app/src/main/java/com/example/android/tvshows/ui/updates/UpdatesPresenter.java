@@ -1,13 +1,15 @@
 package com.example.android.tvshows.ui.updates;
 
-
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
@@ -20,6 +22,7 @@ import com.example.android.tvshows.data.model.tvshowdetailed.TVShowDetailed;
 import com.example.android.tvshows.data.rest.ApiService;
 import com.example.android.tvshows.service.DownloadService;
 import com.example.android.tvshows.ui.RetryUntilDownloaded;
+import com.example.android.tvshows.ui.myshows.FilterMyShowsDialog;
 import com.example.android.tvshows.util.Utility;
 
 import java.util.ArrayList;
@@ -43,13 +46,30 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
     private ArrayList<TVShow> mTVShows;
     private Hashtable<Integer,ArrayList<SeasonForUpdate>> mHashtableSeasons;
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadShowsFromDatabase(true);
+        }
+    };
+
     public UpdatesPresenter(UpdatesContract.View updatesView, ShowsRepository showsRepository) {
         mUpdatesView = updatesView;
         mShowsRepository = showsRepository;
+        registerReceivers();
+    }
+
+    private void registerReceivers(){
+//        LocalBroadcastManager.getInstance(mUpdatesView.getActivity()).registerReceiver((mBroadcastReceiver),
+//                new IntentFilter(ShowsRepository.INSERT_COMPLETE));
+//        LocalBroadcastManager.getInstance(mUpdatesView.getActivity()).registerReceiver((mBroadcastReceiver),
+//                new IntentFilter(ShowsRepository.DELETE_COMPLETE));
+        LocalBroadcastManager.getInstance(mUpdatesView.getActivity()).registerReceiver((mBroadcastReceiver),
+                new IntentFilter(ShowsRepository.UPDATE_COMPLETE));
     }
 
     @Override
-    public void loadShowsFromDatabase() {
+    public void loadShowsFromDatabase(boolean update) {
 
         mTVShows = new ArrayList<>();
         mHashtableSeasons = new Hashtable<>();
@@ -87,10 +107,11 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
             }while(seasonsCursor.moveToNext() && currentShowId == seasonsCursor.getInt(seasonsCursor.getColumnIndex(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY)));
 
             mHashtableSeasons.put(currentShowId,seasons);
-
         }
         seasonsCursor.close();
-        mUpdatesView.showsDataLoaded(mTVShows.size());
+
+        if (update) mUpdatesView.displayUpdate();
+        else mUpdatesView.showsDataLoaded(mTVShows.size());
     }
 
     @Override
@@ -131,7 +152,6 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
 
     @Override
     public String getSeasonName(Integer showId,int position) {
-        ArrayList<SeasonForUpdate> seasons = mHashtableSeasons.get(showId);
         return mHashtableSeasons.get(showId).get(position).name;
     }
 

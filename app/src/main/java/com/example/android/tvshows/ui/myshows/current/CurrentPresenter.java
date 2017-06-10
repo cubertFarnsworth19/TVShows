@@ -46,9 +46,7 @@ public class CurrentPresenter implements CurrentContract.Presenter{
         mCurrentView = currentView;
         mShowsRepository = showsRepository;
         mCurrentType = currentType;
-        LocalBroadcastManager.getInstance(mCurrentView.getActivity()).registerReceiver((mBroadcastReceiver),
-                new IntentFilter(ShowsRepository.INSERT_COMPLETE)
-        );
+        registerReceivers();
     }
 
     public CurrentPresenter(CurrentContract.View currentView,ShowsRepository showsRepository,int currentType,
@@ -58,9 +56,14 @@ public class CurrentPresenter implements CurrentContract.Presenter{
         mCurrentType = currentType;
         mCurrent = current;
         mDates = dates;
+        registerReceivers();
+    }
+
+    private void registerReceivers(){
         LocalBroadcastManager.getInstance(mCurrentView.getActivity()).registerReceiver((mBroadcastReceiver),
-                new IntentFilter(ShowsRepository.INSERT_COMPLETE)
-        );
+                new IntentFilter(ShowsRepository.INSERT_COMPLETE));
+        LocalBroadcastManager.getInstance(mCurrentView.getActivity()).registerReceiver((mBroadcastReceiver),
+                new IntentFilter(ShowsRepository.DELETE_COMPLETE));
     }
 
     @Override

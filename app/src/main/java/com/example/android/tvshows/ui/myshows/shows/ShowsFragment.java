@@ -96,26 +96,11 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
         mRecyclerView.setLayoutManager(glm);
     }
 
-    public ShowsContract.Presenter getShowsPresenter(){
-        return mShowsPresenter;
-    }
-
     @Override
     public void showsDataLoaded(int size) {
         mShowsAdapter.displayShows(size);
     }
 
-    @Override
-    public boolean getContinuing() {
-        MyShowsActivity myShowsActivity = (MyShowsActivity) getActivity();
-        return myShowsActivity.getContinuing();
-    }
-
-    @Override
-    public boolean getFavorite() {
-        MyShowsActivity myShowsActivity = (MyShowsActivity) getActivity();
-        return myShowsActivity.getFavorite();
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

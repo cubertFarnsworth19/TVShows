@@ -83,7 +83,7 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        if(!mLoaded) mUpdatesPresenter.loadShowsFromDatabase();
+        if(!mLoaded) mUpdatesPresenter.loadShowsFromDatabase(false);
     }
 
     @Override
@@ -100,6 +100,15 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
     @Override
     public void noConnection() {
         Snackbar.make(mRootview,getResources().getString(R.string.no_connection),Snackbar.LENGTH_INDEFINITE).show();
+    }
+
+    @Override
+    public void displayUpdate() {
+        mUpdatesAdapter.displayUpdates();
+    }
+
+    public void unCheckAll(){
+        mUpdatesAdapter.uncheckAll();
     }
 
     @Override

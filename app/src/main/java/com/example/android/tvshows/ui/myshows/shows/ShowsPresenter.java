@@ -59,7 +59,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
                     mFavorite = intent.getBooleanExtra(FilterMyShowsDialog.FAVORITE,false);
                     loadShowsFromDatabase(context,mContinuing,mFavorite);
                 }
-
             }
         };
     }

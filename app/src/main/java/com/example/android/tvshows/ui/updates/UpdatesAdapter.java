@@ -40,10 +40,6 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mUpdatesPresenter = updatesPresenter;
     }
 
-    public ArrayList<ArrayList<Boolean>> getCheckedArrayList(){
-        return mChecked;
-    }
-
     public void displayUpdates(int size){
         mSize = size;
         mAllChecked = new ArrayList<>(mSize);
@@ -64,6 +60,23 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void displayUpdates(){
+        notifyDataSetChanged();
+    }
+
+    public void uncheckAll(){
+        for(int i=0;i< mAllChecked.size();i++){
+            mAllChecked.set(i,false);
+        }
+
+        for(int i=0;i< mChecked.size();i++){
+            for(int j=0;j< mChecked.get(i).size();j++){
+                mChecked.get(i).set(j,false);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
 
     public ArrayList<Pair<Boolean,ArrayList<Boolean>>> getChecked(){
         ArrayList<Pair<Boolean,ArrayList<Boolean>>> checked = new ArrayList<>();
@@ -249,15 +262,6 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     protected UpdatesAdapter(Parcel in) {
-//        mContext = (Context) in.readValue(Context.class.getClassLoader());
-//        mUpdatesPresenter = (UpdatesContract.Presenter) in.readValue(UpdatesContract.Presenter.class.getClassLoader());
-//        mSize = in.readInt();
-//        if (in.readByte() == 0x01) {
-//            mAllChecked = new ArrayList<Boolean>();
-//            in.readList(mAllChecked, Boolean.class.getClassLoader());
-//        } else {
-//            mAllChecked = null;
-//        }
     }
 
     @Override
@@ -267,15 +271,6 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeValue(mContext);
-//        dest.writeValue(mUpdatesPresenter);
-//        dest.writeInt(mSize);
-//        if (mAllChecked == null) {
-//            dest.writeByte((byte) (0x00));
-//        } else {
-//            dest.writeByte((byte) (0x01));
-//            dest.writeList(mAllChecked);
-//        }
     }
 
     @SuppressWarnings("unused")

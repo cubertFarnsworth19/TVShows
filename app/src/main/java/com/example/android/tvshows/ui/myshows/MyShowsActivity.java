@@ -39,8 +39,6 @@ public class MyShowsActivity extends NavigationIconActivity {
     private boolean mContinuing;
     private boolean mFavorite;
 
-    private ShowsFragment mShowsFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +79,7 @@ public class MyShowsActivity extends NavigationIconActivity {
         public Fragment getItem(int position) {
             Fragment fragment;
             if(position==0) {
-                mShowsFragment = ShowsFragment.getInstance();
-                fragment = mShowsFragment;
-                //fragment = ShowsFragment.getInstance();
+                fragment = ShowsFragment.getInstance();
             }
             else {
                 fragment = CurrentFragment.getInstance(position);
@@ -111,7 +107,7 @@ public class MyShowsActivity extends NavigationIconActivity {
     @OnClick(R.id.btn_filter)
     public void clickButton() {
         FragmentManager fm = this.getSupportFragmentManager();
-        FilterMyShowsDialog filterMyShowsDialog = new FilterMyShowsDialog(this,mShowsFragment.getShowsPresenter(),mContinuing,mFavorite);
+        FilterMyShowsDialog filterMyShowsDialog = new FilterMyShowsDialog(this,mContinuing,mFavorite);
         filterMyShowsDialog.show(fm,"dialog_myshows_filter");
     }
 
@@ -123,13 +119,6 @@ public class MyShowsActivity extends NavigationIconActivity {
         mFavorite = favorite;
     }
 
-    public boolean getContinuing() {
-        return mContinuing;
-    }
-
-    public boolean getFavorite() {
-        return mFavorite;
-    }
 
     // navigation drawer methods
     @Override

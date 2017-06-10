@@ -52,6 +52,7 @@ public class UpdatesActivity extends NavigationIconActivity {
     @OnClick(R.id.btn_update)
     void updateSelected(){
         mUpdatesFragment.updateSelected();
+        mUpdatesFragment.unCheckAll();
     }
 
 }
