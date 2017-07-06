@@ -163,6 +163,7 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         mShowsInfo.remove(position);
         mShowsRepository.deleteShow(removeId);
     }
+
     @Override
     public ArrayList<ShowInfo> getShowsInfo() {
         return mShowsInfo;

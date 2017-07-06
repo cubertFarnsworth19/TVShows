@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import com.example.android.tvshows.R;
 
-class ShowInfo implements Parcelable{
+public class ShowInfo implements Parcelable{
     private int id;
     private String title,posterUrl,numberOfSeasons,numberOfEpisodes,inProduction;
     boolean favorite;
