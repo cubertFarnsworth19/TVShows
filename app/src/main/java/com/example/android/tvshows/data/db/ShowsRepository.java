@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.android.tvshows.data.model.credits.Credits;
 import com.example.android.tvshows.data.model.season.Season;
 import com.example.android.tvshows.data.model.tvshowdetailed.TVShowDetailed;
+import com.example.android.tvshows.ui.myshows.current.CurrentDatabaseLoad;
 import com.example.android.tvshows.util.Utility;
 
 import java.util.ArrayList;
@@ -362,7 +363,7 @@ public class ShowsRepository {
         return mContext.getContentResolver().query(ShowsDbContract.EpisodeEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
     }
 
-    public Cursor getEpisodesLastMonth(){
+    public ArrayList<CurrentDatabaseLoad> getEpisodesLastMonth(){
         Integer day = Utility.getDay();
         Integer month = Utility.getMonth();
         Integer year = Utility.getYear();
@@ -390,10 +391,11 @@ public class ShowsRepository {
                 + ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH + " DESC, "
                 + ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY + " DESC";
 
-        return mContext.getContentResolver().query(Uri.parse(ShowsDbContract.EpisodeEntry.CONTENT_URI+"/last_month"),null,where,null,sortOrder);
+
+        return getCurrentEpisodes(mContext.getContentResolver().query(Uri.parse(ShowsDbContract.EpisodeEntry.CONTENT_URI+"/last_month"),null,where,null,sortOrder));
     }
 
-    public Cursor getEpisodesNextMonth(){
+    public ArrayList<CurrentDatabaseLoad> getEpisodesNextMonth(){
         Integer day = Utility.getDay();
         Integer month = Utility.getMonth();
         Integer year = Utility.getYear();
@@ -420,7 +422,24 @@ public class ShowsRepository {
                 + ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH + " ASC, "
                 + ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY + " ASC";
 
-        return mContext.getContentResolver().query(Uri.parse(ShowsDbContract.EpisodeEntry.CONTENT_URI+"/next_month"),null,where,null,sortOrder);
+        return getCurrentEpisodes(mContext.getContentResolver().query(Uri.parse(ShowsDbContract.EpisodeEntry.CONTENT_URI+"/next_month"),null,where,null,sortOrder));
+    }
+
+    public ArrayList<CurrentDatabaseLoad> getCurrentEpisodes(Cursor cursor){
+        ArrayList<CurrentDatabaseLoad> currentEpisodes = new ArrayList<>(cursor.getCount());
+
+        while (cursor.moveToNext()){
+            currentEpisodes.add(new CurrentDatabaseLoad(
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR))));
+        }
+
+        return currentEpisodes;
     }
 
     public Cursor getCreators(Integer tmdbId){

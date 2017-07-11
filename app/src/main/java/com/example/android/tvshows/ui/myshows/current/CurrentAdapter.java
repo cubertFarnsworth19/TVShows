@@ -113,7 +113,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ViewHolderShows holderShows = (ViewHolderShows) holder;
             holderShows.title.setText(mCurrentPresenter.getShowName(mDayPosition,position));
-            mPicasso.load(mCurrentPresenter.getShowPosterUrl(mContext,mDayPosition,position)).into(holderShows.poster);
+            mPicasso.load(mCurrentPresenter.getShowPosterUrl(mDayPosition,position)).into(holderShows.poster);
             holderShows.overview.setText(mCurrentPresenter.getShowOverview(mDayPosition,position));
             holderShows.episodeName.setText(mCurrentPresenter.getEpisodeName(mDayPosition,position));
         }

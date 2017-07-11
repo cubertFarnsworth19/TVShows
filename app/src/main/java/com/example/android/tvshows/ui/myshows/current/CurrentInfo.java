@@ -31,6 +31,13 @@ public class CurrentInfo implements Parcelable{
         return posterUrl;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        CurrentInfo currentInfo = (CurrentInfo) obj;
+        return this.showName.equals(currentInfo.getShowName()) && this.episodeName.equals(currentInfo.getEpisodeName())
+                && this.overview.equals(currentInfo.getOverview()) && this.posterUrl.equals(currentInfo.getPosterUrl());
+    }
+
     protected CurrentInfo(Parcel in) {
         showName = in.readString();
         episodeName = in.readString();

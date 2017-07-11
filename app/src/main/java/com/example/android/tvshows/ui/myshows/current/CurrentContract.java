@@ -17,7 +17,7 @@ public interface CurrentContract {
         int getNumberOfShowsOnDate(int position);
         // day position is the adapter position in the day
         // show position is the position of the shwo for the given day
-        String getShowPosterUrl(Context context,int dayPosition,int showPosition);
+        String getShowPosterUrl(int dayPosition,int showPosition);
         String getShowName(int dayPosition, int showPosition);
         String getEpisodeName(int dayPosition, int showPosition);
         String getShowOverview(int dayPosition, int showPosition);

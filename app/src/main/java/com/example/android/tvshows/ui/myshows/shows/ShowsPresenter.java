@@ -36,7 +36,7 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     public ShowsPresenter(ShowsContract.View showsView,ShowsRepository showsRepository){
         mShowsView = showsView;
         mShowsRepository = showsRepository;
-        setBrodcastReciever();
+        setBroadcastReceiver();
         registerReceivers();
     }
 
@@ -44,11 +44,11 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         mShowsView = showsView;
         mShowsRepository = showsRepository;
         mShowsInfo = showsInfo;
-        setBrodcastReciever();
+        setBroadcastReceiver();
         registerReceivers();
     }
 
-    private void setBrodcastReciever(){
+    private void setBroadcastReceiver(){
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

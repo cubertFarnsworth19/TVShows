@@ -46,7 +46,7 @@ public class ShowsUnitTest {
 
     ArrayList<ShowInfo> mShowsInfo;
 
-    private static final String METHOD_SET = "setBrodcastReciever";
+    private static final String METHOD_SET = "setBroadcastReceiver";
     private static final String METHOD_REGISTER = "registerReceivers";
 
     private String continuing = "Continuing";
