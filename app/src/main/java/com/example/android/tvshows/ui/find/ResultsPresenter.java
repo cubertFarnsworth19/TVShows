@@ -55,6 +55,7 @@ public class ResultsPresenter implements ResultsContract.Presenter {
     private String mLastMinVoteCount;
     private String mLastFirstAirDateAfter;
     private String mLastFirstAirDateBefore;
+    //the ids of all shows stored in the database
     private ArrayList<Integer> mAllShowIds;
 
     @Inject
@@ -276,7 +277,6 @@ public class ResultsPresenter implements ResultsContract.Presenter {
         return context.getString(R.string.poster_path) + mResults.get(position).getPosterPath();
     }
 
-
     @Override
     public boolean showAddButton(int position) {
         return !mAllShowIds.contains(mResults.get(position).getId());
@@ -286,7 +286,6 @@ public class ResultsPresenter implements ResultsContract.Presenter {
     public int getTmdbId(int position) {
         return mResults.get(position).getId();
     }
-
 
     @Override
     public void openMoreDetailsDialog(Context context,final int position) {

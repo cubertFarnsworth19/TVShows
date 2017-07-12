@@ -51,6 +51,13 @@ public class Result implements Parcelable {
     @Expose
     private String originalName;
 
+    public Result(Integer id, Double voteAverage, Integer voteCount,String firstAirDate) {
+        this.id = id;
+        this.voteAverage = voteAverage;
+        this.voteCount = voteCount;
+        this.firstAirDate = firstAirDate;
+    }
+
     public String getPosterPath() {
         return posterPath;
     }
