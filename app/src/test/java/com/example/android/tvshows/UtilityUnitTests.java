@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.test.AndroidTestCase;
 
+import com.example.android.tvshows.data.model.tvshowdetailed.Genre;
 import com.example.android.tvshows.util.Genres;
 import com.example.android.tvshows.util.Utility;
 
@@ -41,6 +42,18 @@ public class UtilityUnitTests{
         selectedGenres[4] = true;
         selectedGenres[5] = true;
         assertTrue(genres.equals(Genres.getGenresString(selectedGenres,mContext)));
+    }
+
+    @Test
+    public void genres_genresToStringInts(){
+
+        String genres = "18,10766";
+
+        boolean[] selected = new boolean[16];
+        selected[5] = true;
+        selected[12] = true;
+
+        assertTrue(genres.equals(Genres.genresToStringInts(selected)));
     }
 
 }

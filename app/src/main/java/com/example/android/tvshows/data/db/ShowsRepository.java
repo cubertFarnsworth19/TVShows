@@ -13,6 +13,8 @@ import com.example.android.tvshows.data.model.credits.Credits;
 import com.example.android.tvshows.data.model.season.Season;
 import com.example.android.tvshows.data.model.tvshowdetailed.TVShowDetailed;
 import com.example.android.tvshows.ui.myshows.current.CurrentDatabaseLoad;
+import com.example.android.tvshows.ui.updates.SeasonForUpdate;
+import com.example.android.tvshows.ui.updates.TVShow;
 import com.example.android.tvshows.util.Utility;
 
 import java.util.ArrayList;
@@ -327,6 +329,25 @@ public class ShowsRepository {
         }
     }
 
+    public ArrayList<TVShow> getAllShowsUpdate(){
+        ArrayList<TVShow> tvShows = new ArrayList<>();
+
+        Cursor cursor = getAllShows(false,false);
+
+        while (cursor.moveToNext()){
+            tvShows.add(new TVShow(
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry._ID)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_DAY)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_MONTH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_YEAR))));
+        }
+
+        cursor.close();
+
+        return tvShows;
+    }
+
     public ArrayList<Integer> getAllShowIds(){
         String[] columns = {ShowsDbContract.ShowsEntry._ID};
         Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,columns,null,null,null);
@@ -448,9 +469,29 @@ public class ShowsRepository {
         return mContext.getContentResolver().query(ShowsDbContract.CreatorEntry.CONTENT_URI,null,null,selectionArgs,null);
     }
 
-    public Cursor getAllSeasons(){
+//    public Cursor getAllSeasons(){
+//        String sortOrder = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + " ASC, " + ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER + " DESC";
+//        return mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,null,null,sortOrder);
+//    }
+
+    public ArrayList<SeasonForUpdate> getAllSeasons(){
         String sortOrder = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + " ASC, " + ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER + " DESC";
-        return mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,null,null,sortOrder);
+        Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,null,null,sortOrder);
+
+        ArrayList<SeasonForUpdate> seasonsForUpdate = new ArrayList<>();
+
+        while(cursor.moveToNext()){
+            seasonsForUpdate.add(new SeasonForUpdate(cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_DAY)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_MONTH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_YEAR))));
+        }
+
+        cursor.close();
+
+        return seasonsForUpdate;
     }
 
     public void updateTVShowDetails(final TVShowDetailed tvShowDetailed, final Credits credits){

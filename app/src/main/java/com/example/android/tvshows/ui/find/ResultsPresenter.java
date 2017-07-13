@@ -24,6 +24,7 @@ import com.example.android.tvshows.data.model.tvshowdetailed.TVShowDetailed;
 import com.example.android.tvshows.data.rest.ApiService;
 import com.example.android.tvshows.service.DownloadService;
 import com.example.android.tvshows.ui.RetryUntilDownloaded;
+import com.example.android.tvshows.util.Genres;
 import com.example.android.tvshows.util.Utility;
 
 import java.util.ArrayList;

@@ -140,8 +140,8 @@ public class DiscoverActivity extends NavigationIconActivity {
         // set the filters and send to presenter to make request
         mResultsFragment.setFilters(
                 getSortByString(mSpinnerSortBy.getSelectedItemPosition()),
-                genresToStringInts(mIncludeGenres),
-                genresToStringInts(mExcludeGenres),
+                Genres.genresToStringInts(mIncludeGenres),
+                Genres.genresToStringInts(mExcludeGenres),
                 mEditTextVoteAverage.getText().toString(),
                 mEditTextVoteCount.getText().toString(),
                 mSpinnerFirstAirDateAfter.getSelectedItem().toString(),
@@ -179,21 +179,21 @@ public class DiscoverActivity extends NavigationIconActivity {
     }
 
     // convert the boolean selected genres into a comma separated list of integer ids
-    private String genresToStringInts(boolean[] selectedGenres){
-        StringBuilder stringSelected = new StringBuilder();
-        boolean firstSelected = false;
-        for(int i=0;i<selectedGenres.length;i++){
-            if(selectedGenres[i]){
-                if(firstSelected)
-                    stringSelected.append(","+Genres.getGenreInteger(i));
-                else {
-                    stringSelected.append(Genres.getGenreInteger(i));
-                    firstSelected = true;
-                }
-            }
-        }
-        return stringSelected.toString();
-    }
+//    private String genresToStringInts(boolean[] selectedGenres){
+//        StringBuilder stringSelected = new StringBuilder();
+//        boolean firstSelected = false;
+//        for(int i=0;i<selectedGenres.length;i++){
+//            if(selectedGenres[i]){
+//                if(firstSelected)
+//                    stringSelected.append(","+Genres.getGenreInteger(i));
+//                else {
+//                    stringSelected.append(Genres.getGenreInteger(i));
+//                    firstSelected = true;
+//                }
+//            }
+//        }
+//        return stringSelected.toString();
+//    }
 
     //set the data for the 3 spinners
     private void setupSpinners(){

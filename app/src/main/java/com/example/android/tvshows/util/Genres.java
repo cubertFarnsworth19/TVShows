@@ -95,4 +95,21 @@ public class Genres {
         return stringSelected.toString();
     }
 
+    // convert the boolean selected genres into a comma separated list of integer ids
+    public static String genresToStringInts(boolean[] selectedGenres){
+        StringBuilder stringSelected = new StringBuilder();
+        boolean firstSelected = false;
+        for(int i=0;i<selectedGenres.length;i++){
+            if(selectedGenres[i]){
+                if(firstSelected)
+                    stringSelected.append(","+ getGenreInteger(i));
+                else {
+                    stringSelected.append(getGenreInteger(i));
+                    firstSelected = true;
+                }
+            }
+        }
+        return stringSelected.toString();
+    }
+
 }
