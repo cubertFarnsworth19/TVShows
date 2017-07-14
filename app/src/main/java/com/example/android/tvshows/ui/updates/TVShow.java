@@ -7,12 +7,12 @@ import com.example.android.tvshows.util.Utility;
 
 public class TVShow implements Parcelable {
 
-    Integer id;
-    String name;
-    int updateDay;
-    int updateMonth;
-    int updateYear;
-    String lastUpdate;
+    public Integer id;
+    public String name;
+    public int updateDay;
+    public int updateMonth;
+    public int updateYear;
+    public String lastUpdate;
 
     public TVShow(Integer id, String name, int updateDay, int updateMonth, int updateYear) {
         this.id = id;

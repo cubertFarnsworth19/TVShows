@@ -40,6 +40,9 @@ public class UpdatesUnitTest {
     private static final String METHOD_DISPLAY = "display";
     private static final String METHOD_REGISTER = "registerReceivers";
 
+    ArrayList<TVShow> tvShows;
+    ArrayList<SeasonForUpdate> seasonsForUpdate;
+
     @Before
     public void init() {
 
@@ -58,18 +61,18 @@ public class UpdatesUnitTest {
     }
 
     private ArrayList<TVShow> getMockTvShows(){
-        ArrayList<TVShow> tvShows = new ArrayList<>();
+        tvShows = new ArrayList<>();
 
         tvShows.add(new TVShow(1,"Show 1",21,6,2017));
-        tvShows.add(new TVShow(2,"Show 2",21,6,2017));
-        tvShows.add(new TVShow(3,"Show 3",21,6,2017));
-        tvShows.add(new TVShow(4,"Show 4",21,6,2017));
+        tvShows.add(new TVShow(2,"Show 2",24,6,2017));
+        tvShows.add(new TVShow(3,"Show 3",24,6,2017));
+        tvShows.add(new TVShow(4,"Show 4",23,6,2017));
 
         return tvShows;
     }
 
     private ArrayList<SeasonForUpdate> getMockSeasons(){
-        ArrayList<SeasonForUpdate> seasonsForUpdate = new ArrayList<>();
+        seasonsForUpdate = new ArrayList<>();
 
         seasonsForUpdate.add(new SeasonForUpdate(1,"Season 1",1,22,6,2017));
         seasonsForUpdate.add(new SeasonForUpdate(1,"Season 2",1,22,6,2017));
@@ -92,12 +95,28 @@ public class UpdatesUnitTest {
 
     @Test
     public void numberOfSeasons(){
-
         assertTrue(mPresenter.getNumberOfSeasons(0)==3);
         assertTrue(mPresenter.getNumberOfSeasons(1)==3);
         assertTrue(mPresenter.getNumberOfSeasons(2)==3);
         assertTrue(mPresenter.getNumberOfSeasons(3)==2);
     }
+
+    @Test
+    public void getLastUpdate(){
+        assertTrue(mPresenter.getLastUpdate(0).equals(tvShows.get(0).lastUpdate));
+        assertTrue(mPresenter.getLastUpdate(1).equals(seasonsForUpdate.get(3).lastUpdate));
+        assertTrue(mPresenter.getLastUpdate(2).equals(seasonsForUpdate.get(6).lastUpdate));
+        assertTrue(mPresenter.getLastUpdate(3).equals(seasonsForUpdate.get(9).lastUpdate));
+    }
+
+    @Test
+    public void getSeasonName(){
+        assertTrue(mPresenter.getSeasonName(4,1).equals("Season 2"));
+    }
+
+
+
+
 
 
 }

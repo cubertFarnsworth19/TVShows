@@ -157,6 +157,7 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
         return mTVShows.get(position).name;
     }
 
+    //the last update for the most recent season/ tv details update
     @Override
     public String getLastUpdate(int position) {
         ArrayList<SeasonForUpdate> seasons = mHashtableSeasons.get(mTVShows.get(position).id);

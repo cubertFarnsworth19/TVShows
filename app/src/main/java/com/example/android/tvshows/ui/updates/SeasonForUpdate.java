@@ -7,13 +7,13 @@ import com.example.android.tvshows.util.Utility;
 
 public class SeasonForUpdate implements Parcelable {
 
-    int showId;
-    String name;
-    int seasonNumber;
-    int updateDay;
-    int updateMonth;
-    int updateYear;
-    String lastUpdate;
+    public int showId;
+    public String name;
+    public int seasonNumber;
+    public int updateDay;
+    public int updateMonth;
+    public int updateYear;
+    public String lastUpdate;
 
     public SeasonForUpdate(int showId,String name, int seasonNumber, int updateDay, int updateMonth, int updateYear) {
         this.showId = showId;
