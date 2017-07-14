@@ -67,57 +67,11 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
 
     @Override
     public void loadShowsFromDatabase(boolean update) {
-
         mTVShows = mShowsRepository.getAllShowsUpdate();
-
 
         setHashtableSeasons(mShowsRepository.getAllSeasons());
 
         display(update);
-
-        //mTVShows = new ArrayList<>();
-
-//        Cursor cursor = mShowsRepository.getAllShows(false,false);
-//
-//        while (cursor.moveToNext()){
-//            mTVShows.add(new TVShow(
-//                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry._ID)),
-//                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
-//                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_DAY)),
-//                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_MONTH)),
-//                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_YEAR))));
-//        }
-//
-//        cursor.close();
-//
-//        ArrayList<SeasonForUpdate> seasonsForUpdate = mShowsRepository.getAllSeasons();
-//
-//        mHashtableSeasons = new Hashtable<>();
-//
-//       // Cursor seasonsCursor = mShowsRepository.getAllSeasons();
-//
-//        seasonsCursor.moveToFirst();
-//
-//        while(!seasonsCursor.isAfterLast()){
-//
-//            ArrayList<SeasonForUpdate> seasons = new ArrayList<>();
-//
-//            Integer currentShowId = seasonsCursor.getInt(seasonsCursor.getColumnIndex(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY));
-//
-//            do{
-//                seasons.add(new SeasonForUpdate(seasonsCursor.getString(seasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME)),
-//                        seasonsCursor.getInt(seasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER)),
-//                        seasonsCursor.getInt(seasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_DAY)),
-//                        seasonsCursor.getInt(seasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_MONTH)),
-//                        seasonsCursor.getInt(seasonsCursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_YEAR))));
-//
-//            }while(seasonsCursor.moveToNext() && currentShowId == seasonsCursor.getInt(seasonsCursor.getColumnIndex(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY)));
-//
-//            mHashtableSeasons.put(currentShowId,seasons);
-//        }
-//        seasonsCursor.close();
-
-
     }
 
     private void display(boolean update){
