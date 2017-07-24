@@ -29,6 +29,9 @@ public class SearchActivity extends NavigationIconActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setBackgroundDrawable(null);
+
         if(savedInstanceState != null){
             mResultsFragment = (ResultsFragment) getSupportFragmentManager().getFragment(savedInstanceState,FRAGMENT);
         }

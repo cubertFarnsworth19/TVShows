@@ -7,7 +7,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_results_item"
-    android:background="@color/colorBackgroundDark"
+    tools:background="@color/colorBackgroundDark"
     android:gravity="center_horizontal"
     android:layout_gravity="center_horizontal">
 

@@ -70,6 +70,8 @@ public class DiscoverActivity extends NavigationIconActivity {
 
         ButterKnife.bind(this);
 
+        getWindow().setBackgroundDrawable(null);
+
         setupSpinners();
 
         if(savedInstanceState != null){

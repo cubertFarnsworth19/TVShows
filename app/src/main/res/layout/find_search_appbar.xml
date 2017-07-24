@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+
     tools:context="com.example.android.tvshows.ui.find.search.SearchActivity">
 
 

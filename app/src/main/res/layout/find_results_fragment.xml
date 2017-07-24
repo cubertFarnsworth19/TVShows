@@ -15,7 +15,7 @@
             android:id="@+id/recyclerview_results"
             android:layout_weight="1"
             android:scrollbars="vertical"
-            android:background="@color/colorBackgroundDark"
+
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:layout_height="0dp"
