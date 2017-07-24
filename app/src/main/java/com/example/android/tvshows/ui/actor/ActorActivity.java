@@ -64,6 +64,9 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.actor_activity);
+
+        getWindow().setBackgroundDrawable(null);
+
         ButterKnife.bind(this);
 
         Intent intent = getIntent();

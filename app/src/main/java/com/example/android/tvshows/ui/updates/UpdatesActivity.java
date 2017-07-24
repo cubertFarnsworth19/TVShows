@@ -23,6 +23,8 @@ public class UpdatesActivity extends NavigationIconActivity {
 
         ButterKnife.bind(this);
 
+        getWindow().setBackgroundDrawable(null);
+
         mUpdatesFragment = new UpdatesFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 

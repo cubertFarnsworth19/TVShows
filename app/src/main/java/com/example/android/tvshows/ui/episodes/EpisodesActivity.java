@@ -49,6 +49,8 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().setBackgroundDrawable(null);
+
         mNestedScrollView.setFillViewport(true);
         mNestedScrollView.setNestedScrollingEnabled(true);
 

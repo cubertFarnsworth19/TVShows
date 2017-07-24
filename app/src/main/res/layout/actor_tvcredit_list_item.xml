@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/seasons_layout"
-    android:background="@color/colorBackgroundDark"
+    tools:background="@color/colorBackgroundDark"
     android:paddingTop="@dimen/padding_small"
     android:orientation="horizontal"
     android:layout_width="match_parent"
