@@ -85,7 +85,6 @@ public class DownloadService extends Service {
         return START_NOT_STICKY;
     }
 
-
     private void downloadResults(Integer id){
 
         final String strId = id.toString();

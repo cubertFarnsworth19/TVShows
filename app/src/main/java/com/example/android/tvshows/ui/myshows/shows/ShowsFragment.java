@@ -48,6 +48,8 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.myshows_shows_fragment,container,false);
+
+
         ButterKnife.bind(this,rootview);
 
         if(savedInstanceState!=null){

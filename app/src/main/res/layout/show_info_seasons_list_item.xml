@@ -9,7 +9,7 @@
     android:paddingBottom="@dimen/padding_small"
     android:paddingLeft="@dimen/padding_medium"
     android:paddingRight="@dimen/padding_medium"
-    android:background="@color/colorBackgroundDark"
+
     android:layout_gravity="center"
     android:gravity="center">
     <android.support.v7.widget.CardView

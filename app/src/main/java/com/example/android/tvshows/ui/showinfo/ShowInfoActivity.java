@@ -49,11 +49,15 @@ public class ShowInfoActivity extends BaseNavigationActivity {
             }
         });
 
+        getWindow().setBackgroundDrawable(null);
+
         setipToolbar();
 
         Intent intent = getIntent();
         tmdbId = intent.getIntExtra(ShowsDbContract.ShowsEntry._ID,-1);
         mShowName.setText(intent.getStringExtra(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+
+
     }
 
     private void setipToolbar(){

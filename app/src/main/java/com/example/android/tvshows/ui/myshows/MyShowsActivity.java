@@ -64,6 +64,8 @@ public class MyShowsActivity extends NavigationIconActivity {
             }
         });
 
+        getWindow().setBackgroundDrawable(null);
+
     }
 
     class MyPagerAdapter extends FragmentStatePagerAdapter {
