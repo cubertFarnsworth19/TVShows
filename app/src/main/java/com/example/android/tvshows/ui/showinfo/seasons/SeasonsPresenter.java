@@ -42,42 +42,64 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
         mSeasonsInfo = seasonsInfo;
     }
 
+//    @Override
+//    public void loadSeasonsData(final Context context) {
+//
+//        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
+//                e.onNext(mShowsRepository.getSeasons(tmdbId));
+//            }
+//        });
+//
+//        Consumer<Cursor> consumer = new Consumer<Cursor>() {
+//            @Override
+//            public void accept(@NonNull Cursor cursor) throws Exception {
+//
+//                mSeasonsInfo = new ArrayList<>();
+//
+//                while (cursor.moveToNext()){
+//
+//                    mSeasonsInfo.add(new SeasonInfo(
+//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_DAY)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_MONTH)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_YEAR)),
+//                            context.getString(R.string.poster_path) + cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_POSTER_PATH)),
+//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_OVERVIEW)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_NUMBER_OF_EPISODES)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER))));
+//                }
+//
+//                cursor.close();
+//                mSeasonsView.seasonDataLoaded(mSeasonsInfo.size());
+//            }
+//        };
+//
+//        observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
+//    }
+
     @Override
     public void loadSeasonsData(final Context context) {
 
-        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+        Observable<ArrayList<SeasonInfo>> observable = Observable.create(new ObservableOnSubscribe<ArrayList<SeasonInfo>>() {
             @Override
-            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
+            public void subscribe(ObservableEmitter<ArrayList<SeasonInfo>> e) throws Exception {
                 e.onNext(mShowsRepository.getSeasons(tmdbId));
             }
         });
 
-        Consumer<Cursor> consumer = new Consumer<Cursor>() {
+        Consumer<ArrayList<SeasonInfo>> consumer = new Consumer<ArrayList<SeasonInfo>>() {
             @Override
-            public void accept(@NonNull Cursor cursor) throws Exception {
-
-                mSeasonsInfo = new ArrayList<>();
-
-                while (cursor.moveToNext()){
-
-                    mSeasonsInfo.add(new SeasonInfo(
-                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_DAY)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_MONTH)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_YEAR)),
-                            context.getString(R.string.poster_path) + cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_POSTER_PATH)),
-                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_OVERVIEW)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_NUMBER_OF_EPISODES)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER))));
-                }
-
-                cursor.close();
+            public void accept(@NonNull ArrayList<SeasonInfo> seasonsInfo) throws Exception {
+                mSeasonsInfo = seasonsInfo;
                 mSeasonsView.seasonDataLoaded(mSeasonsInfo.size());
             }
         };
 
         observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
     }
+
 
     @Override
     public String getSeasonName(int adapterPosition) {

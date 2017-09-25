@@ -3,7 +3,7 @@ package com.example.android.tvshows.ui.showinfo.cast;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-class CastInfo implements Parcelable{
+public class CastInfo implements Parcelable{
     private String characterName, actorName, photoUrl;
     private int personId;
 

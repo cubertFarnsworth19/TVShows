@@ -70,40 +70,59 @@ public class ShowsPresenter implements ShowsContract.Presenter {
                 new IntentFilter(FilterMyShowsDialog.FILTER_SHOWS));
     }
 
+//    @Override
+//    public void loadShowsFromDatabase(final Context context, final boolean continuing, final boolean favorite) {
+//
+//        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
+//                e.onNext(mShowsRepository.getAllShows(continuing,favorite));
+//            }
+//        });
+//
+//        Consumer<Cursor> consumer = new Consumer<Cursor>() {
+//            @Override
+//            public void accept(@NonNull Cursor cursor) throws Exception {
+//                mShowsInfo = new ArrayList<>();
+//                while (cursor.moveToNext()){
+//                    mShowsInfo.add(new ShowInfo(
+//                            context,
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry._ID)),
+//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
+//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_EPISODES)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION)),
+//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE))
+//                    ));
+//                }
+//
+//                mShowsView.showsDataLoaded(cursor.getCount());
+//                cursor.close();
+//            }
+//        };
+//
+//        observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
+//
+//    }
+
     @Override
     public void loadShowsFromDatabase(final Context context, final boolean continuing, final boolean favorite) {
-
-        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+        Observable<ArrayList<ShowInfo>> observable = Observable.create(new ObservableOnSubscribe<ArrayList<ShowInfo>>() {
             @Override
-            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
+            public void subscribe(ObservableEmitter<ArrayList<ShowInfo>> e) throws Exception {
                 e.onNext(mShowsRepository.getAllShows(continuing,favorite));
             }
         });
 
-        Consumer<Cursor> consumer = new Consumer<Cursor>() {
+        Consumer<ArrayList<ShowInfo>> consumer = new Consumer<ArrayList<ShowInfo>>() {
             @Override
-            public void accept(@NonNull Cursor cursor) throws Exception {
-                mShowsInfo = new ArrayList<>();
-                while (cursor.moveToNext()){
-                    mShowsInfo.add(new ShowInfo(
-                            context,
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry._ID)),
-                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
-                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_EPISODES)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION)),
-                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE))
-                    ));
-                }
-
-                mShowsView.showsDataLoaded(cursor.getCount());
-                cursor.close();
+            public void accept(@NonNull ArrayList<ShowInfo> showsInfo) throws Exception {
+                mShowsInfo = showsInfo;
+                mShowsView.showsDataLoaded(showsInfo.size());
             }
         };
-
         observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
-
     }
 
     @Override

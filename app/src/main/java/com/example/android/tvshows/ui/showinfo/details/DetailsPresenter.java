@@ -15,6 +15,8 @@ import com.example.android.tvshows.data.rest.ApiService;
 import com.example.android.tvshows.util.Genres;
 import com.example.android.tvshows.util.Utility;
 
+import java.util.ArrayList;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -29,8 +31,10 @@ public class DetailsPresenter implements DetailsContract.Presenter{
     private DetailsContract.View mDetailsView;
     private ShowsRepository mShowsRepository;
     private int tmdbId;
-    private Cursor mShowDetails;
-    private Cursor mCreators;
+   // private Cursor mShowDetails;
+    private DetailsData mShowDetails;
+    //private Cursor mCreators;
+    private ArrayList<String> mCreators;
     private ApiService mApiService;
 
     public DetailsPresenter(DetailsContract.View detailsView,ShowsRepository showsRepository,ApiService apiService,int tmdbId){
@@ -43,17 +47,17 @@ public class DetailsPresenter implements DetailsContract.Presenter{
     @Override
     public void loadShowDetails(final Context context) {
 
-        Observable<Cursor> showDetailsObservable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+        Observable<DetailsData> showDetailsObservable = Observable.create(new ObservableOnSubscribe<DetailsData>() {
             @Override
-            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
+            public void subscribe(ObservableEmitter<DetailsData> e) throws Exception {
                 e.onNext(mShowsRepository.getShow(tmdbId));
             }
         });
 
-        Consumer<Cursor> showDetailsConsumer = new Consumer<Cursor>() {
+        Consumer<DetailsData> showDetailsConsumer = new Consumer<DetailsData>() {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Cursor cursor) throws Exception {
-                mShowDetails = cursor;
+            public void accept(@io.reactivex.annotations.NonNull DetailsData detailsData) throws Exception {
+                mShowDetails = detailsData;
                 loadCreators(context);
             }
         };
@@ -62,19 +66,39 @@ public class DetailsPresenter implements DetailsContract.Presenter{
 
     }
 
+//    private void loadCreators(final Context context){
+//
+//        Observable<Cursor> showDetailsObservable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
+//                e.onNext(mShowsRepository.getCreators(tmdbId));
+//            }
+//        });
+//
+//        Consumer<Cursor> showDetailsConsumer = new Consumer<Cursor>() {
+//            @Override
+//            public void accept(@io.reactivex.annotations.NonNull Cursor cursor) throws Exception {
+//                mCreators = cursor;
+//                setDetailsView(context);
+//            }
+//        };
+//
+//        showDetailsObservable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(showDetailsConsumer);
+//    }
+
     private void loadCreators(final Context context){
 
-        Observable<Cursor> showDetailsObservable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+        Observable<ArrayList<String>> showDetailsObservable = Observable.create(new ObservableOnSubscribe<ArrayList<String>>() {
             @Override
-            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
+            public void subscribe(ObservableEmitter<ArrayList<String>> e) throws Exception {
                 e.onNext(mShowsRepository.getCreators(tmdbId));
             }
         });
 
-        Consumer<Cursor> showDetailsConsumer = new Consumer<Cursor>() {
+        Consumer<ArrayList<String>> showDetailsConsumer = new Consumer<ArrayList<String>>() {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Cursor cursor) throws Exception {
-                mCreators = cursor;
+            public void accept(@io.reactivex.annotations.NonNull ArrayList<String> creators) throws Exception {
+                mCreators = creators;
                 setDetailsView(context);
             }
         };
@@ -82,28 +106,48 @@ public class DetailsPresenter implements DetailsContract.Presenter{
         showDetailsObservable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(showDetailsConsumer);
     }
 
+//    private void setDetailsView(Context context){
+//        if(mShowDetails.moveToFirst()) {
+//            String overview = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_OVERVIEW));
+//            Integer startYear = mShowDetails.getInt(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FIRST_AIR_DATE_YEAR));
+//            Double userScore = mShowDetails.getDouble(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_AVERAGE));
+//            Integer voteCount = mShowDetails.getInt(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_COUNT));
+//
+//            mDetailsView.setUserInterfaceText(overview, startYear.toString(), userScore.toString(), voteCount.toString(), getGenres(context,mShowDetails),
+//                    Utility.getRatingBackgroundColor(context,userScore),Utility.getTextColor(context,userScore));
+//
+//            mDetailsView.setPoster(mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)));
+//
+//            mDetailsView.creatorDataLoaded(mCreators.getCount());
+//        }
+//    }
+
     private void setDetailsView(Context context){
-        if(mShowDetails.moveToFirst()) {
-            String overview = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_OVERVIEW));
-            Integer startYear = mShowDetails.getInt(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FIRST_AIR_DATE_YEAR));
-            Double userScore = mShowDetails.getDouble(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_AVERAGE));
-            Integer voteCount = mShowDetails.getInt(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_COUNT));
+       // if(mShowDetails.moveToFirst()) {
+//            String overview = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_OVERVIEW));
+//            Integer startYear = mShowDetails.getInt(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FIRST_AIR_DATE_YEAR));
+//            Double userScore = mShowDetails.getDouble(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_AVERAGE));
+//            Integer voteCount = mShowDetails.getInt(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_COUNT));
 
-            mDetailsView.setUserInterfaceText(overview, startYear.toString(), userScore.toString(), voteCount.toString(), getGenres(context,mShowDetails),
-                    Utility.getRatingBackgroundColor(context,userScore),Utility.getTextColor(context,userScore));
+            mDetailsView.setUserInterfaceText(mShowDetails.overview, mShowDetails.startYear.toString(),
+                    mShowDetails.userScore.toString(), mShowDetails.voteCount.toString(), getGenres(context,mShowDetails),
+                    Utility.getRatingBackgroundColor(context,mShowDetails.userScore),Utility.getTextColor(context,mShowDetails.userScore));
 
-            mDetailsView.setPoster(mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)));
+            mDetailsView.setPoster(mShowDetails.posterPath);
 
-            mDetailsView.creatorDataLoaded(mCreators.getCount());
-        }
-
-
+            mDetailsView.creatorDataLoaded(mCreators.size());
+      //  }
     }
+
+//    @Override
+//    public String getCreatorName(int position) {
+//        mCreators.moveToPosition(position);
+//        return mCreators.getString(mCreators.getColumnIndex(ShowsDbContract.CreatorEntry.COLUMN_CREATOR_NAME));
+//    }
 
     @Override
     public String getCreatorName(int position) {
-        mCreators.moveToPosition(position);
-        return mCreators.getString(mCreators.getColumnIndex(ShowsDbContract.CreatorEntry.COLUMN_CREATOR_NAME));
+        return mCreators.get(position);
     }
 
     @Override
@@ -149,60 +193,118 @@ public class DetailsPresenter implements DetailsContract.Presenter{
             context.startActivity(intent);
     }
 
+//    @Override
+//    public void searchGoogle(Context context) {
+//        if(mShowDetails.moveToFirst()) {
+//            String title = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+//            Uri webpage = Uri.parse(context.getString(R.string.google_search_webpage) + title);
+//            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+//            if (intent.resolveActivity(context.getPackageManager()) != null)
+//                context.startActivity(intent);
+//        }
+//    }
+//
+//    @Override
+//    public void searchYouTube(Context context) {
+//        if(mShowDetails.moveToFirst()) {
+//            String title = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+//            Uri webpage = Uri.parse(context.getString(R.string.youtube_search_webpage) + title);
+//            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+//            if (intent.resolveActivity(context.getPackageManager()) != null)
+//                context.startActivity(intent);
+//        }
+//    }
+//
+//    @Override
+//    public void visitWikipedia(Context context) {
+//        if(mShowDetails.moveToFirst()){
+//            String title = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+//            Uri webpage = Uri.parse(Utility.getWikipediaTVSeriesWebpage(context,title));
+//            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+//            if (intent.resolveActivity(context.getPackageManager()) != null)
+//                context.startActivity(intent);
+//        }
+//    }
+
     @Override
     public void searchGoogle(Context context) {
-        if(mShowDetails.moveToFirst()) {
-            String title = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+            String title = mShowDetails.name;
             Uri webpage = Uri.parse(context.getString(R.string.google_search_webpage) + title);
             Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
             if (intent.resolveActivity(context.getPackageManager()) != null)
                 context.startActivity(intent);
-        }
+
     }
 
     @Override
     public void searchYouTube(Context context) {
-        if(mShowDetails.moveToFirst()) {
-            String title = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+
+            String title = mShowDetails.name;
             Uri webpage = Uri.parse(context.getString(R.string.youtube_search_webpage) + title);
             Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
             if (intent.resolveActivity(context.getPackageManager()) != null)
                 context.startActivity(intent);
-        }
+
     }
 
     @Override
     public void visitWikipedia(Context context) {
-        if(mShowDetails.moveToFirst()){
-            String title = mShowDetails.getString(mShowDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
+
+            String title = mShowDetails.name;
             Uri webpage = Uri.parse(Utility.getWikipediaTVSeriesWebpage(context,title));
             Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
             if (intent.resolveActivity(context.getPackageManager()) != null)
                 context.startActivity(intent);
-        }
+
     }
 
+
+//    @NonNull
+//    private String getGenres(Context context, Cursor showDetails){
+//
+//        boolean[] genres = new boolean[Genres.numberOfGenres()];
+//
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_ACTION_ADVENTURE))==1) genres[0] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_ANIMATION))==1) genres[1] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_COMEDY))==1) genres[2] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_CRIME))==1) genres[3] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_DOCUMENTARY))==1) genres[4] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_DRAMA))==1) genres[5] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_FAMILY))==1) genres[6] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_KIDS))==1) genres[7] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_MYSTERY))==1) genres[8] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_NEWS))==1) genres[9] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_REALITY))==1) genres[10] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_SCI_FI_FANTASY))==1) genres[11] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_SOAP))==1) genres[12] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_TALK))==1) genres[13] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_WAR_POLITICS))==1) genres[14] = true;
+//        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_WESTERN))==1) genres[15] = true;
+//
+//        return Genres.getGenresString(genres,context);
+//    }
+
     @NonNull
-    private String getGenres(Context context, Cursor showDetails){
+    private String getGenres(Context context, DetailsData showDetails){
 
         boolean[] genres = new boolean[Genres.numberOfGenres()];
 
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_ACTION_ADVENTURE))==1) genres[0] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_ANIMATION))==1) genres[1] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_COMEDY))==1) genres[2] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_CRIME))==1) genres[3] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_DOCUMENTARY))==1) genres[4] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_DRAMA))==1) genres[5] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_FAMILY))==1) genres[6] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_KIDS))==1) genres[7] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_MYSTERY))==1) genres[8] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_NEWS))==1) genres[9] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_REALITY))==1) genres[10] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_SCI_FI_FANTASY))==1) genres[11] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_SOAP))==1) genres[12] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_TALK))==1) genres[13] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_WAR_POLITICS))==1) genres[14] = true;
-        if(showDetails.getInt(showDetails.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_GENRE_WESTERN))==1) genres[15] = true;
+        if(showDetails.actionAdventure) genres[0] = true;
+        if(showDetails.animation) genres[1] = true;
+        if(showDetails.comedy) genres[2] = true;
+        if(showDetails.crime) genres[3] = true;
+        if(showDetails.documentary) genres[4] = true;
+        if(showDetails.drama) genres[5] = true;
+        if(showDetails.family) genres[6] = true;
+        if(showDetails.kids) genres[7] = true;
+        if(showDetails.mystery) genres[8] = true;
+        if(showDetails.news) genres[9] = true;
+        if(showDetails.reality) genres[10] = true;
+        if(showDetails.sciFiFantasy) genres[11] = true;
+        if(showDetails.soap) genres[12] = true;
+        if(showDetails.talk) genres[13] = true;
+        if(showDetails.warPolitics) genres[14] = true;
+        if(showDetails.western) genres[15] = true;
 
         return Genres.getGenresString(genres,context);
     }

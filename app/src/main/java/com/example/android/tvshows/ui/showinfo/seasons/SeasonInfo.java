@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.example.android.tvshows.util.Utility;
 
-class SeasonInfo implements Parcelable {
+public class SeasonInfo implements Parcelable {
     String seasonName;
     String airDate;
     String posterUrl;
