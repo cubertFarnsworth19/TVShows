@@ -9,10 +9,16 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.android.tvshows.R;
 import com.example.android.tvshows.data.model.credits.Credits;
 import com.example.android.tvshows.data.model.season.Season;
 import com.example.android.tvshows.data.model.tvshowdetailed.TVShowDetailed;
+import com.example.android.tvshows.ui.episodes.EpisodeData;
 import com.example.android.tvshows.ui.myshows.current.CurrentDatabaseLoad;
+import com.example.android.tvshows.ui.myshows.shows.ShowInfo;
+import com.example.android.tvshows.ui.showinfo.cast.CastInfo;
+import com.example.android.tvshows.ui.showinfo.details.DetailsData;
+import com.example.android.tvshows.ui.showinfo.seasons.SeasonInfo;
 import com.example.android.tvshows.ui.updates.SeasonForUpdate;
 import com.example.android.tvshows.ui.updates.TVShow;
 import com.example.android.tvshows.util.Utility;
@@ -309,7 +315,7 @@ public class ShowsRepository {
 
     }
 
-    public Cursor getAllShows(boolean continuing,boolean favorites){
+    private Cursor getAllShowsCursor(boolean continuing,boolean favorites){
         if(!continuing && !favorites)
             return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,null,null,null);
 
@@ -329,10 +335,33 @@ public class ShowsRepository {
         }
     }
 
+    public ArrayList<ShowInfo> getAllShows(boolean continuing,boolean favorites){
+
+        Cursor cursor = getAllShowsCursor(continuing,favorites);
+
+        ArrayList<ShowInfo> showsInfo = new ArrayList<>();
+        while (cursor.moveToNext()){
+            showsInfo.add(new ShowInfo(
+                    mContext,
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry._ID)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_EPISODES)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE))
+            ));
+        }
+
+        cursor.close();
+
+        return showsInfo;
+    }
+
     public ArrayList<TVShow> getAllShowsUpdate(){
         ArrayList<TVShow> tvShows = new ArrayList<>();
 
-        Cursor cursor = getAllShows(false,false);
+        Cursor cursor = getAllShowsCursor(false,false);
 
         while (cursor.moveToNext()){
             tvShows.add(new TVShow(
@@ -358,30 +387,125 @@ public class ShowsRepository {
         return allShowIds;
     }
 
-    public Cursor getShow(Integer tmdbId){
+//    public Cursor getShow(Integer tmdbId){
+//        String where = ShowsDbContract.ShowsEntry._ID + "=?";
+//        String[] selectionArgs = {tmdbId.toString()};
+//        return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,where,selectionArgs,null);
+//    }
+
+    public DetailsData getShow(Integer tmdbId){
         String where = ShowsDbContract.ShowsEntry._ID + "=?";
         String[] selectionArgs = {tmdbId.toString()};
-        return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,where,selectionArgs,null);
+        Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,where,selectionArgs,null);
+
+
+        if(cursor.moveToFirst()) {
+            DetailsData detailsData = new DetailsData(cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_OVERVIEW)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FIRST_AIR_DATE_YEAR)),
+                    cursor.getDouble(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_AVERAGE)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_VOTE_COUNT)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)));
+
+            detailsData.setGenres(cursor);
+            cursor.close();
+
+            return detailsData;
+        }
+
+        return new DetailsData();
+
     }
 
-    public Cursor getCast(Integer tmdbId){
+//    public Cursor getCast(Integer tmdbId){
+//        String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
+//        String[] selectionArgs = {tmdbId.toString()};
+//        return mContext.getContentResolver().query(ShowsDbContract.CastEntry.CONTENT_URI,null,where,selectionArgs,null);
+//    }
+
+    public ArrayList<CastInfo> getCast(Integer tmdbId){
         String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
         String[] selectionArgs = {tmdbId.toString()};
-        return mContext.getContentResolver().query(ShowsDbContract.CastEntry.CONTENT_URI,null,where,selectionArgs,null);
+        Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.CastEntry.CONTENT_URI,null,where,selectionArgs,null);
+
+        ArrayList<CastInfo> castInfo = new ArrayList();
+
+        while (cursor.moveToNext()){
+            castInfo.add(new CastInfo(
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_CHARACTER)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_NAME)),
+                    mContext.getString(R.string.poster_path) + cursor.getString(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_PROFILE_PATH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_PERSON_ID))
+            ));
+        }
+
+        cursor.close();
+
+        return castInfo;
     }
 
-    public Cursor getSeasons(Integer tmdbId){
+//    public Cursor getSeasons(Integer tmdbId){
+//        String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
+//        String[] selectionArgs = {tmdbId.toString()};
+//        String sortOrder = ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER + " DESC";
+//        return mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
+//    }
+
+    public ArrayList<SeasonInfo> getSeasons(Integer tmdbId){
         String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
         String[] selectionArgs = {tmdbId.toString()};
         String sortOrder = ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER + " DESC";
-        return mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
+        Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
+
+        ArrayList<SeasonInfo> seasonsInfo = new ArrayList<>();
+
+        while (cursor.moveToNext()){
+
+            seasonsInfo.add(new SeasonInfo(
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_DAY)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_MONTH)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_AIR_DATE_YEAR)),
+                    mContext.getString(R.string.poster_path) + cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_POSTER_PATH)),
+                    cursor.getString(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_OVERVIEW)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_NUMBER_OF_EPISODES)),
+                    cursor.getInt(cursor.getColumnIndex(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER))));
+        }
+
+        cursor.close();
+        
+        return seasonsInfo;
     }
 
-    public Cursor getEpisodes(Integer tmdbId,Integer season){
+//    public Cursor getEpisodes(Integer tmdbId,Integer season){
+//        String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=? AND " + ShowsDbContract.EpisodeEntry.COLUMN_SEASON_NUMBER + "=?";
+//        String[] selectionArgs = {tmdbId.toString(),season.toString()};
+//        String sortOrder = ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NUMBER + " ASC";
+//        return mContext.getContentResolver().query(ShowsDbContract.EpisodeEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
+//    }
+
+    public ArrayList<EpisodeData> getEpisodes(Integer tmdbId, Integer season){
         String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=? AND " + ShowsDbContract.EpisodeEntry.COLUMN_SEASON_NUMBER + "=?";
         String[] selectionArgs = {tmdbId.toString(),season.toString()};
         String sortOrder = ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NUMBER + " ASC";
-        return mContext.getContentResolver().query(ShowsDbContract.EpisodeEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
+        Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.EpisodeEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
+
+        ArrayList<EpisodeData> episodeData = new ArrayList<>();
+        while (cursor.moveToNext()){
+            int tmdbId2 = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry._ID));
+            String name = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME));
+            String overview = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW));
+            String stillPath = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_STILL_PATH));
+
+            Integer day = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY));
+            Integer month = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH));
+            Integer year = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR));
+            episodeData.add(new EpisodeData(tmdbId2,name,overview,mContext.getString(R.string.poster_path) +stillPath, Utility.getDateAsString(day,month,year),cursor.getPosition()));
+        }
+
+        cursor.close();
+
+        return episodeData;
     }
 
     public ArrayList<CurrentDatabaseLoad> getEpisodesLastMonth(){
@@ -463,10 +587,23 @@ public class ShowsRepository {
         return currentEpisodes;
     }
 
-    public Cursor getCreators(Integer tmdbId){
-        //String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
+//    public Cursor getCreators(Integer tmdbId){
+//        //String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
+//        String[] selectionArgs = {tmdbId.toString()};
+//        return mContext.getContentResolver().query(ShowsDbContract.CreatorEntry.CONTENT_URI,null,null,selectionArgs,null);
+//    }
+
+    public ArrayList<String> getCreators(Integer tmdbId){
         String[] selectionArgs = {tmdbId.toString()};
-        return mContext.getContentResolver().query(ShowsDbContract.CreatorEntry.CONTENT_URI,null,null,selectionArgs,null);
+        Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.CreatorEntry.CONTENT_URI,null,null,selectionArgs,null);
+
+        ArrayList<String> creators = new ArrayList<>();
+        while (cursor.moveToNext())
+            creators.add(cursor.getString(cursor.getColumnIndex(ShowsDbContract.CreatorEntry.COLUMN_CREATOR_NAME)));
+
+        cursor.close();
+
+        return creators;
     }
 
 //    public Cursor getAllSeasons(){
