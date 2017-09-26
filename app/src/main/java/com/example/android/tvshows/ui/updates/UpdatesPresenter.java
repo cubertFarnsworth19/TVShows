@@ -174,7 +174,6 @@ public class UpdatesPresenter implements UpdatesContract.Presenter{
                     intent.putExtra(DownloadService.SEASONS_NUMBER, seasonsNumber);
                     context.startService(intent);
                 }
-
             }
         }else{
             mUpdatesView.noConnection();

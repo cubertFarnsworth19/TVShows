@@ -25,6 +25,13 @@ public class Cast {
     @Expose
     private Integer order;
 
+    public Cast(){}
+
+    public Cast(String name, Integer order) {
+        this.name = name;
+        this.order = order;
+    }
+
     public String getCharacter() {
         return character;
     }

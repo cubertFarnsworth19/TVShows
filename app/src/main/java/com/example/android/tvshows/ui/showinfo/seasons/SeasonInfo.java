@@ -6,12 +6,12 @@ import android.os.Parcelable;
 import com.example.android.tvshows.util.Utility;
 
 public class SeasonInfo implements Parcelable {
-    String seasonName;
-    String airDate;
-    String posterUrl;
-    String overview;
-    String numberOfEpisodes;
-    int seasonNumber;
+    public String seasonName;
+    public String airDate;
+    public String posterUrl;
+    public String overview;
+    public String numberOfEpisodes;
+    public int seasonNumber;
 
     public SeasonInfo(String seasonName,Integer day ,Integer month,Integer year, String posterUrl, String overview, Integer numberOfEpisodes, int seasonNumber) {
         this.seasonName = seasonName;

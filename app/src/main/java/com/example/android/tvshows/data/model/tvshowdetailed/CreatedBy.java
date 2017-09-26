@@ -16,6 +16,14 @@ public class CreatedBy {
     @Expose
     private String profilePath;
 
+    public CreatedBy() {
+    }
+
+    public CreatedBy(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

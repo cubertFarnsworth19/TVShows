@@ -13,7 +13,7 @@ public class DetailsData {
     public Double userScore;
     public Integer voteCount;
     public String posterPath;
-    boolean actionAdventure, animation, comedy, crime, documentary, drama, family, kids, mystery, news, reality, sciFiFantasy, soap, talk, warPolitics, western;
+    public boolean actionAdventure, animation, comedy, crime, documentary, drama, family, kids, mystery, news, reality, sciFiFantasy, soap, talk, warPolitics, western;
 
     public DetailsData(){}
 

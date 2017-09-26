@@ -20,7 +20,7 @@ android {
     }
     buildTypes.each {
         //Enter tmdb api key here
-        it.buildConfigField 'String', 'TMDB_API_KEY', "\"7d86ea3dba098f1a39ee6f754bb8859c\""
+        it.buildConfigField 'String', 'TMDB_API_KEY', "\"\""
     }
 
     testOptions {
@@ -37,6 +37,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    androidTestCompile 'org.mockito:mockito-core:1.9.5'
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-all:1.10.19"
     testCompile "org.hamcrest:hamcrest-all:1.3"

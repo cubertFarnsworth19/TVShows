@@ -17,6 +17,14 @@ public class Credits {
     @Expose
     private Integer id;
 
+    public Credits() {
+    }
+
+    public Credits( Integer id,List<Cast> cast) {
+        this.cast = cast;
+        this.id = id;
+    }
+
     public List<Cast> getCast() {
         return cast;
     }

@@ -8,7 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
+//import android.util.Log;
 import com.example.android.tvshows.data.db.ShowsDbContract.*;
 import com.example.android.tvshows.data.db.ShowsDbContract.ShowsEntry;
 import com.example.android.tvshows.data.db.ShowsDbContract.SeasonEntry;
@@ -111,7 +111,7 @@ public class ShowsProvider extends ContentProvider {
                         + " WHERE " + ForeignKeys.COLUMN_CREATOR_FOREIGN_KEY + " = " + selectionArgs[0] ;
                 cursor = database.rawQuery(string,null);
                 cursor.moveToFirst();
-                Log.v("ShowsProvider ", Integer.toString(cursor.getInt(0)));
+                //Log.v("ShowsProvider ", Integer.toString(cursor.getInt(0)));
                 break;
 
             default:
@@ -157,7 +157,7 @@ public class ShowsProvider extends ContentProvider {
             long id = database.insert(ShowsEntry.TABLE_NAME,null,contentValues);
             getContext().getContentResolver().notifyChange(uri,null);
 
-            Log.v("ShowsProvider insert",""+id);
+          //  Log.v("ShowsProvider insert",""+id);
             return ContentUris.withAppendedId(uri,id);
         }
 
@@ -175,7 +175,7 @@ public class ShowsProvider extends ContentProvider {
             try{
                 for(ContentValues v:values){
                     database.insert(SeasonEntry.TABLE_NAME,null,v);
-                    Log.v("ShowsProvider insert","season "+ v.getAsString(SeasonEntry.COLUMN_SEASON_NAME));
+                   // Log.v("ShowsProvider insert","season "+ v.getAsString(SeasonEntry.COLUMN_SEASON_NAME));
                 }
                 database.setTransactionSuccessful();
             }
@@ -192,7 +192,7 @@ public class ShowsProvider extends ContentProvider {
                 for (ContentValues v : values) {
                     database.insert(EpisodeEntry.TABLE_NAME, null, v);
 
-                    Log.v("ShowsProvider insert", "episode " + v.getAsInteger(EpisodeEntry.COLUMN_EPISODE_NUMBER));
+                  //  Log.v("ShowsProvider insert", "episode " + v.getAsInteger(EpisodeEntry.COLUMN_EPISODE_NUMBER));
                 }
                 database.setTransactionSuccessful();
             }
@@ -209,7 +209,7 @@ public class ShowsProvider extends ContentProvider {
             try{
                 for(ContentValues v:values){
                     database.insert(CastEntry.TABLE_NAME,null,v);
-                    Log.v("ShowsProvider insert","cast "+ v.getAsString(CastEntry.COLUMN_NAME));
+                 //   Log.v("ShowsProvider insert","cast "+ v.getAsString(CastEntry.COLUMN_NAME));
                 }
                 database.setTransactionSuccessful();
             }
@@ -224,7 +224,7 @@ public class ShowsProvider extends ContentProvider {
             try{
                 for(ContentValues v:values){
                     database.insert(CreatorEntry.TABLE_NAME,null,v);
-                    Log.v("ShowsProvider insert","creator "+ v.getAsString(CreatorEntry.COLUMN_CREATOR_NAME));
+                  //  Log.v("ShowsProvider insert","creator "+ v.getAsString(CreatorEntry.COLUMN_CREATOR_NAME));
                 }
                 database.setTransactionSuccessful();
             }
@@ -263,35 +263,35 @@ public class ShowsProvider extends ContentProvider {
         switch(match){
             case TVSHOW:
                 rowsDeleted = database.delete(ShowsEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","show "+ selectionArgs[0] );
+             //   Log.v("ShowsProvider delete","show "+ selectionArgs[0] );
                 break;
             case CAST_CREATOR_SHOW_DELETE:
                 rowsDeleted = database.delete(CastEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","cast "+ selectionArgs[0] );
+            //    Log.v("ShowsProvider delete","cast "+ selectionArgs[0] );
                 //need to first delete from creators table
                 database.delete(CreatorShowEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","creator_show "+ selectionArgs[0] );
+           //     Log.v("ShowsProvider delete","creator_show "+ selectionArgs[0] );
                 break;
             case SEASONS_DELETE:
                 database.delete(SeasonEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","seasons "+ selectionArgs[0] );
+               // Log.v("ShowsProvider delete","seasons "+ selectionArgs[0] );
                 database.delete(EpisodeEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","episodes "+ selectionArgs[0] );
+             //   Log.v("ShowsProvider delete","episodes "+ selectionArgs[0] );
                 break;
             case FULL_SHOW_DELETE:
                 rowsDeleted = database.delete(CastEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","cast "+ selectionArgs[0] );
+            //    Log.v("ShowsProvider delete","cast "+ selectionArgs[0] );
                 database.delete(SeasonEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","seasons "+ selectionArgs[0] );
+           //     Log.v("ShowsProvider delete","seasons "+ selectionArgs[0] );
                 database.delete(EpisodeEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","episodes "+ selectionArgs[0] );
+            //    Log.v("ShowsProvider delete","episodes "+ selectionArgs[0] );
                 //need to first delete from creators table
                 database.delete(CreatorShowEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","creator_show "+ selectionArgs[0] );
+            //    Log.v("ShowsProvider delete","creator_show "+ selectionArgs[0] );
                 break;
             case CREATOR:
                 rowsDeleted = database.delete(CreatorEntry.TABLE_NAME,where,selectionArgs);
-                Log.v("ShowsProvider delete","creators "+ selectionArgs[0] );
+             //   Log.v("ShowsProvider delete","creators "+ selectionArgs[0] );
                 break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);

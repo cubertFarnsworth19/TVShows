@@ -44,6 +44,17 @@ public class Episode {
     @Expose
     private Integer voteCount;
 
+    public Episode() {
+    }
+
+    public Episode(String name,Double voteAverage, Integer voteCount,Integer seasonNumber,String airDate) {
+        this.voteAverage = voteAverage;
+        this.voteCount = voteCount;
+        this.name = name;
+        this.seasonNumber = seasonNumber;
+        this.airDate = airDate;
+    }
+
     public String getAirDate() {
         return airDate;
     }

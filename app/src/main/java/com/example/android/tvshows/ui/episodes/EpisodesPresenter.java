@@ -54,33 +54,6 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     @Override
     public void loadEpisodesData(final Context context) {
 
-//        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
-//                e.onNext(mShowsRepository.getEpisodes(mShowId, mSeasonNumber));
-//            }
-//        });
-//
-//        Consumer<Cursor> consumer = new Consumer<Cursor>() {
-//            @Override
-//            public void accept(@NonNull Cursor cursor) throws Exception {
-//                mEpisodeData = new ArrayList<>();
-//                while (cursor.moveToNext()){
-//                    int tmdbId = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry._ID));
-//                    String name = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NAME));
-//                    String overview = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_OVERVIEW));
-//                    String stillPath = cursor.getString(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_STILL_PATH));
-//
-//                    Integer day = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY));
-//                    Integer month = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_MONTH));
-//                    Integer year = cursor.getInt(cursor.getColumnIndex(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_YEAR));
-//                    mEpisodeData.add(new EpisodeData(tmdbId,name,overview,context.getString(R.string.poster_path) +stillPath, Utility.getDateAsString(day,month,year),cursor.getPosition()));
-//                }
-//                cursor.close();
-//                mEpisodeView.episodeDataLoaded(cursor.getCount());
-//            }
-//        };
-
         Observable<ArrayList<EpisodeData>> observable = Observable.create(new ObservableOnSubscribe<ArrayList<EpisodeData>>() {
             @Override
             public void subscribe(ObservableEmitter<ArrayList<EpisodeData>> e) throws Exception {
@@ -96,9 +69,8 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
             }
         };
 
-
-        observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
-
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
     }
 
     @Override
@@ -128,7 +100,8 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     @Override
     public void visitIMDbPage(final Context context,final int episodeNumber) {
 
-        mApiService.getEpisodeExternalIds(String.valueOf(mShowId),String.valueOf(mSeasonNumber),String.valueOf(episodeNumber),BuildConfig.TMDB_API_KEY)
+        mApiService.getEpisodeExternalIds(String.valueOf(mShowId),
+                String.valueOf(mSeasonNumber),String.valueOf(episodeNumber),BuildConfig.TMDB_API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ExternalIdsTvShow>() {
@@ -161,33 +134,6 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
             context.startActivity(intent);
     }
 
-//    @Override
-//    public void searchGoogle(Context context, String episodeName) {
-//        Cursor showCursor = mShowsRepository.getShow(mShowId);
-//        if (showCursor.moveToFirst()) {
-//            String showName = showCursor.getString(showCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
-//            Uri webpage = Uri.parse(context.getString(R.string.google_search_webpage) + showName + " " + episodeName);
-//            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-//            if (intent.resolveActivity(context.getPackageManager()) != null)
-//                context.startActivity(intent);
-//        }
-//        showCursor.close();
-//    }
-//
-//    @Override
-//    public void searchYouTube(Context context, String episodeName) {
-//        Cursor showCursor = mShowsRepository.getShow(mShowId);
-//        if (showCursor.moveToFirst()) {
-//            String showName = showCursor.getString(showCursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME));
-//            Uri webpage = Uri.parse(context.getString(R.string.youtube_search_webpage)  + showName + " " + episodeName);
-//            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-//            if (intent.resolveActivity(context.getPackageManager()) != null)
-//                context.startActivity(intent);
-//        }
-//        showCursor.close();
-//    }
-
-
     @Override
     public void searchGoogle(Context context, String episodeName) {
         DetailsData detailsData = mShowsRepository.getShow(mShowId);
@@ -197,8 +143,6 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
         if (intent.resolveActivity(context.getPackageManager()) != null)
             context.startActivity(intent);
-
-
     }
 
     @Override
@@ -211,8 +155,5 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
         if (intent.resolveActivity(context.getPackageManager()) != null)
             context.startActivity(intent);
     }
-
-
-
 
 }

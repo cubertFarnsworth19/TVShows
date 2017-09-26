@@ -34,6 +34,15 @@ public class Season {
     @Expose
     private Integer seasonNumber;
 
+    public Season() {
+    }
+
+    public Season(String name, List<Episode> episodes,Integer seasonNumber) {
+        this.name = name;
+        this.episodes = episodes;
+        this.seasonNumber = seasonNumber;
+    }
+
     public String getXId() {
         return xId;
     }

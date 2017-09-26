@@ -70,42 +70,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
                 new IntentFilter(FilterMyShowsDialog.FILTER_SHOWS));
     }
 
-//    @Override
-//    public void loadShowsFromDatabase(final Context context, final boolean continuing, final boolean favorite) {
-//
-//        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
-//                e.onNext(mShowsRepository.getAllShows(continuing,favorite));
-//            }
-//        });
-//
-//        Consumer<Cursor> consumer = new Consumer<Cursor>() {
-//            @Override
-//            public void accept(@NonNull Cursor cursor) throws Exception {
-//                mShowsInfo = new ArrayList<>();
-//                while (cursor.moveToNext()){
-//                    mShowsInfo.add(new ShowInfo(
-//                            context,
-//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry._ID)),
-//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
-//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_POSTER_PATH)),
-//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS)),
-//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NUM_EPISODES)),
-//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION)),
-//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_FAVORITE))
-//                    ));
-//                }
-//
-//                mShowsView.showsDataLoaded(cursor.getCount());
-//                cursor.close();
-//            }
-//        };
-//
-//        observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
-//
-//    }
-
     @Override
     public void loadShowsFromDatabase(final Context context, final boolean continuing, final boolean favorite) {
         Observable<ArrayList<ShowInfo>> observable = Observable.create(new ObservableOnSubscribe<ArrayList<ShowInfo>>() {
@@ -171,16 +135,21 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     public void startShowInfoActivity(Context context, int position) {
         Intent intent = new Intent(context, ShowInfoActivity.class);
         intent.putExtra(ShowsDbContract.ShowsEntry._ID,mShowsInfo.get(position).getId());
-
         intent.putExtra(ShowsDbContract.ShowsEntry.COLUMN_NAME,mShowsInfo.get(position).getTitle());
         context.startActivity(intent);
     }
 
     @Override
     public void removeShow(int position) {
-        int removeId = mShowsInfo.get(position).getId();
+        final int removeId = mShowsInfo.get(position).getId();
         mShowsInfo.remove(position);
-        mShowsRepository.deleteShow(removeId);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mShowsRepository.deleteShow(removeId);
+            }
+        });
+        thread.start();
     }
 
     @Override

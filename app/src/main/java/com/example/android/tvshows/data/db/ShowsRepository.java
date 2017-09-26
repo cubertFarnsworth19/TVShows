@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-import android.widget.Toast;
+//import android.util.Log;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.data.model.credits.Credits;
@@ -40,11 +39,11 @@ public class ShowsRepository {
     }
 
     public void insertShowIntoDatabase(final TVShowDetailed tvShowDetailed, final Credits credits, final Season[] seasons){
-        Log.v("ShowsRepository","insert");
+       // Log.v("ShowsRepository","insert");
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
 
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
@@ -59,7 +58,8 @@ public class ShowsRepository {
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_POPULARITY,tvShowDetailed.getPopularity());
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_OVERVIEW,tvShowDetailed.getOverview());
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_NUM_EPISODES,tvShowDetailed.getNumberOfEpisodes());
-                showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS,tvShowDetailed.getSeasonsListSize());
+                //showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS,tvShowDetailed.getSeasonsListSize());
+                showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_NUM_SEASONS,seasons.length);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_HOMEPAGE,tvShowDetailed.getHomepage());
                 if(tvShowDetailed.getInProduction()) showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_IN_PRODUCTION,1);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_FIRST_AIR_DATE_YEAR,tvShowDetailed.getFirstAirDateYear());
@@ -87,7 +87,7 @@ public class ShowsRepository {
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_DAY,todayDay);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_MONTH,todayMonth);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_YEAR,todayYear);
-                Log.v("insertIntoDatabase",tvShowDetailed.getName()+","+credits.getId());
+              //  Log.v("insertIntoDatabase",tvShowDetailed.getName()+","+credits.getId());
 
 
                 int numEpisodes = 0;
@@ -114,7 +114,8 @@ public class ShowsRepository {
                     seasonsValues[i].put(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_MONTH,todayMonth);
                     seasonsValues[i].put(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_YEAR,todayYear);
 
-                    for(int j=0;j<seasons[i].numberOfEpisodes();j++){
+//                    for(int j=0;j<seasons[i].numberOfEpisodes();j++){
+                    for (int j=0;j<seasons[i].getEpisodes().size();j++){
                         episodesValues[episodesIndex] = new ContentValues();
                         episodesValues[episodesIndex].put(ShowsDbContract.EpisodeEntry._ID,seasons[i].getEpisodes().get(j).getId());
                         episodesValues[episodesIndex].put(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY,tvShowDetailed.getId());
@@ -160,10 +161,10 @@ public class ShowsRepository {
 
                 completeShowInsert(showsValues,castValues,seasonsValues,episodesValues,creatorValues,creatorShowValues);
 
-            }
-        });
+      //      }
+    //    });
 
-        thread.start();
+      //  thread.start();
 
     }
 
@@ -182,9 +183,9 @@ public class ShowsRepository {
     }
 
     public void insertAdditionalSeasonsIntoDatabase(final int tmdbId, final Season[] seasons){
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
 
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
@@ -235,10 +236,10 @@ public class ShowsRepository {
 
                 completeAdditionalSeasonsInsert(seasonsValues,episodesValues);
 
-            }
-        });
-
-        thread.start();
+//            }
+//        });
+//
+//        thread.start();
     }
 
     private synchronized void completeAdditionalSeasonsInsert(ContentValues[] seasonsValues,ContentValues[] episodesValues){
@@ -247,18 +248,9 @@ public class ShowsRepository {
     }
 
     public void deleteShow(final Integer tmdbId){
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                //the creators need to be deleted first, as the creator_show table is required
-                deleteCreators(tmdbId);
-                completeDelete(tmdbId);
-
-            }
-        });
-        thread.start();
+        //the creators need to be deleted first, as the creator_show table is required
+        deleteCreators(tmdbId);
+        completeDelete(tmdbId);
     }
 
     private synchronized void deleteCreators(Integer tmdbId) {
@@ -387,12 +379,6 @@ public class ShowsRepository {
         return allShowIds;
     }
 
-//    public Cursor getShow(Integer tmdbId){
-//        String where = ShowsDbContract.ShowsEntry._ID + "=?";
-//        String[] selectionArgs = {tmdbId.toString()};
-//        return mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,where,selectionArgs,null);
-//    }
-
     public DetailsData getShow(Integer tmdbId){
         String where = ShowsDbContract.ShowsEntry._ID + "=?";
         String[] selectionArgs = {tmdbId.toString()};
@@ -417,12 +403,6 @@ public class ShowsRepository {
 
     }
 
-//    public Cursor getCast(Integer tmdbId){
-//        String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
-//        String[] selectionArgs = {tmdbId.toString()};
-//        return mContext.getContentResolver().query(ShowsDbContract.CastEntry.CONTENT_URI,null,where,selectionArgs,null);
-//    }
-
     public ArrayList<CastInfo> getCast(Integer tmdbId){
         String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
         String[] selectionArgs = {tmdbId.toString()};
@@ -443,13 +423,6 @@ public class ShowsRepository {
 
         return castInfo;
     }
-
-//    public Cursor getSeasons(Integer tmdbId){
-//        String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
-//        String[] selectionArgs = {tmdbId.toString()};
-//        String sortOrder = ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER + " DESC";
-//        return mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
-//    }
 
     public ArrayList<SeasonInfo> getSeasons(Integer tmdbId){
         String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
@@ -476,13 +449,6 @@ public class ShowsRepository {
         
         return seasonsInfo;
     }
-
-//    public Cursor getEpisodes(Integer tmdbId,Integer season){
-//        String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=? AND " + ShowsDbContract.EpisodeEntry.COLUMN_SEASON_NUMBER + "=?";
-//        String[] selectionArgs = {tmdbId.toString(),season.toString()};
-//        String sortOrder = ShowsDbContract.EpisodeEntry.COLUMN_EPISODE_NUMBER + " ASC";
-//        return mContext.getContentResolver().query(ShowsDbContract.EpisodeEntry.CONTENT_URI,null,where,selectionArgs,sortOrder);
-//    }
 
     public ArrayList<EpisodeData> getEpisodes(Integer tmdbId, Integer season){
         String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=? AND " + ShowsDbContract.EpisodeEntry.COLUMN_SEASON_NUMBER + "=?";
@@ -570,7 +536,7 @@ public class ShowsRepository {
         return getCurrentEpisodes(mContext.getContentResolver().query(Uri.parse(ShowsDbContract.EpisodeEntry.CONTENT_URI+"/next_month"),null,where,null,sortOrder));
     }
 
-    public ArrayList<CurrentDatabaseLoad> getCurrentEpisodes(Cursor cursor){
+    private ArrayList<CurrentDatabaseLoad> getCurrentEpisodes(Cursor cursor){
         ArrayList<CurrentDatabaseLoad> currentEpisodes = new ArrayList<>(cursor.getCount());
 
         while (cursor.moveToNext()){
@@ -587,12 +553,6 @@ public class ShowsRepository {
         return currentEpisodes;
     }
 
-//    public Cursor getCreators(Integer tmdbId){
-//        //String where = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + "=?";
-//        String[] selectionArgs = {tmdbId.toString()};
-//        return mContext.getContentResolver().query(ShowsDbContract.CreatorEntry.CONTENT_URI,null,null,selectionArgs,null);
-//    }
-
     public ArrayList<String> getCreators(Integer tmdbId){
         String[] selectionArgs = {tmdbId.toString()};
         Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.CreatorEntry.CONTENT_URI,null,null,selectionArgs,null);
@@ -605,11 +565,6 @@ public class ShowsRepository {
 
         return creators;
     }
-
-//    public Cursor getAllSeasons(){
-//        String sortOrder = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + " ASC, " + ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER + " DESC";
-//        return mContext.getContentResolver().query(ShowsDbContract.SeasonEntry.CONTENT_URI,null,null,null,sortOrder);
-//    }
 
     public ArrayList<SeasonForUpdate> getAllSeasons(){
         String sortOrder = ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY + " ASC, " + ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER + " DESC";
@@ -632,9 +587,9 @@ public class ShowsRepository {
     }
 
     public void updateTVShowDetails(final TVShowDetailed tvShowDetailed, final Credits credits){
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
                 Integer todayYear = Utility.getYear();
@@ -676,7 +631,7 @@ public class ShowsRepository {
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_DAY,todayDay);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_MONTH,todayMonth);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_YEAR,todayYear);
-                Log.v("insertIntoDatabase",tvShowDetailed.getName()+","+credits.getId());
+                //Log.v("insertIntoDatabase",tvShowDetailed.getName()+","+credits.getId());
 
                 ContentValues[] castValues = new ContentValues[credits.getNumberOfCast()];
                 for(int i=0;i<castValues.length;i++){
@@ -704,10 +659,10 @@ public class ShowsRepository {
                 }
 
                 completeShowDetailsUpdate(showsValues,castValues,creatorValues,creatorShowValues);
-            }
-        });
-
-        thread.start();
+//            }
+//        });
+//
+//        thread.start();
 
     }
 
@@ -736,10 +691,10 @@ public class ShowsRepository {
     }
 
     public void updateSeasons(final Integer showId,final Season[] seasons){
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+//
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
 
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
@@ -789,10 +744,10 @@ public class ShowsRepository {
                 }
 
                 completeSeasonsUpdate(showId,seasons,seasonsValues,episodesValues);
-            }
-        });
-
-        thread.start();
+//            }
+//        });
+//
+//        thread.start();
     }
 
     private synchronized void completeSeasonsUpdate(Integer showId,final Season[] seasons,ContentValues[] seasonsValues,ContentValues[] episodesValues){

@@ -41,38 +41,6 @@ public class CastPresenter implements CastContract.Presenter {
         mCastInfo = castInfo;
     }
 
-//    @Override
-//    public void loadCastData(final Context context) {
-//
-//        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<Cursor> e) throws Exception {
-//                e.onNext( mShowsRepository.getCast(tmdbId));
-//            }
-//        });
-//
-//        Consumer<Cursor> consumer = new Consumer<Cursor>() {
-//            @Override
-//            public void accept(@NonNull Cursor cursor) throws Exception {
-//
-//                mCastInfo = new ArrayList();
-//
-//                while (cursor.moveToNext()){
-//                    mCastInfo.add(new CastInfo(
-//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_CHARACTER)),
-//                            cursor.getString(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_NAME)),
-//                            context.getString(R.string.poster_path) + cursor.getString(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_PROFILE_PATH)),
-//                            cursor.getInt(cursor.getColumnIndex(ShowsDbContract.CastEntry.COLUMN_PERSON_ID))
-//                    ));
-//                }
-//                mCastView.castDataLoaded(mCastInfo.size());
-//                cursor.close();
-//            }
-//        };
-//
-//        observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
-//    }
-
     @Override
     public void loadCastData(final Context context) {
 
