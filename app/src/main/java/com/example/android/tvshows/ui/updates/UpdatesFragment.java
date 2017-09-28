@@ -56,9 +56,11 @@ public class UpdatesFragment extends Fragment implements  UpdatesContract.View{
 
             mLoaded = false;
 
+            ShowsApplication showsApplication = (ShowsApplication) getActivity().getApplication();
+
             UpdatesComponent component = DaggerUpdatesComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                    .updatesModule(new UpdatesModule(this, this))
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
+                    .updatesModule(showsApplication.getUpdatesModule(this, this))
                     .build();
 
             component.inject(this);

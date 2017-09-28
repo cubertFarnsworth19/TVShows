@@ -52,6 +52,8 @@ public class CurrentFragment extends Fragment implements CurrentContract.View{
         View layout = inflater.inflate(R.layout.myshows_current_fragment,container,false);
         ButterKnife.bind(this,layout);
 
+        ShowsApplication showsApplication = (ShowsApplication) getActivity().getApplication();
+
         if(savedInstanceState!=null){
 
             ArrayList<CurrentInfo> currentInfo = savedInstanceState.getParcelableArrayList(OUTSTATE_CURRENT_INFO);
@@ -59,7 +61,7 @@ public class CurrentFragment extends Fragment implements CurrentContract.View{
             CurrentAdapter adapter = savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
 
             CurrentComponent component = DaggerCurrentComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
                     .currentModule(new CurrentModule(this, this, mCurrentType,currentInfo,dates,adapter))
                     .build();
 
@@ -69,8 +71,8 @@ public class CurrentFragment extends Fragment implements CurrentContract.View{
         }
         else {
             CurrentComponent component = DaggerCurrentComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                    .currentModule(new CurrentModule(this, this, mCurrentType))
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
+                    .currentModule(showsApplication.getCurrentModule(this, this, mCurrentType))
                     .build();
 
             component.inject(this);

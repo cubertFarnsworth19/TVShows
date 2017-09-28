@@ -60,13 +60,15 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
         ButterKnife.bind(this,mRootview);
 
+        ShowsApplication showsApplication = (ShowsApplication) getActivity().getApplication();
+
         if(savedInstanceState!=null){
 
             SaveResultsPresenterState saveResultsPresenterState = savedInstanceState.getParcelable(OUTSTATE_PRESENTER_STATE);
             ResultsAdapter adapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
 
             ResultsComponent component = DaggerResultsComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
                     .resultsModule(new ResultsModule(this, this,saveResultsPresenterState,adapter))
                     .build();
 
@@ -74,8 +76,8 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
         }
         else {
             ResultsComponent component = DaggerResultsComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                    .resultsModule(new ResultsModule(this, this))
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
+                    .resultsModule(showsApplication.getResultsModule(this, this))
                     .build();
 
             component.inject(this);

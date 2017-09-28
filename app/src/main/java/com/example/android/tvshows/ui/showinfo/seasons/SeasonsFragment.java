@@ -48,12 +48,14 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
         View rootview = inflater.inflate(R.layout.show_info_seasons_fragment,container,false);
         ButterKnife.bind(this,rootview);
 
+        ShowsApplication showsApplication = (ShowsApplication) getActivity().getApplication();
+
         if(savedInstanceState!=null){
             ArrayList<SeasonInfo> seasonsInfo = savedInstanceState.getParcelableArrayList(OUTSTATE_SEASONS_INFO);
             SeasonsAdapter adapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
             mLoaded = true;
             SeasonsComponent component = DaggerSeasonsComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
                     .seasonsModule(new SeasonsModule(this, this, mTmdbId,seasonsInfo,adapter))
                     .build();
 
@@ -64,8 +66,8 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
             mLoaded = false;
 
             SeasonsComponent component = DaggerSeasonsComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                    .seasonsModule(new SeasonsModule(this, this, mTmdbId))
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
+                    .seasonsModule(showsApplication.getSeasonsModule(this, this, mTmdbId))
                     .build();
 
             component.inject(this);

@@ -49,12 +49,14 @@ public class CastFragment extends Fragment implements CastContract.View{
         View rootview = inflater.inflate(R.layout.show_info_cast_fragment,container,false);
         ButterKnife.bind(this,rootview);
 
+        ShowsApplication showsApplication = (ShowsApplication) getActivity().getApplication();
+
         if(savedInstanceState!=null){
             ArrayList<CastInfo> castInfo = savedInstanceState.getParcelableArrayList(OUTSTATE_CAST_INFO);
             CastAdapter adapter =  savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
 
             CastComponent component = DaggerCastComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
                     .castModule(new CastModule(this, this, mTmdbId,castInfo,adapter))
                     .build();
 
@@ -66,8 +68,8 @@ public class CastFragment extends Fragment implements CastContract.View{
             mLoaded = false;
 
             CastComponent component = DaggerCastComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                    .castModule(new CastModule(this, this, mTmdbId))
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
+                    .castModule(showsApplication.getCastModule(this, this, mTmdbId))
                     .build();
 
             component.inject(this);

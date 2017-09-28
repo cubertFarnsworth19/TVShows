@@ -72,6 +72,8 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
         Intent intent = getIntent();
         mTmdbActorId = intent.getIntExtra(ShowsDbContract.CastEntry.COLUMN_PERSON_ID, -1);
 
+        ShowsApplication showsApplication = (ShowsApplication) getApplication();
+
         if(savedInstanceState!=null) {
             mLoaded = true;
 
@@ -80,7 +82,7 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
             Actor actor = savedInstanceState.getParcelable(OUTSTATE_ACTOR);;
 
             ActorComponent component = DaggerActorComponent.builder()
-                    .applicationComponent(ShowsApplication.get(this).getComponent())
+                    .applicationComponent(showsApplication.get(this).getComponent())
                     .actorModule(new ActorModule(this, this, mTmdbActorId,
                             externalIds,actorTVCredits,actor))
                     .build();
@@ -90,8 +92,8 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
             mLoaded = false;
 
             ActorComponent component = DaggerActorComponent.builder()
-                    .applicationComponent(ShowsApplication.get(this).getComponent())
-                    .actorModule(new ActorModule(this, this, mTmdbActorId))
+                    .applicationComponent(showsApplication.get(this).getComponent())
+                    .actorModule(showsApplication.getActorModule(this, this, mTmdbActorId))
                     .build();
             component.inject(this);
         }

@@ -50,9 +50,11 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         View rootview = inflater.inflate(R.layout.show_info_details_fragment,container,false);
         ButterKnife.bind(this,rootview);
 
+        ShowsApplication showsApplication = (ShowsApplication) getActivity().getApplication();
+
         DetailsComponent component = DaggerDetailsComponent.builder()
-                .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                .detailsModule(new DetailsModule(this,this,mTmdbId))
+                .applicationComponent(showsApplication.get(getActivity()).getComponent())
+                .detailsModule(showsApplication.getDetailsModule(this,this,mTmdbId))
                 .build();
 
         component.inject(this);

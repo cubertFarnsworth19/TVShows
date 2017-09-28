@@ -46,9 +46,16 @@ public class DownloadService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        ShowsApplication showsApplication = (ShowsApplication) getApplication();
+
+//        ServiceComponent component = DaggerServiceComponent.builder()
+//                .applicationComponent(ShowsApplication.get(this).getComponent())
+//                .serviceModule(new ServiceModule(this))
+//                .build();
+
         ServiceComponent component = DaggerServiceComponent.builder()
-                .applicationComponent(ShowsApplication.get(this).getComponent())
-                .serviceModule(new ServiceModule(this))
+                .applicationComponent(showsApplication.get(this).getComponent())
+                .serviceModule(showsApplication.getServiceModule(this))
                 .build();
 
         component.inject(this);

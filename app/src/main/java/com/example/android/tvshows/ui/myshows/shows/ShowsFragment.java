@@ -49,15 +49,16 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.myshows_shows_fragment,container,false);
 
-
         ButterKnife.bind(this,rootview);
+
+        ShowsApplication showsApplication = (ShowsApplication) getActivity().getApplication();
 
         if(savedInstanceState!=null){
 
             ArrayList<ShowInfo> showInfo = savedInstanceState.getParcelableArrayList(OUTSTATE_SHOWS_INFO);
             ShowsAdapter adapter = savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
             ShowsComponent component = DaggerShowsComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
                     .showsModule(new ShowsModule(this, this,showInfo,adapter))
                     .build();
 
@@ -67,8 +68,8 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
         }
         else {
             ShowsComponent component = DaggerShowsComponent.builder()
-                    .applicationComponent(ShowsApplication.get(getActivity()).getComponent())
-                    .showsModule(new ShowsModule(this, this))
+                    .applicationComponent(showsApplication.get(getActivity()).getComponent())
+                    .showsModule(showsApplication.getShowsModule(this, this))
                     .build();
 
             component.inject(this);

@@ -60,10 +60,11 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
         int[] seasonNumbers = intent.getIntArrayExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER);
         mInitialSpinnerPosition = intent.getIntExtra("adapter_position",0);
 
+        ShowsApplication showsApplication = (ShowsApplication) getApplication();
 
         EpisodesComponent component = DaggerEpisodesComponent.builder()
-                .applicationComponent(ShowsApplication.get(this).getComponent())
-                .episodesModule(new EpisodesModule(this,this,seasonNames,showId,seasonNumbers[mInitialSpinnerPosition],seasonNumbers))
+                .applicationComponent(showsApplication.get(this).getComponent())
+                .episodesModule(showsApplication.getEpisodesModule(this,this,seasonNames,showId,seasonNumbers[mInitialSpinnerPosition],seasonNumbers))
                 .build();
         component.inject(this);
 
