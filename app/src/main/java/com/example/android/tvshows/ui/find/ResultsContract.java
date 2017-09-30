@@ -16,7 +16,7 @@ public interface ResultsContract {
         void setResultsAdapter(int size);
         void setFilters(String sortBy, String withGenres, String withoutGenres,
                                     String minVoteAverage, String minVoteCount,
-                                    String firstAirDateAfter, String firstAirDateBefore);
+                                    String firstAirDateAfter, String firstAirDateBefore) throws InterruptedException;
         void search(String searchTerm);
         FragmentManager getFragmentManagerForDialog();
         void updateAdapter();

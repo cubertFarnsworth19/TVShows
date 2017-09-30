@@ -91,7 +91,7 @@ public class DiscoverActivity extends NavigationIconActivity {
             mResultsFragment = new DiscoverFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-            fragmentTransaction.add(R.id.find_discover_content,mResultsFragment);
+            fragmentTransaction.add(R.id.find_discover_content,mResultsFragment,FRAGMENT);
             fragmentTransaction.commit();
 
             mExpanded = false;
@@ -138,7 +138,7 @@ public class DiscoverActivity extends NavigationIconActivity {
     }
 
     @OnClick(R.id.btn_find)
-    public void clickFind(ImageButton button){
+    public void clickFind(){
         // set the filters and send to presenter to make request
         mResultsFragment.setFilters(
                 getSortByString(mSpinnerSortBy.getSelectedItemPosition()),
@@ -156,14 +156,12 @@ public class DiscoverActivity extends NavigationIconActivity {
         FragmentManager fm = this.getSupportFragmentManager();
         GenresDialog genresDialog;
         if(layout.getId() == mLayoutIncludeGenres.getId()){
-            Log.v("setGenres","include");
             genresDialog = new GenresDialog(this,mIncludeGenres,true);
             genresDialog.show(fm,"dialog_include_genres");
         }
         else{
             genresDialog = new GenresDialog(this,mExcludeGenres,false);
             genresDialog.show(fm,"dialog_exclude_genres");
-            Log.v("setGenres","exclude");
         }
 
     }
@@ -179,23 +177,6 @@ public class DiscoverActivity extends NavigationIconActivity {
         mTextViewExcludeGenres.setText(Genres.getGenresString(excludeGenres,this));
         mTextViewExcludeGenres.invalidate();
     }
-
-    // convert the boolean selected genres into a comma separated list of integer ids
-//    private String genresToStringInts(boolean[] selectedGenres){
-//        StringBuilder stringSelected = new StringBuilder();
-//        boolean firstSelected = false;
-//        for(int i=0;i<selectedGenres.length;i++){
-//            if(selectedGenres[i]){
-//                if(firstSelected)
-//                    stringSelected.append(","+Genres.getGenreInteger(i));
-//                else {
-//                    stringSelected.append(Genres.getGenreInteger(i));
-//                    firstSelected = true;
-//                }
-//            }
-//        }
-//        return stringSelected.toString();
-//    }
 
     //set the data for the 3 spinners
     private void setupSpinners(){

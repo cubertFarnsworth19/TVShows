@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.example.android.tvshows.data.model.search.DiscoverResults;
 import com.example.android.tvshows.data.model.search.Result;
 import com.example.android.tvshows.data.model.tvshowdetailed.TVShowDetailed;
 import com.example.android.tvshows.data.rest.ApiService;
+import com.example.android.tvshows.idlingResource.SimpleIdlingResource;
 import com.example.android.tvshows.service.DownloadService;
 import com.example.android.tvshows.ui.RetryUntilDownloaded;
 import com.example.android.tvshows.util.Genres;
@@ -59,6 +61,10 @@ public class ResultsPresenter implements ResultsContract.Presenter {
     //the ids of all shows stored in the database
     private ArrayList<Integer> mAllShowIds;
 
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
     @Inject
     public ResultsPresenter(@NonNull ResultsContract.View resultsView,ApiService apiService,ShowsRepository showsRepository) {
         mResultsView = resultsView;
@@ -95,7 +101,6 @@ public class ResultsPresenter implements ResultsContract.Presenter {
         context.startService(intent);
 
         Log.i("Attempting TMDB id",id.toString());
-
     }
 
     @Override

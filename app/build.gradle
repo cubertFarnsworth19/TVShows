@@ -10,7 +10,9 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.example.android.tvshows.ShowsTestRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -34,10 +36,11 @@ dependencies {
 //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
 //        exclude group: 'com.android.support', module: 'support-annotations'
 //    })
+    provided 'javax.annotation:jsr250-api:1.0'
     androidTestCompile 'com.android.support:support-annotations:25.3.1'
     androidTestCompile 'com.android.support.test:runner:0.5';
     androidTestCompile 'com.android.support.test:rules:0.5';
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2';
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1';
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2') {
         // Necessary to avoid version conflicts
         exclude group: 'com.android.support', module: 'appcompat'
@@ -46,6 +49,9 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.1'
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-all:1.10.19"
     testCompile "org.hamcrest:hamcrest-all:1.3"
@@ -81,7 +87,7 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 
     //dagger2
-    compile 'com.google.dagger:dagger:2.6'
-    apt 'com.google.dagger:dagger-compiler:2.6'
+    compile 'com.google.dagger:dagger:2.0.2'
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
 
 }

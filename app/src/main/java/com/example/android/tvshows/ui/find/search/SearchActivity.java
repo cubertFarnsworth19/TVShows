@@ -39,7 +39,7 @@ public class SearchActivity extends NavigationIconActivity{
 
             mResultsFragment = new ResultsFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.find_search_content, mResultsFragment);
+            fragmentTransaction.add(R.id.find_search_content, mResultsFragment,FRAGMENT);
             fragmentTransaction.commit();
         }
 
@@ -83,5 +83,7 @@ public class SearchActivity extends NavigationIconActivity{
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, FRAGMENT,mResultsFragment);
     }
+
+
 
 }
