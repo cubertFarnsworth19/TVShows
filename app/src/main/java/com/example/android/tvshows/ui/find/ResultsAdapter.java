@@ -18,6 +18,7 @@ import com.example.android.tvshows.R;
 import com.example.android.tvshows.data.model.search.DiscoverResults;
 import com.example.android.tvshows.data.model.search.Result;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import javax.inject.Inject;
 
@@ -126,7 +127,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 buttonAdd.setVisibility(View.INVISIBLE);
                 showMoreDetails.setVisibility(View.INVISIBLE);
             }
-
         }
     }
 
