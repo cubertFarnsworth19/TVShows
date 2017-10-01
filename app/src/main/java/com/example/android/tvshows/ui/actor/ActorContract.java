@@ -15,6 +15,7 @@ public interface ActorContract {
         void setBiography(String biography);
         void displayCredits(int size);
         void noConnection();
+        void startingDownload();
     }
 
     interface Presenter{

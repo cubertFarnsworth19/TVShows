@@ -3,6 +3,7 @@ package com.example.android.tvshows.ui.actor;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -105,8 +106,10 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
     @Override
     protected void onStart() {
         super.onStart();
-        if(!mLoaded) mActorPresenter.downloadActorData(getBaseContext());
-        else mActorPresenter.setActorData();
+        if(!mLoaded)
+            mActorPresenter.downloadActorData(getBaseContext());
+        else
+            mActorPresenter.setActorData();
     }
 
     private void setupRecyclerView(){
@@ -161,6 +164,8 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @Override
     public void setImage(String url) {
         mPicasso.load(getString(R.string.poster_path)+url).into(mPhoto);
@@ -199,6 +204,10 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
                 ).show();
     }
 
+    @Override
+    public void startingDownload() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -207,4 +216,5 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
         outState.putParcelable(OUTSTATE_ACTOR_TV_CREDITS,mActorPresenter.getActorTVCredits());
         outState.putParcelable(OUTSTATE_EXTERNAL_IDS,mActorPresenter.getExternalIds());
     }
+
 }

@@ -39,13 +39,13 @@ public class ActorModule {
         mActor = actor;
     }
 
-    @Provides
-    @ActorActivityScope
-    public ActorActivity provideActorActivity(){return mActorActivity;}
-
-    @Provides
-    @ActorActivityScope
-    public ActorContract.View provideActorContractView(){return mView;}
+//    @Provides
+//    @ActorActivityScope
+//    public ActorActivity provideActorActivity(){return mActorActivity;}
+//
+//    @Provides
+//    @ActorActivityScope
+//    public ActorContract.View provideActorContractView(){return mView;}
 
     @Provides
     @ActorActivityScope

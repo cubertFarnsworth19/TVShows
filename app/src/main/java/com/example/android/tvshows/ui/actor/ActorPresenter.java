@@ -51,6 +51,9 @@ public class ActorPresenter implements ActorContract.Presenter {
 
     @Override
     public void downloadActorData(Context context) {
+
+        mActorView.startingDownload();
+
         ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

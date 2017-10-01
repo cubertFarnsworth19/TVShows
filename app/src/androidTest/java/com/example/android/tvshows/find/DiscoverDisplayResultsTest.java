@@ -67,9 +67,6 @@ public class DiscoverDisplayResultsTest {
 
         mAdapter = new ResultsAdapter(context,mMockPresenter,mMockPicasso);
 
-        when(mockResultsModule.provideResultsContractPresenter(any(ApiService.class),any(ShowsRepository.class)))
-                .thenReturn(mMockPresenter);
-
         when(mockResultsModule.provideResultsAdapter(any(ResultsContract.Presenter.class),any(Picasso.class)))
                 .thenReturn(mAdapter);
 
