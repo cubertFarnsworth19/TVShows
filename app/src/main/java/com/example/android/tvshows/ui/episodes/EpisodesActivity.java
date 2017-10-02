@@ -33,6 +33,8 @@ import butterknife.BindView;
 
 public class EpisodesActivity extends BaseNavigationActivity implements EpisodesContract.View{
 
+    public static final String adapterPosition = "adapter_position";
+
     @Inject EpisodesContract.Presenter mEpisodesPresenter;
     @Inject Picasso mPicasso;
 
@@ -58,7 +60,7 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
         int showId = intent.getIntExtra(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY,-1);
         String[] seasonNames = intent.getStringArrayExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME);
         int[] seasonNumbers = intent.getIntArrayExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER);
-        mInitialSpinnerPosition = intent.getIntExtra("adapter_position",0);
+        mInitialSpinnerPosition = intent.getIntExtra(adapterPosition,0);
 
         ShowsApplication showsApplication = (ShowsApplication) getApplication();
 
@@ -123,7 +125,6 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
     public void endActivity() {
         finish();
     }
-
 
     public Picasso getPicasso() {
         return mPicasso;

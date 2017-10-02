@@ -8,6 +8,7 @@
     android:background="@color/colorBackgroundDark"
     >
     <LinearLayout
+        android:id="@+id/episode_layout"
         android:paddingLeft="@dimen/padding_large"
         android:paddingRight="@dimen/padding_large"
         android:paddingTop="@dimen/padding_medium"

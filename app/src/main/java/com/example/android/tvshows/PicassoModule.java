@@ -20,10 +20,10 @@ public class PicassoModule {
                 .build();
     }
 
-    @Provides
-    @ShowsApplicationScope
-    public OkHttp3Downloader provideOkHttp3Downloader(OkHttpClient okHttpClient){
-        return new OkHttp3Downloader(okHttpClient);
-    }
+//    @Provides
+//    @ShowsApplicationScope
+//    public OkHttp3Downloader provideOkHttp3Downloader(OkHttpClient okHttpClient){
+//        return new OkHttp3Downloader(okHttpClient);
+//    }
 
 }

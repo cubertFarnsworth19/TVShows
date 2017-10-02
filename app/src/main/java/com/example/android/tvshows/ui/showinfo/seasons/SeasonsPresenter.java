@@ -105,7 +105,7 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
 
         intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME,seasonsName);
         intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER,seasonNumbers);
-        intent.putExtra("adapter_position",adapterPosition);
+        intent.putExtra(EpisodesActivity.adapterPosition,adapterPosition);
 
         context.startActivity(intent);
     }

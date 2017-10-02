@@ -1,5 +1,7 @@
 package com.example.android.tvshows;
 
+import com.jakewharton.picasso.OkHttp3Downloader;
+
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
@@ -33,5 +35,11 @@ public class NetworkModule {
         return new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .build();
+    }
+
+    @Provides
+    @ShowsApplicationScope
+    public OkHttp3Downloader provideOkHttp3Downloader(OkHttpClient okHttpClient){
+        return new OkHttp3Downloader(okHttpClient);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.android.tvshows;
 
 
+import android.content.Context;
+
 import com.example.android.tvshows.service.DownloadService;
 import com.example.android.tvshows.service.ServiceModule;
 import com.example.android.tvshows.ui.actor.ActorActivity;
@@ -30,6 +32,14 @@ import com.example.android.tvshows.ui.showinfo.seasons.SeasonsModule;
 import com.example.android.tvshows.ui.updates.UpdatesContract;
 import com.example.android.tvshows.ui.updates.UpdatesFragment;
 import com.example.android.tvshows.ui.updates.UpdatesModule;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
+import okhttp3.OkHttpClient;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestShowsApplication extends ShowsApplication{
 
@@ -43,6 +53,16 @@ public class TestShowsApplication extends ShowsApplication{
     private DetailsModule mDetailsModule;
     private SeasonsModule mSeasonsModule;
     private UpdatesModule mUpdatesModule;
+
+   public void setPicassoMock(Picasso mockPicasso){
+       PicassoModule mockPicassoModule = mock(PicassoModule.class);
+       when(mockPicassoModule.providePicasso(any(Context.class),any(OkHttp3Downloader.class))).thenReturn(mockPicasso);
+
+       mComponent =  DaggerApplicationComponent.builder()
+               .contextModule(new ContextModule(this))
+               .picassoModule(mockPicassoModule)
+               .build();
+   }
 
     @Override
     public ServiceModule getServiceModule(DownloadService downloadService) {
@@ -106,6 +126,7 @@ public class TestShowsApplication extends ShowsApplication{
         return mUpdatesModule;
     }
 
+
     public void setServiceModule(ServiceModule serviceModule) {
         mServiceModule = serviceModule;
     }
@@ -146,6 +167,7 @@ public class TestShowsApplication extends ShowsApplication{
         mUpdatesModule = updatesModule;
     }
 
-
-
+//    public void setPicassoModule(PicassoModule picassoModule) {
+//        mPicassoModule = picassoModule;
+//    }
 }
