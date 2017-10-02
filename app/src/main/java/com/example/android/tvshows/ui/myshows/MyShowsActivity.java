@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -82,9 +83,11 @@ public class MyShowsActivity extends NavigationIconActivity {
             Fragment fragment;
             if(position==0) {
                 fragment = ShowsFragment.getInstance();
+
             }
             else {
                 fragment = CurrentFragment.getInstance(position);
+
             }
 
             return fragment;
@@ -99,6 +102,8 @@ public class MyShowsActivity extends NavigationIconActivity {
         public int getCount() {
             return 3;
         }
+
+
     }
 
     public void setFilterButtonVisible(boolean visible){

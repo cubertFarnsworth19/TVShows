@@ -34,6 +34,7 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
 
     public static ShowsFragment getInstance(){
         ShowsFragment showsFragment = new ShowsFragment();
+
         return showsFragment;
     }
 

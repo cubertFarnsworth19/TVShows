@@ -138,13 +138,11 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         }
 
-
         public void setFavorite(boolean favorite) {
             this.favorite = favorite;
             if (favorite) favoriteIcon.setImageResource(R.drawable.ic_favorite_white_24dp);
             else favoriteIcon.setImageResource(R.drawable.ic_favorite_border_white_24dp);
         }
-
 
     }
 

@@ -56,8 +56,6 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class EpisodesTests {
 
-
-
     EpisodesContract.Presenter mMockPresenter;
     Intent mIntent;
     String[] mSeasonsName;
