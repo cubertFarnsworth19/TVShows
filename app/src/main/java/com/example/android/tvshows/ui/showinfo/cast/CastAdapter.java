@@ -27,7 +27,7 @@ public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     Picasso mPicasso;
     int mSize = 0;
 
-    CastAdapter(Context context, CastContract.Presenter castPresenter, Picasso picasso){
+    public CastAdapter(Context context, CastContract.Presenter castPresenter, Picasso picasso){
         mContext = context;
         mCastPresenter = castPresenter;
         mPicasso = picasso;

@@ -52,8 +52,6 @@ public class RecyclerViewMatcher {
                     RecyclerView recyclerView =
                             (RecyclerView) view.getRootView().findViewById(recyclerViewId);
                     if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
-                        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
-
                         childView = recyclerView.findViewHolderForAdapterPosition(position).itemView;
 
                     }

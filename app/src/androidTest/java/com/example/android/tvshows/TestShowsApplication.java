@@ -116,7 +116,7 @@ public class TestShowsApplication extends ShowsApplication{
 
     @Override
     public SeasonsModule getSeasonsModule(SeasonsFragment seasonsFragment, SeasonsContract.View view, int tmdbId) {
-        if(mUpdatesModule==null) return super.getSeasonsModule(seasonsFragment, view, tmdbId);
+        if(mSeasonsModule==null) return super.getSeasonsModule(seasonsFragment, view, tmdbId);
         return mSeasonsModule;
     }
 

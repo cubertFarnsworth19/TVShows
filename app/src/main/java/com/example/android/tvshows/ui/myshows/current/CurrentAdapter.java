@@ -74,8 +74,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ButterKnife.bind(this,itemView);
             dayShowsAdapter = new DayShowsAdapter();
             recyclerView.setAdapter(dayShowsAdapter);
-            //GridLayoutManager glm = new GridLayoutManager(mContext,1);
-            //recyclerView.setLayoutManager(glm);
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             recyclerView.setNestedScrollingEnabled(false);
         }
@@ -84,7 +82,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             dayShowsAdapter.displayShows(size,dayPosition);
         }
     }
-
 
     class DayShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 

@@ -112,7 +112,6 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 mShowsPresenter.setFavorite(getAdapterPosition(),favorite);
             }
             else if(view.getId() == deleteForever.getId()) {
-
                 new AlertDialog.Builder(mContext)
                         .setTitle(R.string.are_you_sure)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -130,12 +129,10 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             }
                         })
                         .show();
-
             }
             else {
                 mShowsPresenter.startShowInfoActivity(mContext, getAdapterPosition());
             }
-
         }
 
         public void setFavorite(boolean favorite) {

@@ -24,7 +24,7 @@ public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     Picasso mPicasso;
     int mSize = 0;
 
-    SeasonsAdapter(Context context, SeasonsContract.Presenter seasonsPresenter, Picasso picasso){
+    public SeasonsAdapter(Context context, SeasonsContract.Presenter seasonsPresenter, Picasso picasso){
         mContext = context;
         mSeasonsPresenter = seasonsPresenter;
         mPicasso = picasso;
@@ -48,7 +48,6 @@ public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ViewHolderSeasons holderSeasons = (ViewHolderSeasons) holder;
         holderSeasons.seasonName.setText(mSeasonsPresenter.getSeasonName(position));
         holderSeasons.airDate.setText(mSeasonsPresenter.getAirDate(position));
-       // holderSeasons.episodes.setText(mSeasonsPresenter.getNumberOfEpisodes(position));
         holderSeasons.overview.setText(mSeasonsPresenter.getOverview(position));
         holderSeasons.episodes.setText(mSeasonsPresenter.getNumberOfEpisodes(position,mContext));
         mPicasso.load(mSeasonsPresenter.getPosterUrl(mContext,position)).into(holderSeasons.poster);

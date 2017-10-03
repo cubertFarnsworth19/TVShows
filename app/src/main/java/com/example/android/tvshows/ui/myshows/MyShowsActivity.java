@@ -1,5 +1,9 @@
 package com.example.android.tvshows.ui.myshows;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.android.tvshows.R;
+import com.example.android.tvshows.idlingResource.SimpleIdlingResource;
 import com.example.android.tvshows.ui.BaseNavigationActivity;
 import com.example.android.tvshows.ui.NavigationIconActivity;
 import com.example.android.tvshows.ui.find.discover.GenresDialog;
@@ -39,6 +44,10 @@ public class MyShowsActivity extends NavigationIconActivity {
     // if filter includes
     private boolean mContinuing;
     private boolean mFavorite;
+
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +75,6 @@ public class MyShowsActivity extends NavigationIconActivity {
         });
 
         getWindow().setBackgroundDrawable(null);
-
     }
 
     class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -83,11 +91,9 @@ public class MyShowsActivity extends NavigationIconActivity {
             Fragment fragment;
             if(position==0) {
                 fragment = ShowsFragment.getInstance();
-
             }
             else {
                 fragment = CurrentFragment.getInstance(position);
-
             }
 
             return fragment;
@@ -103,12 +109,13 @@ public class MyShowsActivity extends NavigationIconActivity {
             return 3;
         }
 
-
     }
 
     public void setFilterButtonVisible(boolean visible){
         if(visible) mButtonFilter.setVisibility(View.VISIBLE);
         else  mButtonFilter.setVisibility(View.INVISIBLE);
+
+        if (mIdlingResource != null) mIdlingResource.setIdleState(true);
     }
 
     @OnClick(R.id.btn_filter)
@@ -154,5 +161,21 @@ public class MyShowsActivity extends NavigationIconActivity {
         outState.putBoolean(OUTSTATE_CONTINUING,mContinuing);
         outState.putBoolean(OUTSTATE_FAVORITE,mFavorite);
     }
+
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
+    @VisibleForTesting
+    public void setNotIdle(){
+        if (mIdlingResource != null) mIdlingResource.setIdleState(false);
+    }
+
 
 }

@@ -96,7 +96,6 @@ public class CurrentPresenter implements CurrentContract.Presenter{
 
     }
 
-
     public void setCurrent(ArrayList<CurrentDatabaseLoad> currentDatabaseLoad,Context context){
 
         mCurrent = new ArrayList<>(currentDatabaseLoad.size());

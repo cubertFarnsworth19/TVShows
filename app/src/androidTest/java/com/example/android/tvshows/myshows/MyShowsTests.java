@@ -1,5 +1,7 @@
 package com.example.android.tvshows.myshows;
 
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.v4.app.Fragment;
 import android.app.Instrumentation;
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.RecyclerView;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.TestShowsApplication;
@@ -25,6 +28,7 @@ import com.example.android.tvshows.ui.myshows.shows.ShowsModule;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,10 +38,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.example.android.tvshows.RecyclerViewAction.clickChildViewWithId;
 import static com.example.android.tvshows.RecyclerViewMatcher.withRecyclerView;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -51,6 +62,7 @@ public class MyShowsTests {
     private ShowsAdapter mShowsAdapter;
     private CurrentAdapter mCurrentAdapter;
     private Picasso mMockPicasso;
+    private IdlingResource mIdlingResource;
 
     @Rule
     public ActivityTestRule<MyShowsActivity> mActivityTestRule =
@@ -94,16 +106,20 @@ public class MyShowsTests {
     }
 
     @Test
-    public void testDisplayShows() throws InterruptedException {
+    public void testDisplayShows() {
         mActivityTestRule.launchActivity(new Intent());
         MyShowsActivity activity = mActivityTestRule.getActivity();
 
         List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
         final ShowsFragment showsFragment = (ShowsFragment) fragments.get(0);
-        CurrentFragment currentFragment =  (CurrentFragment) fragments.get(1);
+        final CurrentFragment currentFragment =  (CurrentFragment) fragments.get(1);
+
+        mIdlingResource = activity.getIdlingResource();
+        Espresso.registerIdlingResources(mIdlingResource);
 
         verify(mMockShowsPresenter).loadShowsFromDatabase(activity,false,false);
 
+        onView(withId(R.id.btn_filter)).check(matches(isDisplayed()));
 
         for(int i=0;i<6;i++) {
             String inProduction = i%2==0 ? "Continuing":"Finished";
@@ -123,8 +139,6 @@ public class MyShowsTests {
                 showsFragment.showsDataLoaded(6);
             }});
 
-
-
         for(int i=0;i<6;i++) {
             onView(withId(R.id.recyclerview_shows))
                     .perform(RecyclerViewActions.scrollToPosition(i));
@@ -138,8 +152,91 @@ public class MyShowsTests {
             onView(withRecyclerView(R.id.recyclerview_shows).atPositionOnView(i, R.id.in_production))
                     .check(matches(withText(inProduction)));
 
+            boolean favorite = i%3==0 ? true:false;
+           // if(favorite) onView(withRecyclerView(R.id.recyclerview_shows).atPositionOnView(i, R.id.favorite))
+           //         .check(matches(withText(inProduction)));
+
+            onView(withId(R.id.recyclerview_shows))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(i, clickChildViewWithId(R.id.favorite)));
+
+            verify(mMockShowsPresenter).setFavorite(i,!favorite);
+
+            onView(withId(R.id.recyclerview_shows))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(i, clickChildViewWithId(R.id.show_layout)));
+            verify(mMockShowsPresenter).startShowInfoActivity(InstrumentationRegistry.getInstrumentation().getContext(),i);
         }
-        Thread.sleep(3000);
+
+        onView(withId(R.id.recyclerview_shows))
+                .perform(RecyclerViewActions.scrollToPosition(0));
+
+        onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeLeft());
+
+        activity.setNotIdle();
+        verify(mMockCurrentPresenter).loadShowsFromDatabase(activity);
+
+        when(mMockCurrentPresenter.getDate(0)).thenReturn("DAY 1");
+        when(mMockCurrentPresenter.getNumberOfShowsOnDate(0)).thenReturn(2);
+        when(mMockCurrentPresenter.getDate(1)).thenReturn("DAY 2");
+        when(mMockCurrentPresenter.getNumberOfShowsOnDate(1)).thenReturn(1);
+        when(mMockCurrentPresenter.getShowName(0,0)).thenReturn("Show 1");
+        when(mMockCurrentPresenter.getShowName(0,1)).thenReturn("Show 2");
+        when(mMockCurrentPresenter.getShowName(1,0)).thenReturn("Show 3");
+        when(mMockCurrentPresenter.getEpisodeName(0,0)).thenReturn("Episode 1");
+        when(mMockCurrentPresenter.getEpisodeName(0,1)).thenReturn("Episode 2");
+        when(mMockCurrentPresenter.getEpisodeName(1,0)).thenReturn("Episode 3");
+        when(mMockCurrentPresenter.getShowOverview(0,0)).thenReturn("Episode Description 1");
+        when(mMockCurrentPresenter.getShowOverview(0,1)).thenReturn("Episode Description 2");
+        when(mMockCurrentPresenter.getShowOverview(1,0)).thenReturn("Episode Description 3");
+
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                currentFragment.showsDataLoaded(2);
+            }});
+
+        onView(withId(R.id.btn_filter)).check(matches(not(isDisplayed())));
+
+        onView(allOf(withId(R.id.recyclerview_current),isDisplayed()))
+                .perform(RecyclerViewActions.scrollToPosition(0));
+        onView(withRecyclerView(R.id.recyclerview_current).atPositionOnView(0, R.id.shows_date))
+                .check(matches(withText("DAY 1")));
+
+        onView(allOf(withId(R.id.recyclerview_current),isDisplayed()))
+                .perform(RecyclerViewActions.scrollToPosition(1));
+        onView(withRecyclerView(R.id.recyclerview_current).atPositionOnView(1, R.id.shows_date))
+                .check(matches(withText("DAY 2")));
+
+        onView(allOf(withRecyclerView(R.id.recyclerview_day_shows).atPositionOnView(0, R.id.title),
+                isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(0, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Show 1")));
+        onView(allOf(withRecyclerView(R.id.recyclerview_day_shows).atPositionOnView(1, R.id.title),
+                isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(0, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Show 2")));
+        onView(allOf(withRecyclerView(R.id.recyclerview_day_shows).atPositionOnView(0, R.id.episode_name),
+                isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(0, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Episode 1")));
+        onView(allOf(withRecyclerView(R.id.recyclerview_day_shows).atPositionOnView(1, R.id.episode_name),
+                isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(0, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Episode 2")));
+        onView(allOf(withRecyclerView(R.id.recyclerview_day_shows).atPositionOnView(0, R.id.overview),
+                isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(0, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Episode Description 1")));
+        onView(allOf(withRecyclerView(R.id.recyclerview_day_shows).atPositionOnView(1, R.id.overview),
+                isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(0, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Episode Description 2")));
+
+        onView(allOf(withId(R.id.title),isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(1, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Show 3")));;
+        onView(allOf(withId(R.id.episode_name),isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(1, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Episode 3")));;
+        onView(allOf(withId(R.id.overview),isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(1, R.id.recyclerview_day_shows))))
+                .check(matches(withText("Episode Description 3")));;
+
+
+        onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeRight());
+        activity.setNotIdle();
+        onView(withId(R.id.btn_filter)).check(matches(isDisplayed()));
+
     }
 
 

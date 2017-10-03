@@ -132,7 +132,6 @@ public class EpisodesTests {
         mActivityTestRule.launchActivity(mIntent);
         mActivity = mActivityTestRule.getActivity();
 
-
         for (int i=0;i<numberOfEpisodes;i++) {
             when(mMockPresenter.getEpisodeData(mActivity, i)).thenReturn(mEpisodes.get(i));
         }

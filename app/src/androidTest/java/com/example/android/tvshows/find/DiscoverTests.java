@@ -216,18 +216,4 @@ public class DiscoverTests {
         }
     }
 
-//    private void displayView(int viewId){
-//        while(!isViewDisplayed(viewId))
-//            onView(withId(R.id.scrollview_discover_filter)).perform(swipeDown());
-//    }
-//
-//    private boolean isViewDisplayed(int viewId){
-//        try {
-//            onView(withId(viewId)).check(matches(isDisplayed()));
-//            return true;
-//        } catch (NoMatchingViewException e) {
-//            return false;
-//        }
-//    }
-
 }
