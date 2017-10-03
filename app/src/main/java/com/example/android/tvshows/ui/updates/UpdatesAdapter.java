@@ -4,6 +4,10 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.tvshows.R;
+import com.example.android.tvshows.idlingResource.SimpleIdlingResource;
 import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.Utils;
@@ -34,6 +39,10 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mSize;
     ArrayList<Boolean> mAllChecked;
     ArrayList<ArrayList<Boolean>> mChecked;
+
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
 
     public UpdatesAdapter(Context context, UpdatesContract.Presenter updatesPresenter) {
         mContext = context;
@@ -118,6 +127,12 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onPreOpen() {
                 createRotateAnimator(holderUpdates.showSeasons,0f,180f).start();
             }
+
+            @Override
+            public void onAnimationEnd() {
+                super.onAnimationEnd();
+                if (mIdlingResource != null) mIdlingResource.setIdleState(true);
+            }
         });
     }
 
@@ -147,6 +162,7 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @Override
         public void onClick(View view) {
             if(view.getId() == showSeasons.getId()){
+                if (mIdlingResource != null) mIdlingResource.setIdleState(true);
                 expandableLayout.toggle();
                 expanded = !expanded;
                 if (expanded) individualAdapter.updateChecked();
@@ -286,4 +302,17 @@ public class UpdatesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     };
 
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
+    @VisibleForTesting
+    public void setNotIdle(){
+        if (mIdlingResource != null) mIdlingResource.setIdleState(false);
+    }
 }

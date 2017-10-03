@@ -152,7 +152,7 @@ public class MyShowsTests {
             onView(withRecyclerView(R.id.recyclerview_shows).atPositionOnView(i, R.id.in_production))
                     .check(matches(withText(inProduction)));
 
-            boolean favorite = i%3==0 ? true:false;
+            boolean favorite = i%3==0;
            // if(favorite) onView(withRecyclerView(R.id.recyclerview_shows).atPositionOnView(i, R.id.favorite))
            //         .check(matches(withText(inProduction)));
 

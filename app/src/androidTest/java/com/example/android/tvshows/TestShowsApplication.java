@@ -122,7 +122,7 @@ public class TestShowsApplication extends ShowsApplication{
 
     @Override
     public UpdatesModule getUpdatesModule(UpdatesFragment updatesFragment, UpdatesContract.View view) {
-        if(mEpisodesModule==null) return super.getUpdatesModule(updatesFragment, view);
+        if(mUpdatesModule==null) return super.getUpdatesModule(updatesFragment, view);
         return mUpdatesModule;
     }
 
