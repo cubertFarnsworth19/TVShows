@@ -133,15 +133,21 @@ public class ShowInfoTests {
 
         verify(mMockDetailsPresenter).loadShowDetails(mActivity);
 
-        testDisplayDetails();
+        mockDetailsPresenterMethods();
+
+        testDisplayDetails(0);
 
         onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeLeft());
 
-        testDisplaySeasons();
+        mockSeasonsPresenterMethods();
+
+        testDisplaySeasons(1);
 
         onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeLeft());
 
-        testDisplayCast();
+        mockCastPresenterMethods();
+
+        testDisplayCast(2);
 
     }
 
@@ -151,13 +157,31 @@ public class ShowInfoTests {
         return intent;
     }
 
-    private void testDisplayDetails(){
-        List<Fragment> fragments = mActivity.getSupportFragmentManager().getFragments();
-
-        final DetailsFragment detailsFragment = (DetailsFragment) fragments.get(0);
-
+    private void mockDetailsPresenterMethods(){
         when(mMockDetailsPresenter.getCreatorName(0)).thenReturn("Creator Name 1");
         when(mMockDetailsPresenter.getCreatorName(1)).thenReturn("Creator Name 2");
+    }
+
+    private void mockSeasonsPresenterMethods(){
+        for(int i=1;i<5;i++) {
+            when(mMockSeasonsPresenter.getSeasonName(i-1)).thenReturn("Season " + i);
+            when(mMockSeasonsPresenter.getAirDate(i-1)).thenReturn("1"+i+" OCT " + "200"+i);
+            when(mMockSeasonsPresenter.getNumberOfEpisodes(i-1,mContext)).thenReturn("10 Episodes");
+            when(mMockSeasonsPresenter.getOverview(i-1)).thenReturn("Season overview for Season " + i + ".");
+        }
+    }
+
+    private void mockCastPresenterMethods(){
+        for(int i=1;i<5;i++) {
+            when(mMockCastPresenter.getActorName(i-1)).thenReturn("Actor " + i);
+            when(mMockCastPresenter.getCharacterName(i-1)).thenReturn("Character " + i);
+        }
+    }
+
+    private void testDisplayDetails(int fragmentPosition){
+        List<Fragment> fragments = mActivity.getSupportFragmentManager().getFragments();
+
+        final DetailsFragment detailsFragment = (DetailsFragment) fragments.get(fragmentPosition);
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -186,16 +210,9 @@ public class ShowInfoTests {
         verify(mMockDetailsPresenter).visitWikipedia(mActivity);
     }
 
-    private void testDisplaySeasons() {
+    private void testDisplaySeasons(int fragmentPosition) {
         List<Fragment> fragments = mActivity.getSupportFragmentManager().getFragments();
-        final SeasonsFragment seasonsFragment = (SeasonsFragment) fragments.get(1);
-
-        for(int i=1;i<5;i++) {
-            when(mMockSeasonsPresenter.getSeasonName(i-1)).thenReturn("Season " + i);
-            when(mMockSeasonsPresenter.getAirDate(i-1)).thenReturn("1"+i+" OCT " + "200"+i);
-            when(mMockSeasonsPresenter.getNumberOfEpisodes(i-1,mContext)).thenReturn("10 Episodes");
-            when(mMockSeasonsPresenter.getOverview(i-1)).thenReturn("Season overview for Season " + i + ".");
-        }
+        final SeasonsFragment seasonsFragment = (SeasonsFragment) fragments.get(fragmentPosition);
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -221,14 +238,9 @@ public class ShowInfoTests {
 
     }
 
-    private void testDisplayCast(){
+    private void testDisplayCast(int fragmentPosition){
         List<Fragment> fragments = mActivity.getSupportFragmentManager().getFragments();
-        final CastFragment castFragment = (CastFragment) fragments.get(2);
-
-        for(int i=1;i<5;i++) {
-            when(mMockCastPresenter.getActorName(i-1)).thenReturn("Actor " + i);
-            when(mMockCastPresenter.getCharacterName(i-1)).thenReturn("Character " + i);
-        }
+        final CastFragment castFragment = (CastFragment) fragments.get(fragmentPosition);
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override

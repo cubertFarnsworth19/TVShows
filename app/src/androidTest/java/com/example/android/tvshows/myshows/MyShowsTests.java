@@ -63,6 +63,8 @@ public class MyShowsTests {
     private CurrentAdapter mCurrentAdapter;
     private Picasso mMockPicasso;
     private IdlingResource mIdlingResource;
+    private Context mContext;
+    private MyShowsActivity mActivity;
 
     @Rule
     public ActivityTestRule<MyShowsActivity> mActivityTestRule =
@@ -85,14 +87,14 @@ public class MyShowsTests {
         when(mockCurrentModule.providesCurrentContractPresenter(any(ShowsRepository.class)))
                 .thenReturn(mMockCurrentPresenter);
 
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        mContext = InstrumentationRegistry.getInstrumentation().getContext();
 
-        mShowsAdapter = new ShowsAdapter(context,mMockShowsPresenter,mMockPicasso);
+        mShowsAdapter = new ShowsAdapter(mContext,mMockShowsPresenter,mMockPicasso);
 
         when(mockShowsModule.provideShowsAdapter(any(ShowsContract.Presenter.class),any(Picasso.class)))
                 .thenReturn(mShowsAdapter);
 
-        mCurrentAdapter = new CurrentAdapter(context,mMockCurrentPresenter,mMockPicasso);
+        mCurrentAdapter = new CurrentAdapter(mContext,mMockCurrentPresenter,mMockPicasso);
 
         when(mockCurrentModule.provideCurrentAdapter(any(CurrentContract.Presenter.class),any(Picasso.class)))
                 .thenReturn(mCurrentAdapter);
@@ -108,31 +110,72 @@ public class MyShowsTests {
     @Test
     public void testDisplayShows() {
         mActivityTestRule.launchActivity(new Intent());
-        MyShowsActivity activity = mActivityTestRule.getActivity();
+        mActivity = mActivityTestRule.getActivity();
 
-        List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
+        List<Fragment> fragments = mActivity.getSupportFragmentManager().getFragments();
         final ShowsFragment showsFragment = (ShowsFragment) fragments.get(0);
         final CurrentFragment currentFragment =  (CurrentFragment) fragments.get(1);
 
-        mIdlingResource = activity.getIdlingResource();
+        mIdlingResource = mActivity.getIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
 
-        verify(mMockShowsPresenter).loadShowsFromDatabase(activity,false,false);
+        verify(mMockShowsPresenter).loadShowsFromDatabase(mActivity,false,false);
 
         onView(withId(R.id.btn_filter)).check(matches(isDisplayed()));
 
+        mockShowPresenterMethods();
+
+        testDisplayMyShows(showsFragment);
+
+        onView(withId(R.id.recyclerview_shows))
+                .perform(RecyclerViewActions.scrollToPosition(0));
+
+        onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeLeft());
+
+        verify(mMockCurrentPresenter).loadShowsFromDatabase(mActivity);
+
+        mockCurrentPresenterMethods();
+
+        testDisplayCurrentShows(currentFragment);
+
+
+        onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeRight());
+        mActivity.setNotIdle();
+        onView(withId(R.id.btn_filter)).check(matches(isDisplayed()));
+
+    }
+
+    private void mockShowPresenterMethods(){
         for(int i=0;i<6;i++) {
             String inProduction = i%2==0 ? "Continuing":"Finished";
             when(mMockShowsPresenter.getInProduction(i)).thenReturn(inProduction);
             when(mMockShowsPresenter.getTitle(i)).thenReturn("Show " + i);
-            when(mMockShowsPresenter.getNumberOfEpisodes(InstrumentationRegistry.getInstrumentation().getContext(),i))
+            when(mMockShowsPresenter.getNumberOfEpisodes(mContext,i))
                     .thenReturn("1"+i+" Episodes");
-            when(mMockShowsPresenter.getNumberOfSeasons(InstrumentationRegistry.getInstrumentation().getContext(),i))
+            when(mMockShowsPresenter.getNumberOfSeasons(mContext,i))
                     .thenReturn("1"+i+" Seasons");
             boolean favorite = i%3==0 ? true:false;
             when(mMockShowsPresenter.isFavorite(i)).thenReturn(favorite);
         }
+    }
 
+    private void mockCurrentPresenterMethods(){
+        when(mMockCurrentPresenter.getDate(0)).thenReturn("DAY 1");
+        when(mMockCurrentPresenter.getNumberOfShowsOnDate(0)).thenReturn(2);
+        when(mMockCurrentPresenter.getDate(1)).thenReturn("DAY 2");
+        when(mMockCurrentPresenter.getNumberOfShowsOnDate(1)).thenReturn(1);
+        when(mMockCurrentPresenter.getShowName(0,0)).thenReturn("Show 1");
+        when(mMockCurrentPresenter.getShowName(0,1)).thenReturn("Show 2");
+        when(mMockCurrentPresenter.getShowName(1,0)).thenReturn("Show 3");
+        when(mMockCurrentPresenter.getEpisodeName(0,0)).thenReturn("Episode 1");
+        when(mMockCurrentPresenter.getEpisodeName(0,1)).thenReturn("Episode 2");
+        when(mMockCurrentPresenter.getEpisodeName(1,0)).thenReturn("Episode 3");
+        when(mMockCurrentPresenter.getShowOverview(0,0)).thenReturn("Episode Description 1");
+        when(mMockCurrentPresenter.getShowOverview(0,1)).thenReturn("Episode Description 2");
+        when(mMockCurrentPresenter.getShowOverview(1,0)).thenReturn("Episode Description 3");
+    }
+
+    private void testDisplayMyShows(final ShowsFragment showsFragment){
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
@@ -153,8 +196,6 @@ public class MyShowsTests {
                     .check(matches(withText(inProduction)));
 
             boolean favorite = i%3==0;
-           // if(favorite) onView(withRecyclerView(R.id.recyclerview_shows).atPositionOnView(i, R.id.favorite))
-           //         .check(matches(withText(inProduction)));
 
             onView(withId(R.id.recyclerview_shows))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(i, clickChildViewWithId(R.id.favorite)));
@@ -163,30 +204,12 @@ public class MyShowsTests {
 
             onView(withId(R.id.recyclerview_shows))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(i, clickChildViewWithId(R.id.show_layout)));
-            verify(mMockShowsPresenter).startShowInfoActivity(InstrumentationRegistry.getInstrumentation().getContext(),i);
+            verify(mMockShowsPresenter).startShowInfoActivity(mContext,i);
         }
+    }
 
-        onView(withId(R.id.recyclerview_shows))
-                .perform(RecyclerViewActions.scrollToPosition(0));
-
-        onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeLeft());
-
-        activity.setNotIdle();
-        verify(mMockCurrentPresenter).loadShowsFromDatabase(activity);
-
-        when(mMockCurrentPresenter.getDate(0)).thenReturn("DAY 1");
-        when(mMockCurrentPresenter.getNumberOfShowsOnDate(0)).thenReturn(2);
-        when(mMockCurrentPresenter.getDate(1)).thenReturn("DAY 2");
-        when(mMockCurrentPresenter.getNumberOfShowsOnDate(1)).thenReturn(1);
-        when(mMockCurrentPresenter.getShowName(0,0)).thenReturn("Show 1");
-        when(mMockCurrentPresenter.getShowName(0,1)).thenReturn("Show 2");
-        when(mMockCurrentPresenter.getShowName(1,0)).thenReturn("Show 3");
-        when(mMockCurrentPresenter.getEpisodeName(0,0)).thenReturn("Episode 1");
-        when(mMockCurrentPresenter.getEpisodeName(0,1)).thenReturn("Episode 2");
-        when(mMockCurrentPresenter.getEpisodeName(1,0)).thenReturn("Episode 3");
-        when(mMockCurrentPresenter.getShowOverview(0,0)).thenReturn("Episode Description 1");
-        when(mMockCurrentPresenter.getShowOverview(0,1)).thenReturn("Episode Description 2");
-        when(mMockCurrentPresenter.getShowOverview(1,0)).thenReturn("Episode Description 3");
+    private void testDisplayCurrentShows(final CurrentFragment currentFragment){
+        mActivity.setNotIdle();
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -231,15 +254,7 @@ public class MyShowsTests {
                 .check(matches(withText("Episode 3")));;
         onView(allOf(withId(R.id.overview),isDescendantOfA(withRecyclerView(R.id.recyclerview_current).atPositionOnView(1, R.id.recyclerview_day_shows))))
                 .check(matches(withText("Episode Description 3")));;
-
-
-        onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeRight());
-        activity.setNotIdle();
-        onView(withId(R.id.btn_filter)).check(matches(isDisplayed()));
-
     }
-
-
 
 
 }

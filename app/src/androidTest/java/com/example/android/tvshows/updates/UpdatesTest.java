@@ -82,26 +82,23 @@ public class UpdatesTest {
     @Test
     public void testDisplayUpdates() {
         mActivityTestRule.launchActivity(new Intent());
-
-        setData();
+        mFragment = (UpdatesFragment) mActivityTestRule.getActivity().getSupportFragmentManager().getFragments().get(0);
+        mockPresenterMethods();
 
         checkDataLoaded();
     }
 
     @Test
-    public void testCheckBoxes(){
+    public void testCheckBoxes() {
         mActivityTestRule.launchActivity(new Intent());
-
-        setData();
+        mFragment = (UpdatesFragment) mActivityTestRule.getActivity().getSupportFragmentManager().getFragments().get(0);
+        mockPresenterMethods();
 
         checkAll();
 
     }
 
-    private void setData(){
-        mFragment = (UpdatesFragment) mActivityTestRule.getActivity().getSupportFragmentManager().getFragments().get(0);
-
-        verify(mMockUpdatesPresenter).loadShowsFromDatabase(false);
+    private void mockPresenterMethods(){
 
         for(int i=1;i<6;i++) {
             when(mMockUpdatesPresenter.getShowName(i-1)).thenReturn("Show Name " + i);
@@ -112,15 +109,17 @@ public class UpdatesTest {
                 when(mMockUpdatesPresenter.getSeasonName(i,j-1)).thenReturn("Season "+ j);
             }
         }
+    }
+
+    private void checkDataLoaded(){
+        verify(mMockUpdatesPresenter).loadShowsFromDatabase(false);
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
                 mFragment.showsDataLoaded(5);
             }});
-    }
 
-    private void checkDataLoaded(){
         for(int i=1;i<6;i++) {
             onView(withRecyclerView(R.id.recyclerview_updates_detail).atPositionOnView(i-1, R.id.show_name))
                     .check(matches(withText("Show Name " + i)));
@@ -143,6 +142,12 @@ public class UpdatesTest {
     }
 
     private void checkAll(){
+
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                mFragment.showsDataLoaded(5);
+            }});
 
         onView(withId(R.id.recyclerview_updates_detail))
                 .perform(RecyclerViewActions.scrollToPosition(0));

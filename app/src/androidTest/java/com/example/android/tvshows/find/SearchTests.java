@@ -77,13 +77,6 @@ public class SearchTests {
         mActivityTestRule.getActivity().getFragmentManager();
         mResultsFragment = (ResultsFragment) mActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT);
 
-       // onView(withId(R.id.search_view)).perform(click());
-
-      //  onView(withId(R.id.search_view)).perform(typeText(searchQuery));
-
-      //  onView(withId(R.id.search_view)).check(matches(withText(searchQuery)));
-
-      // onView(withId(R.id.search_box)).perform(pressImeActionButton());
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {

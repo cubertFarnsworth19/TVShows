@@ -70,6 +70,8 @@ public class DiscoverDisplayResultsTest {
         when(mockResultsModule.provideResultsAdapter(any(ResultsContract.Presenter.class),any(Picasso.class)))
                 .thenReturn(mAdapter);
 
+        when(mMockPicasso.load(any(String.class))).thenReturn(mock(RequestCreator.class));
+
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         TestShowsApplication app = (TestShowsApplication) instrumentation.getTargetContext().getApplicationContext();
 
@@ -80,6 +82,18 @@ public class DiscoverDisplayResultsTest {
     public void testDisplayResults(){
         mActivityTestRule.launchActivity(new Intent());
 
+        setMockPresenterMethods();
+
+        mActivityTestRule.getActivity().getFragmentManager();
+        mResultsFragment = (ResultsFragment) mActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT);
+
+        testDisplayInitialMethods();
+
+        testScrollAndDisplayMethods();
+
+    }
+
+    private void setMockPresenterMethods(){
         for(int i=0;i<40;i++) {
 
             when(mMockPresenter.showAddButton(i)).thenReturn(true);
@@ -93,11 +107,9 @@ public class DiscoverDisplayResultsTest {
             when(mMockPresenter.getTmdbId(i)).thenReturn(i);
 
         }
-        when(mMockPicasso.load(any(String.class))).thenReturn(mock(RequestCreator.class));
+    }
 
-        mActivityTestRule.getActivity().getFragmentManager();
-        mResultsFragment = (ResultsFragment) mActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT);
-
+    private void testDisplayInitialMethods(){
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
@@ -115,7 +127,9 @@ public class DiscoverDisplayResultsTest {
         verify(mMockPresenter).saveSelectedToDatabase(InstrumentationRegistry.getInstrumentation().getContext(),15);
 
         onView(withRecyclerView(R.id.recyclerview_results).atPositionOnView(15,R.id.button_add)).check(matches(not(isDisplayed())));
+    }
 
+    private void testScrollAndDisplayMethods(){
         onView(withId(R.id.recyclerview_results))
                 .perform(RecyclerViewActions.scrollToPosition(19));
 

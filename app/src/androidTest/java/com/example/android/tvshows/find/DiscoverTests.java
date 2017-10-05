@@ -208,7 +208,6 @@ public class DiscoverTests {
 
     }
 
-
     @After
     public void unregisterIdlingResource() {
         if (mIdlingResource != null) {
