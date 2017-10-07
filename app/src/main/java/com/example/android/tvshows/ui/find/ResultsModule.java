@@ -32,25 +32,6 @@ public class ResultsModule {
         mSaved = true;
     }
 
-  //  @Provides
-  //  @FragmentScoped
-   // public ResultsFragment provideResultsFragment(){return mResultsFragment;}
-//
-//    @Provides
-//    @FragmentScoped
-//    public ResultsContract.View provideResultsContractView(){return mView;}
-
-//    @Provides
-//    @FragmentScoped
-//    public ResultsContract.Presenter provideResultsContractPresenter(ResultsContract.View view, ApiService service, ShowsRepository showsRepository){
-//        if(mSaved){
-//            return new ResultsPresenter(view, service, showsRepository,mSaveResultsPresenterState);
-//        }
-//        else {
-//            return new ResultsPresenter(view, service, showsRepository);
-//        }
-//    }
-
     @Provides
     @FragmentScoped
     public ResultsContract.Presenter provideResultsContractPresenter(ApiService service, ShowsRepository showsRepository){

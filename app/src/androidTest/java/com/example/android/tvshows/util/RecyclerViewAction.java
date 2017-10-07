@@ -1,4 +1,4 @@
-package com.example.android.tvshows;
+package com.example.android.tvshows.util;
 
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;

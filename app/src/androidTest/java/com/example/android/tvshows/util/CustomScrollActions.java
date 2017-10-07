@@ -1,4 +1,4 @@
-package com.example.android.tvshows;
+package com.example.android.tvshows.util;
 
 
 import android.support.design.widget.CollapsingToolbarLayout;

@@ -57,7 +57,7 @@ public class CastFragment extends Fragment implements CastContract.View{
 
             CastComponent component = DaggerCastComponent.builder()
                     .applicationComponent(showsApplication.get(getActivity()).getComponent())
-                    .castModule(new CastModule(this, this, mTmdbId,castInfo,adapter))
+                    .castModule(showsApplication.getCastModule(this, this, mTmdbId,castInfo,adapter))
                     .build();
 
             component.inject(this);

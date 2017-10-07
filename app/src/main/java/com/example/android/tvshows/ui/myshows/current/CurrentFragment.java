@@ -62,7 +62,7 @@ public class CurrentFragment extends Fragment implements CurrentContract.View{
 
             CurrentComponent component = DaggerCurrentComponent.builder()
                     .applicationComponent(showsApplication.get(getActivity()).getComponent())
-                    .currentModule(new CurrentModule(this, this, mCurrentType,currentInfo,dates,adapter))
+                    .currentModule(showsApplication.getCurrentModule(this, this, mCurrentType,currentInfo,dates,adapter))
                     .build();
 
             component.inject(this);

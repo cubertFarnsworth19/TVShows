@@ -1,4 +1,4 @@
-package com.example.android.tvshows;
+package com.example.android.tvshows.util;
 
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;

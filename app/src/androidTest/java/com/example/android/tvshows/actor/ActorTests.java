@@ -3,6 +3,7 @@ package com.example.android.tvshows.actor;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,9 +15,6 @@ import com.example.android.tvshows.ui.actor.ActorActivity;
 import com.example.android.tvshows.ui.actor.ActorAdapter;
 import com.example.android.tvshows.ui.actor.ActorContract;
 import com.example.android.tvshows.ui.actor.ActorModule;
-import com.example.android.tvshows.ui.find.ResultsAdapter;
-import com.example.android.tvshows.ui.find.ResultsContract;
-import com.example.android.tvshows.ui.find.discover.DiscoverActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,7 +25,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.example.android.tvshows.RecyclerViewMatcher.withRecyclerView;
+import static com.example.android.tvshows.util.RecyclerViewMatcher.withRecyclerView;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -53,7 +51,6 @@ public class ActorTests {
                 .thenReturn(mMockPresenter);
 
         mAdapter = new ActorAdapter(InstrumentationRegistry.getInstrumentation().getContext(),mMockPresenter);
-
         when(mockActorModule.provideActorAdapter(any(ActorContract.Presenter.class)))
                 .thenReturn(mAdapter);
 
@@ -64,7 +61,7 @@ public class ActorTests {
     }
 
     @Test
-    public void testDisplayActor(){
+    public void testDisplayActor() {
         final String name = "Actor Name";
         final String biography = "This is the actor biography";
 
@@ -77,7 +74,6 @@ public class ActorTests {
         mActivity = mActivityTestRule.getActivity();
 
         verify(mMockPresenter).downloadActorData(any(Context.class));
-
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -95,6 +91,11 @@ public class ActorTests {
             onView(withRecyclerView(R.id.recyclerview_actor).atPositionOnView(i,R.id.tvshow_name)).check(matches(withText("TV Show " + i)));
         }
 
+
+
     }
+
+
+
 
 }

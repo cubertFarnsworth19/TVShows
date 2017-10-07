@@ -27,8 +27,6 @@ public class NetworkModule {
         return interceptor;
     }
 
-
-
     @Provides
     @ShowsApplicationScope
     public OkHttpClient provideOkHttpClient(HttpLoggingInterceptor loggingInterceptor){

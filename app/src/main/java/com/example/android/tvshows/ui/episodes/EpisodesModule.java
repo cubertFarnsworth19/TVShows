@@ -26,10 +26,6 @@ public class EpisodesModule {
         mEpisodesActivity = episodesActivity;
         mView = view;
     }
-//
-//    @Provides
-//    @EpisodesActivityScope
-//    public EpisodesActivity provideEpisodeActivity(){return mEpisodesActivity;}
 
     @Provides
     @EpisodesActivityScope

@@ -50,6 +50,9 @@ public class Actor implements Parcelable{
     @Expose
     private String profilePath;
 
+    public Actor() {
+    }
+
     public Boolean getAdult() {
         return adult;
     }

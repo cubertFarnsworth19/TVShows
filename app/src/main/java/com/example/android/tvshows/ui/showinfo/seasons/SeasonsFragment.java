@@ -56,7 +56,7 @@ public class SeasonsFragment extends Fragment implements SeasonsContract.View{
             mLoaded = true;
             SeasonsComponent component = DaggerSeasonsComponent.builder()
                     .applicationComponent(showsApplication.get(getActivity()).getComponent())
-                    .seasonsModule(new SeasonsModule(this, this, mTmdbId,seasonsInfo,adapter))
+                    .seasonsModule(showsApplication.getSeasonsModule(this, this, mTmdbId,seasonsInfo,adapter))
                     .build();
 
             component.inject(this);

@@ -60,7 +60,7 @@ public class ShowsFragment extends Fragment implements ShowsContract.View{
             ShowsAdapter adapter = savedInstanceState.getParcelable(OUTSTATE_ADAPTER);
             ShowsComponent component = DaggerShowsComponent.builder()
                     .applicationComponent(showsApplication.get(getActivity()).getComponent())
-                    .showsModule(new ShowsModule(this, this,showInfo,adapter))
+                    .showsModule(showsApplication.getShowsModule(this, this,showInfo,adapter))
                     .build();
 
             component.inject(this);

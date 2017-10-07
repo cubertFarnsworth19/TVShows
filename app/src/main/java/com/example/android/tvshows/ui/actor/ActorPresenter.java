@@ -48,7 +48,6 @@ public class ActorPresenter implements ActorContract.Presenter {
         mActor = actor;
     }
 
-
     @Override
     public void downloadActorData(Context context) {
 

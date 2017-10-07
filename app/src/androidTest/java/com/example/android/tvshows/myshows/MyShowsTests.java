@@ -10,12 +10,10 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.TestShowsApplication;
 import com.example.android.tvshows.data.db.ShowsRepository;
-import com.example.android.tvshows.ui.find.discover.DiscoverActivity;
 import com.example.android.tvshows.ui.myshows.MyShowsActivity;
 import com.example.android.tvshows.ui.myshows.current.CurrentAdapter;
 import com.example.android.tvshows.ui.myshows.current.CurrentContract;
@@ -28,13 +26,11 @@ import com.example.android.tvshows.ui.myshows.shows.ShowsModule;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -45,8 +41,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.example.android.tvshows.RecyclerViewAction.clickChildViewWithId;
-import static com.example.android.tvshows.RecyclerViewMatcher.withRecyclerView;
+import static com.example.android.tvshows.util.RecyclerViewAction.clickChildViewWithId;
+import static com.example.android.tvshows.util.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Matchers.any;

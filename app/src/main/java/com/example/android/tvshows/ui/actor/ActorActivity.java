@@ -84,7 +84,7 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
 
             ActorComponent component = DaggerActorComponent.builder()
                     .applicationComponent(showsApplication.get(this).getComponent())
-                    .actorModule(new ActorModule(this, this, mTmdbActorId,
+                    .actorModule(showsApplication.getActorModule(this, this, mTmdbActorId,
                             externalIds,actorTVCredits,actor))
                     .build();
             component.inject(this);
@@ -163,8 +163,6 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
     @Override
     public void setImage(String url) {

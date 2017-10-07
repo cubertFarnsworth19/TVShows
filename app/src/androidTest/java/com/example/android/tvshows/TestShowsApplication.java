@@ -3,6 +3,10 @@ package com.example.android.tvshows;
 
 import android.content.Context;
 
+import com.example.android.tvshows.data.model.Actor;
+import com.example.android.tvshows.data.model.ExternalIds;
+import com.example.android.tvshows.data.model.actortvcredits.ActorTVCredits;
+import com.example.android.tvshows.data.rest.ApiService;
 import com.example.android.tvshows.service.DownloadService;
 import com.example.android.tvshows.service.ServiceModule;
 import com.example.android.tvshows.ui.actor.ActorActivity;
@@ -36,6 +40,7 @@ import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -64,6 +69,16 @@ public class TestShowsApplication extends ShowsApplication{
                .build();
    }
 
+    public void setApiServiceMock(ApiService mockApiService){
+        ApiServiceModule mockApiServiceModule = mock(ApiServiceModule.class);
+        when(mockApiServiceModule.provideApiService(any(Retrofit.class))).thenReturn(mockApiService);
+
+        mComponent = DaggerApplicationComponent.builder()
+                .contextModule(new ContextModule(this))
+                .apiServiceModule(mockApiServiceModule)
+                .build();
+    }
+
     @Override
     public ServiceModule getServiceModule(DownloadService downloadService) {
         if(mServiceModule==null) return super.getServiceModule(downloadService);
@@ -74,6 +89,13 @@ public class TestShowsApplication extends ShowsApplication{
     public ActorModule getActorModule(ActorActivity actorActivity, ActorContract.View view, int tmdbActorId) {
         if(mActorModule==null)
             return super.getActorModule(actorActivity, view, tmdbActorId);
+        return mActorModule;
+    }
+
+    @Override
+    public ActorModule getActorModule(ActorActivity actorActivity, ActorContract.View view, int tmdbActorId, ExternalIds externalIds, ActorTVCredits actorTVCredits, Actor actor) {
+        if(mActorModule==null)
+            return super.getActorModule(actorActivity, view, tmdbActorId, externalIds, actorTVCredits, actor);
         return mActorModule;
     }
 
@@ -167,7 +189,4 @@ public class TestShowsApplication extends ShowsApplication{
         mUpdatesModule = updatesModule;
     }
 
-//    public void setPicassoModule(PicassoModule picassoModule) {
-//        mPicassoModule = picassoModule;
-//    }
 }

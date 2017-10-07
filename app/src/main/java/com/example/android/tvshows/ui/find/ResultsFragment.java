@@ -66,7 +66,7 @@ public class ResultsFragment extends Fragment implements ResultsContract.View {
 
             ResultsComponent component = DaggerResultsComponent.builder()
                     .applicationComponent(showsApplication.get(getActivity()).getComponent())
-                    .resultsModule(new ResultsModule(this, this,saveResultsPresenterState,adapter))
+                    .resultsModule(showsApplication.getResultsModule(this, this,saveResultsPresenterState,adapter))
                     .build();
 
             component.inject(this);

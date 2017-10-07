@@ -1,27 +1,21 @@
 package com.example.android.tvshows.episodes;
 
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.android.tvshows.CustomScrollActions;
-import com.example.android.tvshows.PicassoModule;
+import com.example.android.tvshows.util.CustomScrollActions;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.TestShowsApplication;
 import com.example.android.tvshows.data.db.ShowsDbContract;
 import com.example.android.tvshows.data.db.ShowsRepository;
 import com.example.android.tvshows.data.rest.ApiService;
-import com.example.android.tvshows.ui.actor.ActorActivity;
 import com.example.android.tvshows.ui.episodes.EpisodeData;
 import com.example.android.tvshows.ui.episodes.EpisodesActivity;
 import com.example.android.tvshows.ui.episodes.EpisodesContract;
 import com.example.android.tvshows.ui.episodes.EpisodesModule;
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -29,22 +23,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
