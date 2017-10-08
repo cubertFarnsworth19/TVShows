@@ -89,6 +89,11 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
     }
 
+//    @Override
+//    public int getId(int position) {
+//        return mShowsInfo.get(position).getId();
+//    }
+
     @Override
     public String getTitle(int position) {
         return mShowsInfo.get(position).getTitle();
@@ -132,14 +137,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
     }
 
     @Override
-    public void startShowInfoActivity(Context context, int position) {
-        Intent intent = new Intent(context, ShowInfoActivity.class);
-        intent.putExtra(ShowsDbContract.ShowsEntry._ID,mShowsInfo.get(position).getId());
-        intent.putExtra(ShowsDbContract.ShowsEntry.COLUMN_NAME,mShowsInfo.get(position).getTitle());
-        context.startActivity(intent);
-    }
-
-    @Override
     public void removeShow(int position) {
         final int removeId = mShowsInfo.get(position).getId();
         mShowsInfo.remove(position);
@@ -157,4 +154,8 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         return mShowsInfo;
     }
 
+    @Override
+    public Intent getIntentForShowInfoActivity(Context context, int position) {
+        return ShowInfoActivity.getIntent(context, mShowsInfo.get(position).getId(),getTitle(position));
+    }
 }

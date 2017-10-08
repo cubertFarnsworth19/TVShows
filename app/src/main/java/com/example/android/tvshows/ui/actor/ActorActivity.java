@@ -1,5 +1,6 @@
 package com.example.android.tvshows.ui.actor;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -30,6 +31,7 @@ import com.example.android.tvshows.data.db.ShowsDbContract;
 import com.example.android.tvshows.data.model.Actor;
 import com.example.android.tvshows.data.model.ExternalIds;
 import com.example.android.tvshows.data.model.actortvcredits.ActorTVCredits;
+import com.example.android.tvshows.util.ExternalLinks;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -148,7 +150,7 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
                 imdb.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mActorPresenter.goToImdbPage(ActorActivity.this);
+                        ExternalLinks.visitIMDBActorPage(getBaseContext(),mActorPresenter.getActorIMDBId());
                     }
                 });
                 PopupWindow linksPopupWindow = new PopupWindow(
@@ -213,6 +215,12 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
         outState.putParcelable(OUTSTATE_ACTOR,mActorPresenter.getActor());
         outState.putParcelable(OUTSTATE_ACTOR_TV_CREDITS,mActorPresenter.getActorTVCredits());
         outState.putParcelable(OUTSTATE_EXTERNAL_IDS,mActorPresenter.getExternalIds());
+    }
+
+    public static Intent getIntent(Context context,int personId){
+        Intent intent = new Intent(context, ActorActivity.class);
+        intent.putExtra(ShowsDbContract.CastEntry.COLUMN_PERSON_ID,personId);
+        return intent;
     }
 
 }

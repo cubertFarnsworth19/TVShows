@@ -1,6 +1,7 @@
 package com.example.android.tvshows.ui.myshows.shows;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public interface ShowsContract {
         String getInProduction(int position);
         boolean isFavorite(int position);
         void setFavorite(int position,boolean favorite);
-        void startShowInfoActivity(Context context,int position);
         void removeShow(int position);
         ArrayList<ShowInfo> getShowsInfo();
+        Intent getIntentForShowInfoActivity(Context context,int position);
     }
 }

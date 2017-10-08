@@ -12,15 +12,14 @@ public interface DetailsContract {
 
         void setPoster(String url);
         void creatorDataLoaded(int size);
+        void setIMDBid(String id);
     }
 
     interface Presenter{
         void loadShowDetails(Context context);
         String getCreatorName(int position);
-        void visitIMDbPage(Context context);
-        void visitTMDBPage(Context context);
-        void searchGoogle(Context context);
-        void searchYouTube(Context context);
-        void visitWikipedia(Context context);
+        String getTitle();
+        boolean downloadExternalIds();
+        String getImdbId();
     }
 }

@@ -80,7 +80,7 @@ public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         @Override
         public void onClick(View view) {
-            mCastPresenter.startActorActivity(mContext,getAdapterPosition());
+            mContext.startActivity(mCastPresenter.getIntentForActorActivity(mContext,getAdapterPosition()));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.android.tvshows.ui.showinfo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -56,7 +57,6 @@ public class ShowInfoActivity extends BaseNavigationActivity {
         Intent intent = getIntent();
         tmdbId = intent.getIntExtra(ShowsDbContract.ShowsEntry._ID,-1);
         mShowName.setText(intent.getStringExtra(ShowsDbContract.ShowsEntry.COLUMN_NAME));
-
 
     }
 
@@ -117,5 +117,11 @@ public class ShowInfoActivity extends BaseNavigationActivity {
         return (DrawerLayout) findViewById(R.id.show_info_drawer_layout);
     }
 
+    public static Intent getIntent(Context context,int id,String title) {
+        Intent intent = new Intent(context, ShowInfoActivity.class);
+        intent.putExtra(ShowsDbContract.ShowsEntry._ID, id);
+        intent.putExtra(ShowsDbContract.ShowsEntry.COLUMN_NAME, title);
+        return intent;
+    }
 
 }

@@ -90,11 +90,9 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
         return episodes;
     }
 
-    @Override
-    public void startEpisodesActivity(Context context,int adapterPosition) {
 
-        Intent intent = new Intent(context, EpisodesActivity.class);
-        intent.putExtra(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY,tmdbId);
+    @Override
+    public Intent getIntentForEpisodesActivity(Context context, int adapterPosition) {
         String[] seasonsName = new String[mSeasonsInfo.size()];
         int [] seasonNumbers = new int[mSeasonsInfo.size()];
 
@@ -103,11 +101,7 @@ public class SeasonsPresenter implements SeasonsContract.Presenter{
             seasonNumbers[i] = mSeasonsInfo.get(i).seasonNumber;
         }
 
-        intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME,seasonsName);
-        intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER,seasonNumbers);
-        intent.putExtra(EpisodesActivity.adapterPosition,adapterPosition);
-
-        context.startActivity(intent);
+        return EpisodesActivity.getIntent(context,tmdbId,seasonsName,seasonNumbers,adapterPosition);
     }
 
     @Override

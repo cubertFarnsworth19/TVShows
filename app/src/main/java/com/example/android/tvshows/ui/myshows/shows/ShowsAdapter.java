@@ -131,7 +131,7 @@ public class ShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .show();
             }
             else {
-                mShowsPresenter.startShowInfoActivity(mContext, getAdapterPosition());
+                mContext.startActivity(mShowsPresenter.getIntentForShowInfoActivity(mContext,getAdapterPosition()));
             }
         }
 

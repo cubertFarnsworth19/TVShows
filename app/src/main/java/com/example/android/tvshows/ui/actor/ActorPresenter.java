@@ -118,14 +118,8 @@ public class ActorPresenter implements ActorContract.Presenter {
     }
 
     @Override
-    public void goToImdbPage(Context context) {
-        String imdbKey = mExternalIds.getImdbId();
-        if(imdbKey!="") {
-            Uri webpage = Uri.parse("http://www.imdb.com/name/" + imdbKey + "/?ref_=tt_cl_t4");
-            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-            if (intent.resolveActivity(context.getPackageManager()) != null)
-                context.startActivity(intent);
-        }
+    public String getActorIMDBId() {
+        return mExternalIds.getImdbId();
     }
 
     @Override

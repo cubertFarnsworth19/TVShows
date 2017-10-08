@@ -78,11 +78,8 @@ public class CastPresenter implements CastContract.Presenter {
     }
 
     @Override
-    public void startActorActivity(Context context, int position) {
-        Intent intent = new Intent(context, ActorActivity.class);
-        intent.putExtra(ShowsDbContract.CastEntry.COLUMN_PERSON_ID,mCastInfo.get(position).getPersonId());
-
-        context.startActivity(intent);
+    public Intent getIntentForActorActivity(Context context, int position) {
+        return ActorActivity.getIntent(context,mCastInfo.get(position).getPersonId());
     }
 
     @Override

@@ -39,6 +39,7 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     private String[] mSeasonNames;
     private ApiService mApiService;
     private ArrayList<EpisodeData> mEpisodeData;
+    private ExternalIdsTvShow mExternalIdsTvShow;
 
     @Inject
     public EpisodesPresenter(EpisodesContract.View episodeView,ShowsRepository showsRepository,ApiService apiService,int showId,int seasonNumber,int[] seasonNumbers,String[] seasonNames){
@@ -78,18 +79,15 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
         return mEpisodeData.get(position);
     }
 
-    @Override
-    public void startNewEpisodesActvity(Context context,int index) {
+    public Intent getIntentForNewEpisodeActivity(Context context,int index){
         int newSeasonNumber = mSeasonNumbers[index];
-        if(newSeasonNumber != mSeasonNumber){
-            Intent intent = new Intent(context, EpisodesActivity.class);
-            intent.putExtra(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY,mShowId);
-            intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME,mSeasonNames);
-            intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER,mSeasonNumbers);
-            intent.putExtra("adapter_position",index);
-            context.startActivity(intent);
-            mEpisodeView.endActivity();
-        }
+
+        Intent intent = EpisodesActivity.getIntent(context, mShowId, mSeasonNames, mSeasonNumbers, index);
+
+        if(newSeasonNumber == mSeasonNumber)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        return intent;
     }
 
     @Override
@@ -98,62 +96,41 @@ public class EpisodesPresenter implements EpisodesContract.Presenter {
     }
 
     @Override
-    public void visitIMDbPage(final Context context,final int episodeNumber) {
+    public boolean downloadExternalIds(final int episodeNumber) {
+        if(mExternalIdsTvShow==null) {
+            mApiService.getEpisodeExternalIds(String.valueOf(mShowId),
+                    String.valueOf(mSeasonNumber),String.valueOf(episodeNumber),BuildConfig.TMDB_API_KEY)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ExternalIdsTvShow>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {}
 
-        mApiService.getEpisodeExternalIds(String.valueOf(mShowId),
-                String.valueOf(mSeasonNumber),String.valueOf(episodeNumber),BuildConfig.TMDB_API_KEY)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ExternalIdsTvShow>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
-                    @Override
-                    public void onNext(ExternalIdsTvShow externalIdsTvShow) {
-                        String imdbId = externalIdsTvShow.getImdbId();
-                        if(imdbId!="") {
-                            Uri webpage = Uri.parse(context.getString(R.string.imdb_tv_show_webpage) + imdbId);
-                            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-                            if (intent.resolveActivity(context.getPackageManager()) != null)
-                                context.startActivity(intent);
+                        @Override
+                        public void onNext(ExternalIdsTvShow externalIdsTvShow) {
+                            mExternalIdsTvShow = externalIdsTvShow;
+                            mEpisodeView.setIMDBId(mExternalIdsTvShow.getImdbId());
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {}
-                    @Override
-                    public void onComplete() {}
-                });
+                        @Override
+                        public void onError(Throwable e) {}
+                        @Override
+                        public void onComplete() {}
+                    });
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
-    public void visitTMDBPage(Context context, int tmdbId) {
-        Uri webpage = Uri.parse(context.getString(R.string.tmdb_tv_show_webpage) + tmdbId);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
-    }
-
-    @Override
-    public void searchGoogle(Context context, String episodeName) {
+    public String getTitle() {
         DetailsData detailsData = mShowsRepository.getShow(mShowId);
-
-        String showName = detailsData.name;
-        Uri webpage = Uri.parse(context.getString(R.string.google_search_webpage) + showName + " " + episodeName);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
+        return detailsData.name;
     }
 
     @Override
-    public void searchYouTube(Context context, String episodeName) {
-        DetailsData detailsData = mShowsRepository.getShow(mShowId);
-
-        String showName = detailsData.name;
-        Uri webpage = Uri.parse(context.getString(R.string.youtube_search_webpage)  + showName + " " + episodeName);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
+    public String getImdbId() {
+        return mExternalIdsTvShow.getImdbId();
     }
-
 }

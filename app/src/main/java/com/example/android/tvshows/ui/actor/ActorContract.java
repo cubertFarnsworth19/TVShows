@@ -24,7 +24,7 @@ public interface ActorContract {
         ActorTVCredits getActorTVCredits();
         ExternalIds getExternalIds();
         Actor getActor();
-        void goToImdbPage(Context context);
+        String getActorIMDBId();
         String getCharacterName(int position);
         String getTVShowTitle(int position);
     }

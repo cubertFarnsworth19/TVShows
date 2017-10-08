@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.data.db.ShowsRepository;
+import com.example.android.tvshows.util.ExternalLinks;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -45,19 +46,22 @@ public class EpisodesFragment extends Fragment{
         return rootview;
     }
 
+
+
     @OnClick({R.id.link_imdb,R.id.link_tmdb,R.id.link_google_search,R.id.link_youtube_search})
     void visitLink(View view){
         if(view.getId() == R.id.link_imdb){
-            ((EpisodesActivity)getActivity()).visitIMDbPage(mEpisodeNumber);
+            if(((EpisodesActivity)getActivity()).mEpisodesPresenter.downloadExternalIds(mEpisodeNumber))
+                ExternalLinks.vistIMDBShowPage(this.getContext(),((EpisodesActivity)getActivity()).mEpisodesPresenter.getImdbId());
         }
         else if(view.getId() == R.id.link_tmdb){
-            ((EpisodesActivity)getActivity()).visitTMDBPage(mTMDbId);
+            ExternalLinks.visitTMDBPage(getContext(),mTMDbId);
         }
         else if(view.getId() == R.id.link_google_search){
-            ((EpisodesActivity)getActivity()).searchGoogle(mEpisodeName.getText().toString());
+            ExternalLinks.searchGoogle(getContext(),((EpisodesActivity)getActivity()).mEpisodesPresenter.getTitle()+" "+mEpisodeName.getText().toString());
         }
         else if(view.getId() == R.id.link_youtube_search){
-            ((EpisodesActivity)getActivity()).searchYouTube(mEpisodeName.getText().toString());
+            ExternalLinks.searchYoutube(getContext(),((EpisodesActivity)getActivity()).mEpisodesPresenter.getTitle()+" "+mEpisodeName.getText().toString());
         }
 
     }

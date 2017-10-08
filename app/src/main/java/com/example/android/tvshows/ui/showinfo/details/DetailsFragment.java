@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.ShowsApplication;
 import com.example.android.tvshows.data.db.ShowsRepository;
+import com.example.android.tvshows.util.ExternalLinks;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -102,22 +103,27 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         mCreatorAdapter.displayCreators(size);
     }
 
+    @Override
+    public void setIMDBid(String id) {
+        ExternalLinks.vistIMDBShowPage(this.getContext(),mDetailsPresenter.getImdbId());
+    }
+
     @OnClick({R.id.link_imdb,R.id.link_tmdb,R.id.link_google_search,R.id.link_youtube_search,R.id.link_wikipedia})
     void visitLink(View view){
         if(view.getId() == R.id.link_imdb){
-            mDetailsPresenter.visitIMDbPage(getActivity());
+            if(mDetailsPresenter.downloadExternalIds()) ExternalLinks.vistIMDBShowPage(this.getContext(),mDetailsPresenter.getImdbId());
         }
         else if(view.getId() == R.id.link_tmdb){
-            mDetailsPresenter.visitTMDBPage(getActivity());
+            ExternalLinks.visitTMDBPage(this.getContext(),mTmdbId);
         }
         else if(view.getId() == R.id.link_google_search){
-            mDetailsPresenter.searchGoogle(getActivity());
+            ExternalLinks.searchGoogle(this.getContext(),mDetailsPresenter.getTitle());
         }
         else if(view.getId() == R.id.link_youtube_search){
-            mDetailsPresenter.searchYouTube(getActivity());
+            ExternalLinks.searchYoutube(this.getContext(),mDetailsPresenter.getTitle());
         }
         else if(view.getId() == R.id.link_wikipedia){
-            mDetailsPresenter.visitWikipedia(getActivity());
+            ExternalLinks.visitWikipedia(this.getContext(),mDetailsPresenter.getTitle());
         }
     }
 

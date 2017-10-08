@@ -1,5 +1,6 @@
 package com.example.android.tvshows.ui.episodes;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +23,7 @@ import com.example.android.tvshows.data.db.ShowsDbContract;
 import com.example.android.tvshows.data.db.ShowsRepository;
 import com.example.android.tvshows.ui.BaseNavigationActivity;
 import com.example.android.tvshows.ui.tabs.SlidingTabLayout;
+import com.example.android.tvshows.util.ExternalLinks;
 import com.example.android.tvshows.util.Utility;
 import com.squareup.picasso.Picasso;
 
@@ -87,15 +89,20 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
     }
 
     private void setupSpinner(){
-        ArrayAdapter<String> adapterSeasons = new ArrayAdapter<>(this,R.layout.episodes_seasons_spinner_item,mEpisodesPresenter.getSeasonNames());
+        ArrayAdapter<String> adapterSeasons = new ArrayAdapter<>(
+                this,R.layout.episodes_seasons_spinner_item,mEpisodesPresenter.getSeasonNames());
         mSpinnerSeasons.setAdapter(adapterSeasons);
         mSpinnerSeasons.setSelection(mInitialSpinnerPosition);
 
         mSpinnerSeasons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(mInitialised)
-                    mEpisodesPresenter.startNewEpisodesActvity(EpisodesActivity.this,i);
+                if(mInitialised) {
+                    Intent intent = mEpisodesPresenter.getIntentForNewEpisodeActivity(EpisodesActivity.this, i);
+                    getBaseContext().startActivity(intent);
+
+                    if(intent.getFlags()!=Intent.FLAG_ACTIVITY_NEW_TASK) endActivity();
+                }
 
                 mInitialised = true;
             }
@@ -122,6 +129,11 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
     }
 
     @Override
+    public void setIMDBId(String imdbId) {
+        ExternalLinks.vistIMDBShowPage(getBaseContext(),mEpisodesPresenter.getImdbId());
+    }
+
+    @Override
     public void endActivity() {
         finish();
     }
@@ -130,21 +142,6 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
         return mPicasso;
     }
 
-    public void visitIMDbPage(int episodeNumber){
-        mEpisodesPresenter.visitIMDbPage(this,episodeNumber);
-    }
-
-    public void visitTMDBPage(int tmdbId){
-        mEpisodesPresenter.visitTMDBPage(this,tmdbId);
-    }
-
-    public void searchGoogle(String episodeName){
-        mEpisodesPresenter.searchGoogle(this,episodeName);
-    }
-
-    public void searchYouTube(String episodeName){
-        mEpisodesPresenter.searchYouTube(this,episodeName);
-    }
     // navigation drawer methods
     @Override
     protected int getLayoutResourceId() {
@@ -171,9 +168,6 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
     class EpisodesPagerAdapter extends FragmentStatePagerAdapter{
 
@@ -211,6 +205,17 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
         public int getCount() {
             return mNumberOfEpisodes;
         }
+    }
+
+    public static Intent getIntent(Context context,int tmdbId,String seasonsName[],int[] seasonNumbers,int position){
+        Intent intent = new Intent(context, EpisodesActivity.class);
+        intent.putExtra(ShowsDbContract.ForeignKeys.COLUMN_SHOW_FOREIGN_KEY,tmdbId);
+
+        intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NAME,seasonsName);
+        intent.putExtra(ShowsDbContract.SeasonEntry.COLUMN_SEASON_NUMBER,seasonNumbers);
+        intent.putExtra(adapterPosition,position);
+
+        return intent;
     }
 
 

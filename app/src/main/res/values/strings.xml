@@ -108,6 +108,8 @@
 
 
     <string name="imdb_tv_show_webpage">http://www.imdb.com/title/</string>
+    <string name="imdb_actor_webage_start">http://www.imdb.com/name/</string>
+    <string name="imdb_actor_webage_end">/?ref_=tt_cl_t4</string>
     <string name="tmdb_tv_show_webpage">https://www.themoviedb.org/tv/</string>
     <string name="google_search_webpage">https://www.google.co.uk/#q=</string>
     <string name="youtube_search_webpage">https://www.youtube.com/results?search_query=</string>

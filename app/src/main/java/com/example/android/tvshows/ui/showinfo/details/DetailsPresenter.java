@@ -34,6 +34,7 @@ public class DetailsPresenter implements DetailsContract.Presenter{
     private DetailsData mShowDetails;
     private ArrayList<String> mCreators;
     private ApiService mApiService;
+    private ExternalIdsTvShow mExternalIdsTvShow;
 
     public DetailsPresenter(DetailsContract.View detailsView,ShowsRepository showsRepository,
                             ApiService apiService,int tmdbId){
@@ -101,67 +102,44 @@ public class DetailsPresenter implements DetailsContract.Presenter{
     }
 
     @Override
-    public void visitIMDbPage(final Context context) {
+    public String getTitle() {
+        return mShowDetails.name;
+    }
 
-        mApiService.getTVShowExternalIds(String.valueOf(tmdbId),BuildConfig.TMDB_API_KEY)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ExternalIdsTvShow>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-                    @Override
-                    public void onNext(ExternalIdsTvShow externalIdsTvShow) {
-                        String imdbId = externalIdsTvShow.getImdbId();
-                        if(imdbId!="") {
-                            Uri webpage = Uri.parse(context.getString(R.string.imdb_tv_show_webpage) + imdbId);
-                            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-                            if (intent.resolveActivity(context.getPackageManager()) != null)
-                                context.startActivity(intent);
+    @Override
+    public boolean downloadExternalIds() {
+        if(mExternalIdsTvShow==null) {
+            mApiService.getTVShowExternalIds(String.valueOf(tmdbId), BuildConfig.TMDB_API_KEY)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ExternalIdsTvShow>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
                         }
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+
+                        @Override
+                        public void onNext(ExternalIdsTvShow externalIdsTvShow) {
+                            mExternalIdsTvShow = externalIdsTvShow;
+                            mDetailsView.setIMDBid(mExternalIdsTvShow.getImdbId());
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+
+                        @Override
+                        public void onComplete() {
+                        }
+                    });
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
-    public void visitTMDBPage(Context context) {
-        Uri webpage = Uri.parse(context.getString(R.string.tmdb_tv_show_webpage) + tmdbId);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
-    }
-
-    @Override
-    public void searchGoogle(Context context) {
-        String title = mShowDetails.name;
-        Uri webpage = Uri.parse(context.getString(R.string.google_search_webpage) + title);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
-    }
-
-    @Override
-    public void searchYouTube(Context context) {
-        String title = mShowDetails.name;
-        Uri webpage = Uri.parse(context.getString(R.string.youtube_search_webpage) + title);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
-    }
-
-    @Override
-    public void visitWikipedia(Context context) {
-        String title = mShowDetails.name;
-        Uri webpage = Uri.parse(Utility.getWikipediaTVSeriesWebpage(context,title));
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
+    public String getImdbId() {
+        return mExternalIdsTvShow.getImdbId();
     }
 
     @NonNull

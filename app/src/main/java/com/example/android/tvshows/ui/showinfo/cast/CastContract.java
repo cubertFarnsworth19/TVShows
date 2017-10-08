@@ -1,6 +1,7 @@
 package com.example.android.tvshows.ui.showinfo.cast;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public interface CastContract {
         String getCharacterName(int position);
         String getActorName(int position);
         String getPhotoUrl(Context context, int position);
-        void startActorActivity(Context context,int position);
+        Intent getIntentForActorActivity(Context context,int position);
         ArrayList<CastInfo> getCastInfo();
     }
 }
