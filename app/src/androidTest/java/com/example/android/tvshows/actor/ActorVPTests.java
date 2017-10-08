@@ -84,7 +84,6 @@ public class ActorVPTests {
         mockApiServiceMethods(actorId,actor,externalIds,actorTVCredits);
 
         mActivityTestRule.launchActivity(getIntent(actorId));
-
         testDataDisplayed(actor,actorTVCredits);
 
         mActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -109,6 +108,7 @@ public class ActorVPTests {
 
         mActivityTestRule.launchActivity(getIntent(actorId));
 
+        // do nothing when an external intent is called
         intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
         onView(withId(R.id.action_links)).perform(click());

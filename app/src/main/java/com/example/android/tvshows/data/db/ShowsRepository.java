@@ -39,11 +39,6 @@ public class ShowsRepository {
     }
 
     public void insertShowIntoDatabase(final TVShowDetailed tvShowDetailed, final Credits credits, final Season[] seasons){
-       // Log.v("ShowsRepository","insert");
-
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
 
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
@@ -87,7 +82,6 @@ public class ShowsRepository {
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_DAY,todayDay);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_MONTH,todayMonth);
                 showsValues.put(ShowsDbContract.ShowsEntry.COLUMN_LAST_UPDATE_YEAR,todayYear);
-              //  Log.v("insertIntoDatabase",tvShowDetailed.getName()+","+credits.getId());
 
 
                 int numEpisodes = 0;
@@ -114,7 +108,6 @@ public class ShowsRepository {
                     seasonsValues[i].put(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_MONTH,todayMonth);
                     seasonsValues[i].put(ShowsDbContract.SeasonEntry.COLUMN_LAST_UPDATE_YEAR,todayYear);
 
-//                    for(int j=0;j<seasons[i].numberOfEpisodes();j++){
                     for (int j=0;j<seasons[i].getEpisodes().size();j++){
                         episodesValues[episodesIndex] = new ContentValues();
                         episodesValues[episodesIndex].put(ShowsDbContract.EpisodeEntry._ID,seasons[i].getEpisodes().get(j).getId());
@@ -161,11 +154,6 @@ public class ShowsRepository {
 
                 completeShowInsert(showsValues,castValues,seasonsValues,episodesValues,creatorValues,creatorShowValues);
 
-      //      }
-    //    });
-
-      //  thread.start();
-
     }
 
     private synchronized void completeShowInsert(ContentValues showsValues,ContentValues[] castValues,ContentValues[] seasonsValues,
@@ -183,9 +171,6 @@ public class ShowsRepository {
     }
 
     public void insertAdditionalSeasonsIntoDatabase(final int tmdbId, final Season[] seasons){
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
 
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
@@ -231,15 +216,10 @@ public class ShowsRepository {
                         episodesValues[episodesIndex].put(ShowsDbContract.EpisodeEntry.COLUMN_AIR_DATE_DAY,seasons[i].getEpisodes().get(j).getAirDateDay());
                         episodesIndex++;
                     }
-
                 }
 
                 completeAdditionalSeasonsInsert(seasonsValues,episodesValues);
 
-//            }
-//        });
-//
-//        thread.start();
     }
 
     private synchronized void completeAdditionalSeasonsInsert(ContentValues[] seasonsValues,ContentValues[] episodesValues){
@@ -383,7 +363,6 @@ public class ShowsRepository {
         String where = ShowsDbContract.ShowsEntry._ID + "=?";
         String[] selectionArgs = {tmdbId.toString()};
         Cursor cursor = mContext.getContentResolver().query(ShowsDbContract.ShowsEntry.CONTENT_URI,null,where,selectionArgs,null);
-
 
         if(cursor.moveToFirst()) {
             DetailsData detailsData = new DetailsData(cursor.getString(cursor.getColumnIndex(ShowsDbContract.ShowsEntry.COLUMN_NAME)),
@@ -587,9 +566,6 @@ public class ShowsRepository {
     }
 
     public void updateTVShowDetails(final TVShowDetailed tvShowDetailed, final Credits credits){
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
                 Integer todayYear = Utility.getYear();
@@ -659,10 +635,6 @@ public class ShowsRepository {
                 }
 
                 completeShowDetailsUpdate(showsValues,castValues,creatorValues,creatorShowValues);
-//            }
-//        });
-//
-//        thread.start();
 
     }
 
@@ -691,10 +663,6 @@ public class ShowsRepository {
     }
 
     public void updateSeasons(final Integer showId,final Season[] seasons){
-//
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
 
                 Integer todayDay = Utility.getDay();
                 Integer todayMonth = Utility.getMonth();
@@ -744,10 +712,6 @@ public class ShowsRepository {
                 }
 
                 completeSeasonsUpdate(showId,seasons,seasonsValues,episodesValues);
-//            }
-//        });
-//
-//        thread.start();
     }
 
     private synchronized void completeSeasonsUpdate(Integer showId,final Season[] seasons,ContentValues[] seasonsValues,ContentValues[] episodesValues){

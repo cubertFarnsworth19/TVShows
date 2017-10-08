@@ -3,6 +3,7 @@ package com.example.android.tvshows;
 
 import android.content.Context;
 
+import com.example.android.tvshows.data.db.ShowsRepository;
 import com.example.android.tvshows.data.model.Actor;
 import com.example.android.tvshows.data.model.ExternalIds;
 import com.example.android.tvshows.data.model.actortvcredits.ActorTVCredits;
@@ -76,6 +77,20 @@ public class TestShowsApplication extends ShowsApplication{
         mComponent = DaggerApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
                 .apiServiceModule(mockApiServiceModule)
+                .build();
+    }
+
+    public void setMocks(ApiService mockApiService, ShowsRepository mockShowsRepository){
+        ApiServiceModule mockApiServiceModule = mock(ApiServiceModule.class);
+        when(mockApiServiceModule.provideApiService(any(Retrofit.class))).thenReturn(mockApiService);
+
+        RepositoryModule mockRepositoryModule = mock(RepositoryModule.class);
+        when(mockRepositoryModule.provideRepository(any(Context.class))).thenReturn(mockShowsRepository);
+
+        mComponent = DaggerApplicationComponent.builder()
+                .contextModule(new ContextModule(this))
+                .apiServiceModule(mockApiServiceModule)
+                .repositoryModule(mockRepositoryModule)
                 .build();
     }
 

@@ -73,6 +73,8 @@ public class ActorTests {
 
         mActivity = mActivityTestRule.getActivity();
 
+
+
         verify(mMockPresenter).downloadActorData(any(Context.class));
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
