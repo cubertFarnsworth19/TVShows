@@ -111,9 +111,4 @@ public class Utility {
         return date;
     }
 
-    public static String getWikipediaTVSeriesWebpage(Context context,String title){
-        title.replace(' ','_');
-        return context.getString(R.string.wikipedia_webapge)+title+context.getString(R.string.wikipedia_webpage_end);
-    }
-
 }
