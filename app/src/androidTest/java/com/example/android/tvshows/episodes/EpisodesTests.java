@@ -1,8 +1,12 @@
 package com.example.android.tvshows.episodes;
 
+import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -19,6 +23,7 @@ import com.example.android.tvshows.ui.episodes.EpisodesModule;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,12 +36,20 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,6 +61,7 @@ public class EpisodesTests {
     Intent mIntent;
     String[] mSeasonsName;
     ArrayList<EpisodeData> mEpisodes;
+    final int numberOfEpisodes = 4;
 
     @Mock
     Picasso mMockPicasso;
@@ -55,8 +69,8 @@ public class EpisodesTests {
     EpisodesActivity mActivity;
 
     @Rule
-    public ActivityTestRule<EpisodesActivity> mActivityTestRule =
-            new ActivityTestRule<>(EpisodesActivity.class,false,false);
+    public IntentsTestRule<EpisodesActivity> mActivityTestRule =
+            new IntentsTestRule<>(EpisodesActivity.class,false,false);
 
     @Before
     public void setUp(){
@@ -115,16 +129,10 @@ public class EpisodesTests {
     @Test
     public void testDisplayEpisodes(){
 
-        final int numberOfEpisodes = 4;
-
         mActivityTestRule.launchActivity(mIntent);
         mActivity = mActivityTestRule.getActivity();
 
-        for (int i=0;i<numberOfEpisodes;i++) {
-            when(mMockPresenter.getEpisodeData(mActivity, i)).thenReturn(mEpisodes.get(i));
-        }
-
-        when(mMockPresenter.getSeasonNames()).thenReturn(mSeasonsName);
+        mockPresenterMethods();
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -139,21 +147,26 @@ public class EpisodesTests {
             onView(allOf(isDisplayed(),withId(R.id.still_photo))).perform(swipeLeft());
         }
 
+        // do nothing when an external intent is called
+        intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
         onView(allOf(withId(R.id.link_imdb),isDescendantOfA(allOf(withId(R.id.episode_layout),isDisplayed()))))
                 .perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockPresenter).visitIMDbPage(mActivity,4);
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),hasData(Uri.parse(mActivity.getString(R.string.imdb_tv_show_webpage)+"1"))));
 
         onView(allOf(withId(R.id.link_tmdb),isDescendantOfA(allOf(withId(R.id.episode_layout),isDisplayed()))))
                 .perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockPresenter).visitIMDbPage(mActivity,4);
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),hasData(Uri.parse(mActivity.getString(R.string.tmdb_tv_show_webpage)+"1"))));
 
         onView(allOf(withId(R.id.link_google_search),isDescendantOfA(allOf(withId(R.id.episode_layout),isDisplayed()))))
                 .perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockPresenter).searchGoogle(mActivity,mEpisodes.get(3).getEpisodeName());
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),
+                hasData(Uri.parse(mActivity.getString(R.string.google_search_webpage)+"TV Show "+mEpisodes.get(3).getEpisodeName()))));
 
         onView(allOf(withId(R.id.link_youtube_search),isDescendantOfA(allOf(withId(R.id.episode_layout),isDisplayed()))))
                 .perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockPresenter).searchYouTube(mActivity,mEpisodes.get(3).getEpisodeName());
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),
+                hasData(Uri.parse(mActivity.getString(R.string.youtube_search_webpage)+"TV Show "+mEpisodes.get(3).getEpisodeName()))));
 
     }
 
@@ -170,17 +183,38 @@ public class EpisodesTests {
 
         when(mMockPresenter.getSeasonNames()).thenReturn(mSeasonsName);
 
+        when(mMockPresenter.getIntentForNewEpisodeActivity(
+                activity.getBaseContext(),0)).thenReturn(new Intent(activity.getBaseContext(),EpisodesActivity.class));
+
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
                 activity.episodeDataLoaded(numberOfEpisodes);
             }});
 
+        // do nothing when an internal intent is called
+        intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
         onView(withId(R.id.spinner_seasons)).perform(click());
         onView(withText("Season 1")).perform(click());
 
-        verify(mMockPresenter).startNewEpisodesActvity(activity,0);
+        intended(hasComponent(EpisodesActivity.class.getName()));
+    }
+
+    private void mockPresenterMethods(){
+
+        for (int i=0;i<numberOfEpisodes;i++) {
+            when(mMockPresenter.getEpisodeData(mActivity, i)).thenReturn(mEpisodes.get(i));
+        }
+
+        when(mMockPresenter.getSeasonNames()).thenReturn(mSeasonsName);
+
+        when(mMockPresenter.getImdbId()).thenReturn("1");
+        when(mMockPresenter.getTitle()).thenReturn("TV Show");
+
+        when(mMockPresenter.downloadExternalIds(4)).thenReturn(true);
 
     }
+
 
 }

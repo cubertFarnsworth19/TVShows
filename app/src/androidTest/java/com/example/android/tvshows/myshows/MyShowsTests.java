@@ -1,8 +1,10 @@
 package com.example.android.tvshows.myshows;
 
+import android.app.Activity;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.v4.app.Fragment;
 import android.app.Instrumentation;
 import android.content.Context;
@@ -14,6 +16,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.TestShowsApplication;
 import com.example.android.tvshows.data.db.ShowsRepository;
+import com.example.android.tvshows.ui.episodes.EpisodesActivity;
 import com.example.android.tvshows.ui.myshows.MyShowsActivity;
 import com.example.android.tvshows.ui.myshows.current.CurrentAdapter;
 import com.example.android.tvshows.ui.myshows.current.CurrentContract;
@@ -23,6 +26,7 @@ import com.example.android.tvshows.ui.myshows.shows.ShowsAdapter;
 import com.example.android.tvshows.ui.myshows.shows.ShowsContract;
 import com.example.android.tvshows.ui.myshows.shows.ShowsFragment;
 import com.example.android.tvshows.ui.myshows.shows.ShowsModule;
+import com.example.android.tvshows.ui.showinfo.ShowInfoActivity;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -37,6 +41,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.Intents.times;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -63,8 +72,8 @@ public class MyShowsTests {
     private MyShowsActivity mActivity;
 
     @Rule
-    public ActivityTestRule<MyShowsActivity> mActivityTestRule =
-            new ActivityTestRule<>(MyShowsActivity.class,false,false);
+    public IntentsTestRule<MyShowsActivity> mActivityTestRule =
+            new IntentsTestRule<>(MyShowsActivity.class,false,false);
 
     @Before
     public void setUp(){
@@ -104,7 +113,7 @@ public class MyShowsTests {
     }
 
     @Test
-    public void testDisplayShows() {
+    public void testDisplayShows(){
         mActivityTestRule.launchActivity(new Intent());
         mActivity = mActivityTestRule.getActivity();
 
@@ -127,7 +136,7 @@ public class MyShowsTests {
                 .perform(RecyclerViewActions.scrollToPosition(0));
 
         onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeLeft());
-
+        mActivity.setNotIdle();
         verify(mMockCurrentPresenter).loadShowsFromDatabase(mActivity);
 
         mockCurrentPresenterMethods();
@@ -137,6 +146,7 @@ public class MyShowsTests {
 
         onView(allOf(withId(R.id.pager),isDisplayed())).perform(swipeRight());
         mActivity.setNotIdle();
+
         onView(withId(R.id.btn_filter)).check(matches(isDisplayed()));
 
     }
@@ -198,14 +208,21 @@ public class MyShowsTests {
 
             verify(mMockShowsPresenter).setFavorite(i,!favorite);
 
+
+            when(mMockShowsPresenter.getIntentForShowInfoActivity(mContext,i))
+                    .thenReturn(new Intent(mActivity.getBaseContext(), ShowInfoActivity.class));
+            // do nothing when an internal intent is called
+            intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
             onView(withId(R.id.recyclerview_shows))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(i, clickChildViewWithId(R.id.show_layout)));
-            verify(mMockShowsPresenter).startShowInfoActivity(mContext,i);
+
+            intended(hasComponent(ShowInfoActivity.class.getName()),times(i+1));
         }
     }
 
     private void testDisplayCurrentShows(final CurrentFragment currentFragment){
-        mActivity.setNotIdle();
+
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
             @Override

@@ -9,7 +9,7 @@ import com.example.android.tvshows.R;
 
 public class ExternalLinks {
 
-    public static void vistIMDBShowPage(Context context,String imdbId ){
+    public static void vistIMDBShowPage(Context context,String imdbId){
         if(imdbId!="")
             visitWebsite(context,Uri.parse(context.getString(R.string.imdb_tv_show_webpage) + imdbId));
     }

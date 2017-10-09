@@ -14,7 +14,10 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -66,6 +69,25 @@ public class MyShowsActivity extends NavigationIconActivity {
         mNestedScrollView.setFillViewport(true);
         mNestedScrollView.setNestedScrollingEnabled(true);
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+              //  Log.v("Pager","onPageScrolled");
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.v("Pager","onPageSelected");
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                //if(state==1) setNotIdle();
+                Log.v("Pager","onPageScrollStateChanged " + state);
+            }
+        });
         mSlidingTabLayout.setViewPager(mPager);
         mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer(){
             @Override
@@ -76,6 +98,7 @@ public class MyShowsActivity extends NavigationIconActivity {
 
         getWindow().setBackgroundDrawable(null);
     }
+
 
     class MyPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -95,7 +118,6 @@ public class MyShowsActivity extends NavigationIconActivity {
             else {
                 fragment = CurrentFragment.getInstance(position);
             }
-
             return fragment;
         }
 
@@ -109,9 +131,11 @@ public class MyShowsActivity extends NavigationIconActivity {
             return 3;
         }
 
+
     }
 
     public void setFilterButtonVisible(boolean visible){
+        Log.v("Pager","setFilterButtonVisible");
         if(visible) mButtonFilter.setVisibility(View.VISIBLE);
         else  mButtonFilter.setVisibility(View.INVISIBLE);
 
@@ -132,7 +156,6 @@ public class MyShowsActivity extends NavigationIconActivity {
     public void setFavorite(boolean favorite) {
         mFavorite = favorite;
     }
-
 
     // navigation drawer methods
     @Override

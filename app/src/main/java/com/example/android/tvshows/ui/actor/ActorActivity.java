@@ -82,7 +82,7 @@ public class ActorActivity extends AppCompatActivity implements ActorContract.Vi
 
             ExternalIds externalIds = savedInstanceState.getParcelable(OUTSTATE_EXTERNAL_IDS);
             ActorTVCredits actorTVCredits = savedInstanceState.getParcelable(OUTSTATE_ACTOR_TV_CREDITS);
-            Actor actor = savedInstanceState.getParcelable(OUTSTATE_ACTOR);;
+            Actor actor = savedInstanceState.getParcelable(OUTSTATE_ACTOR);
 
             ActorComponent component = DaggerActorComponent.builder()
                     .applicationComponent(showsApplication.get(this).getComponent())

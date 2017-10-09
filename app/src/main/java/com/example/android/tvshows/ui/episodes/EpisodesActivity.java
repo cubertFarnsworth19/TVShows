@@ -98,10 +98,12 @@ public class EpisodesActivity extends BaseNavigationActivity implements Episodes
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(mInitialised) {
-                    Intent intent = mEpisodesPresenter.getIntentForNewEpisodeActivity(EpisodesActivity.this, i);
+                    //EpisodesActivity.this
+                    Context c = getBaseContext();
+                    Intent intent = mEpisodesPresenter.getIntentForNewEpisodeActivity(getBaseContext(), i);
                     getBaseContext().startActivity(intent);
 
-                    if(intent.getFlags()!=Intent.FLAG_ACTIVITY_NEW_TASK) endActivity();
+                    if(intent!=null && intent.getFlags()!=Intent.FLAG_ACTIVITY_NEW_TASK) endActivity();
                 }
 
                 mInitialised = true;

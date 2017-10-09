@@ -79,7 +79,6 @@ public class SeasonsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onClick(View view) {
-            //mSeasonsPresenter.startEpisodesActivity(mContext,getAdapterPosition());
             mContext.startActivity(
                     mSeasonsPresenter.getIntentForEpisodesActivity(mContext,getAdapterPosition()));
         }

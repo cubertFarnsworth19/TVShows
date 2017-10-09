@@ -1,14 +1,19 @@
 package com.example.android.tvshows.showinfo;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.Fragment;
 
+import com.example.android.tvshows.ui.actor.ActorActivity;
+import com.example.android.tvshows.ui.episodes.EpisodesActivity;
 import com.example.android.tvshows.util.CustomScrollActions;
 import com.example.android.tvshows.R;
 import com.example.android.tvshows.TestShowsApplication;
@@ -31,6 +36,7 @@ import com.example.android.tvshows.ui.showinfo.seasons.SeasonsModule;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,10 +48,19 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.Intents.times;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.android.tvshows.util.RecyclerViewMatcher.withRecyclerView;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -74,8 +89,8 @@ public class ShowInfoTests {
 
 
     @Rule
-    public ActivityTestRule<ShowInfoActivity> mActivityTestRule =
-            new ActivityTestRule<>(ShowInfoActivity.class,false,false);
+    public IntentsTestRule<ShowInfoActivity> mActivityTestRule =
+            new IntentsTestRule<>(ShowInfoActivity.class,false,false);
 
     @Before
     public void setUp(){
@@ -156,6 +171,9 @@ public class ShowInfoTests {
     private void mockDetailsPresenterMethods(){
         when(mMockDetailsPresenter.getCreatorName(0)).thenReturn("Creator Name 1");
         when(mMockDetailsPresenter.getCreatorName(1)).thenReturn("Creator Name 2");
+        when(mMockDetailsPresenter.getTitle()).thenReturn(showName);
+        when(mMockDetailsPresenter.getImdbId()).thenReturn("300");
+        when(mMockDetailsPresenter.downloadExternalIds()).thenReturn(true);
     }
 
     private void mockSeasonsPresenterMethods(){
@@ -194,16 +212,29 @@ public class ShowInfoTests {
         onView(withId(R.id.overview)).check(matches(withText(showOverview)));
         onView(withId(R.id.genres)).check(matches(withText("Crime, Drama")));
 
+        // do nothing when an external intent is called
+        intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
         onView(withId(R.id.link_imdb)).perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockDetailsPresenter).visitIMDbPage(mActivity);
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),
+                hasData(Uri.parse(mActivity.getString(R.string.imdb_tv_show_webpage)+"300"))));
+
         onView(withId(R.id.link_tmdb)).perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockDetailsPresenter).visitTMDBPage(mActivity);
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),
+                hasData(Uri.parse(mActivity.getString(R.string.tmdb_tv_show_webpage)+"-1"))));
+
         onView(withId(R.id.link_google_search)).perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockDetailsPresenter).searchGoogle(mActivity);
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),
+                hasData(Uri.parse(mActivity.getString(R.string.google_search_webpage)+showName))));
+
         onView(withId(R.id.link_youtube_search)).perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockDetailsPresenter).searchYouTube(mActivity);
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),
+                hasData(Uri.parse(mActivity.getString(R.string.youtube_search_webpage)+showName))));
+
         onView(withId(R.id.link_wikipedia)).perform(CustomScrollActions.nestedScrollTo()).perform(click());
-        verify(mMockDetailsPresenter).visitWikipedia(mActivity);
+        intended(Matchers.allOf(hasAction(Intent.ACTION_VIEW),
+                hasData(Uri.parse(mActivity.getString(R.string.wikipedia_webapge)
+                        +showName+mActivity.getString(R.string.wikipedia_webpage_end)))));
     }
 
     private void testDisplaySeasons(int fragmentPosition) {
@@ -216,7 +247,13 @@ public class ShowInfoTests {
                 seasonsFragment.seasonDataLoaded(4);
             }});
 
+        // do nothing when an internal intent is called
+        intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
         for(int i=1;i<5;i++) {
+            when(mMockSeasonsPresenter.getIntentForEpisodesActivity(
+                    mContext,i-1)).thenReturn(new Intent(mActivity.getBaseContext(),EpisodesActivity.class));
+
             onView(withId(R.id.recyclerview_seasons))
                     .perform(RecyclerViewActions.scrollToPosition(i));
             onView(withRecyclerView(R.id.recyclerview_seasons).atPositionOnView(i-1, R.id.season_name))
@@ -229,7 +266,8 @@ public class ShowInfoTests {
                     .check(matches(withText("Season overview for Season " + i + ".")));
             onView(withRecyclerView(R.id.recyclerview_seasons).atPositionOnView(i-1, R.id.seasons_layout))
                     .perform(click());
-            verify(mMockSeasonsPresenter).startEpisodesActivity(mContext,i-1);
+
+            intended(hasComponent(EpisodesActivity.class.getName()),times(i));
         }
 
     }
@@ -244,7 +282,13 @@ public class ShowInfoTests {
                 castFragment.castDataLoaded(4);
             }});
 
+        // do nothing when an internal intent is called
+        intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
         for(int i=1;i<5;i++) {
+            when(mMockCastPresenter.getIntentForActorActivity(
+                    mContext,i-1)).thenReturn(new Intent(mActivity.getBaseContext(),ActorActivity.class));
+
             onView(withId(R.id.recyclerview_cast))
                     .perform(RecyclerViewActions.scrollToPosition(i-1));
             onView(withRecyclerView(R.id.recyclerview_cast).atPositionOnView(i-1, R.id.actor_name))
@@ -253,7 +297,7 @@ public class ShowInfoTests {
                     .check(matches(withText("Character " + i)));
             onView(withRecyclerView(R.id.recyclerview_cast).atPositionOnView(i-1, R.id.cast_layout))
                     .perform(click());
-            verify(mMockCastPresenter).startActorActivity(mContext,i-1);
+            intended(hasComponent(ActorActivity.class.getName()),times(i));
         }
     }
 

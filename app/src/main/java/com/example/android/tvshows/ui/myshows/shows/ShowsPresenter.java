@@ -89,11 +89,6 @@ public class ShowsPresenter implements ShowsContract.Presenter {
         observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
     }
 
-//    @Override
-//    public int getId(int position) {
-//        return mShowsInfo.get(position).getId();
-//    }
-
     @Override
     public String getTitle(int position) {
         return mShowsInfo.get(position).getTitle();
